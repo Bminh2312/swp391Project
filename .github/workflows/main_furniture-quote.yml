@@ -24,12 +24,6 @@ jobs:
       - name: Build with Maven
         run: mvn clean install
 
-      - name: Log available artifacts
-        run: |
-          ls -al $GITHUB_WORKSPACE
-          ls -al $GITHUB_WORKSPACE/target
-        shell: bash
-
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
