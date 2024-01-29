@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/login")
 public class LoginController {
 
-
     @Operation(summary = "This is to login the website")
     @ApiResponses(value = {
 
@@ -27,7 +26,7 @@ public class LoginController {
     })
 
 
-    @GetMapping("signin")
+    @GetMapping("/signin")
     public ResponseEntity<?> message(){
         String mess = "Hello World";
         return new ResponseEntity<>(mess, HttpStatus.OK);
