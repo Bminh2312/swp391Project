@@ -1,5 +1,6 @@
 package com.swp391.project.controller;
 
+import com.swp391.project.payload.response.BaseResponse;
 import com.swp391.project.service.FireBaseStorageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -7,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,9 +38,12 @@ public class FireBaseStorageController {
         try {
             // Gọi service để tải lên Firebase Storage
             String imageUrl = fireBaseStorageService.uploadImage(file);
-
+            BaseResponse baseResponse = new BaseResponse();
+            baseResponse.setData(imageUrl);
+            baseResponse.setMesssage("Image uploaded successfully");
+            baseResponse.setStatusCode(201);
             // Trả về URL của ảnh sau khi tải lên
-            return ResponseEntity.ok("Image uploaded successfully. URL: " + imageUrl);
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             // Xử lý lỗi và trả về thông báo lỗi
