@@ -15,11 +15,17 @@ public class FirebaseConfig {
 
     @Bean
     public FirebaseApp firebaseApp () throws IOException {
-//        FileInputStream serviceAccount = new FileInputStream("classpath:swp391-f7197-firebase-adminsdk-qokx0-96c04d23a0.json");
-        InputStream serviceAccount = getClass().getResourceAsStream("/swp391-f7197-firebase-adminsdk-qokx0-96c04d23a0.json");
+
+//        ClassLoader classLoader = ProjectApplication.class.getClassLoader();
+//        FileInputStream serviceAccount = new FileInputStream(resource.getFile());
+        Resource resource = new ClassPathResource("serviceAccountKey.json");
+        InputStream inputStream = resource.getInputStream();
+//        InputStream serviceAccount = new ClassPathResource("serviceAccountKey.json").getInputStream();
+
         FirebaseOptions options = new FirebaseOptions.Builder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .setStorageBucket("swp391-f7197.appspot.com")
+                .setCredentials(GoogleCredentials.fromStream(Objects.requireNonNull(inputStream)))
+                .setServiceAccountId("firebase-adminsdk-qokx0@swp391-f7197.iam.gserviceaccount.com")
+                .setStorageBucket(storageBucket)
                 .build();
 
         return FirebaseApp.initializeApp(options);
