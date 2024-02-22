@@ -27,12 +27,14 @@ public class FirebaseConfig {
 
     @PostConstruct
     public FirebaseApp firebaseApp () throws IOException {
-        ClassLoader classLoader = ProjectApplication.class.getClassLoader();
-        FileInputStream serviceAccount = new FileInputStream(resource.getFile());
+//        ClassLoader classLoader = ProjectApplication.class.getClassLoader();
+//        FileInputStream serviceAccount = new FileInputStream(resource.getFile());
+        Resource resource = new ClassPathResource("serviceAccountKey.json");
+        InputStream inputStream = resource.getInputStream();
 //        InputStream serviceAccount = new ClassPathResource("serviceAccountKey.json").getInputStream();
 
         FirebaseOptions options = new FirebaseOptions.Builder()
-                .setCredentials(GoogleCredentials.fromStream(Objects.requireNonNull(serviceAccount)))
+                .setCredentials(GoogleCredentials.fromStream(Objects.requireNonNull(inputStream)))
                 .setServiceAccountId("firebase-adminsdk-qokx0@swp391-f7197.iam.gserviceaccount.com")
                 .setStorageBucket(storageBucket)
                 .build();
