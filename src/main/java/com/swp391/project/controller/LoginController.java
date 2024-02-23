@@ -12,9 +12,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(origins = {"http://localhost:8082", "https://furniture-quote.azurewebsites.net",
+        "https://eclectic-belekoy-79d097.netlify.app/", "http://localhost:3000"}, allowCredentials = "true")
 @RequestMapping("/login")
 public class LoginController {
 
@@ -33,15 +37,16 @@ public class LoginController {
     })
 
 
-    @GetMapping("/signin")
-    public ResponseEntity<?> message(){
-        String mess = "Hello World";
-        return new ResponseEntity<>(mess, HttpStatus.OK);
-    }
 
     @PostMapping("/signin/gmail")
     public ResponseEntity<?> loginWithGmail(@RequestParam String accessToken) {
         return loginService.loginWithGmail(accessToken);
+    }
+
+    @PostMapping("/signin")
+    public ResponseEntity<?> signin(@RequestParam String username, @RequestParam String password) throws JsonProcessingException {
+        return loginService.loginWithUserNameAndPassword(username,password);
+
     }
 
 }
