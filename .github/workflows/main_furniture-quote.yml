@@ -21,6 +21,11 @@ jobs:
         with:
           java-version: '17'
 
+      - name: Download and install MySQL Connector/J
+        run: |
+          wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.33/mysql-connector-java-8.0.33.jar
+          mvn install:install-file -Dfile=mysql-connector-java-8.0.33.jar -DgroupId=mysql -DartifactId=mysql-connector-java -Dversion=8.0.33 -Dpackaging=jar
+
       - name: Build with Maven
         run: mvn clean install
 
