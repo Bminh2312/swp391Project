@@ -17,4 +17,6 @@ public class UserDetailDTO {
     private String fullName;
     private String email;
     private String avt;
+    private String accessToken;
+    private String role;
 }

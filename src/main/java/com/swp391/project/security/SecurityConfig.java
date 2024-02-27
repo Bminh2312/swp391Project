@@ -52,9 +52,9 @@ public class SecurityConfig {
                 )
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/login/**").permitAll()
+                                .requestMatchers("/login/**","/designStyle/**").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/v3/**").permitAll()
-                                .requestMatchers("/user").hasAnyRole("USER","ADMIN")
+                                .requestMatchers("/user/**").hasAnyRole("USER","ADMIN")
                                 .anyRequest().authenticated()
 
 
