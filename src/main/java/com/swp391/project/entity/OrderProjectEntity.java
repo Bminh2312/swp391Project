@@ -1,27 +1,27 @@
 package com.swp391.project.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.List;
 
-@Entity(name = "role")
+@Entity(name = "order_project")
 @Getter
 @Setter
-public class RoleEntity {
+public class OrderProjectEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "name",unique = true)
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "id_user")
+    private UserEntity user;
 
-
-    @OneToMany(mappedBy = "role")
-    private List<UserEntity> users;
+    @ManyToOne
+    @JoinColumn(name = "id_project")
+    private ProjectEntity project;
 
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)

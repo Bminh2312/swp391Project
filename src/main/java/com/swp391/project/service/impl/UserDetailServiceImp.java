@@ -9,4 +9,5 @@ public interface UserDetailServiceImp {
     UserDetailDTO findByEmail(String email);
 
     List<UserDetailDTO> findAll();
+
 }

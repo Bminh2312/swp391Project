@@ -1,6 +1,5 @@
 package com.swp391.project.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,20 +7,27 @@ import lombok.Setter;
 import java.util.Date;
 import java.util.List;
 
-@Entity(name = "role")
+@Entity(name = "room")
 @Getter
 @Setter
-public class RoleEntity {
+public class RoomEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "name",unique = true)
-    private String name;
+    @Column(name = "type")
+    private String type;
 
+    @Column(name = "area")
+    private double area;
 
-    @OneToMany(mappedBy = "role")
-    private List<UserEntity> users;
+    @ManyToOne
+    @JoinColumn(name = "id_project")
+    private ProjectEntity projectRoom;
+
+    @OneToMany(mappedBy = "roomQuote")
+    List<QuoteEntity> quotes;
 
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)

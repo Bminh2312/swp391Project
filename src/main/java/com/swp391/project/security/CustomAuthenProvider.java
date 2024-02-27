@@ -4,6 +4,7 @@ import com.swp391.project.entity.UserEntity;
 import com.swp391.project.service.impl.LoginServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -29,7 +30,7 @@ public class CustomAuthenProvider implements AuthenticationProvider {
         UserEntity userEntity = null;
         if(password!= null){
             userEntity = loginServiceImp.checkLogin(email,password);
-            System.out.println(userEntity.getRole());
+
         }else{
              userEntity = loginServiceImp.checkLoginGmail(email);
 
@@ -48,7 +49,7 @@ public class CustomAuthenProvider implements AuthenticationProvider {
             return authenticationToken;
         }
 
-        return null;
+        throw new BadCredentialsException("Invalid username or password");
     }
 
     @Override

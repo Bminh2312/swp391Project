@@ -1,6 +1,5 @@
 package com.swp391.project.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,20 +7,27 @@ import lombok.Setter;
 import java.util.Date;
 import java.util.List;
 
-@Entity(name = "role")
+@Entity(name = "design_style")
 @Getter
 @Setter
-public class RoleEntity {
+
+public class DesignStyleEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "name",unique = true)
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "img")
+    private String img;
 
-    @OneToMany(mappedBy = "role")
-    private List<UserEntity> users;
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
+
+    @OneToMany(mappedBy = "designStyle")
+    private List<ProjectEntity> projectEntities;
 
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
@@ -33,4 +39,5 @@ public class RoleEntity {
 
     @Column(name = "status",columnDefinition = "VARCHAR(255) DEFAULT 'ACTIVE'")
     private String status;
+
 }

@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import com.google.gson.Gson;
+import com.swp391.project.dto.UserDetailDTO;
 import com.swp391.project.entity.RoleEntity;
 import com.swp391.project.entity.UserEntity;
 import com.swp391.project.jwt.JwtHelper;
@@ -17,8 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -51,20 +54,27 @@ public class LoginService implements LoginServiceImp {
             System.out.println("Email: " + decodedToken.getEmail());
             System.out.println("Decode: " + decodedToken);
             String email = decodedToken.getEmail();
+            UserEntity userEntity = checkLoginGmail(email);
+            UserDetailDTO userDetailDTO = new UserDetailDTO();
 //            if (email.endsWith("@fpt.edu.vn")) {
 //                return new ResponseEntity<>(decodedToken, HttpStatus.OK);
 //            }
             String avt = decodedToken.getPicture();
             String fullName = decodedToken.getName();
-            if(checkLoginGmail(email) != null){
+            if(userEntity != null){
                 UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(email,null);
                 Authentication authentication = authenticationManager.authenticate(token);
                 ObjectMapper mapper = new ObjectMapper();
                 String json = mapper.writeValueAsString(authentication.getAuthorities());
                 String jwtToken = jwtHelper.generateToken(json);
+                userDetailDTO.setAccessToken(userEntity.getAccessToken());
+                userDetailDTO.setEmail(userEntity.getEmail());
+                userDetailDTO.setFullName(userEntity.getFullName());
+                userDetailDTO.setAvt(userEntity.getAvt());
+                userDetailDTO.setRole(userEntity.getRole().getName());
                 BaseResponse baseResponse = new BaseResponse();
                 baseResponse.setMesssage("LoginSucessFull");
-                baseResponse.setData(jwtToken);
+                baseResponse.setData(userDetailDTO);
                 return new ResponseEntity<>(baseResponse, HttpStatus.OK);
             }else{
                 RoleEntity roleEntity = roleRepository.findByName("ROLE_USER");
@@ -74,21 +84,26 @@ public class LoginService implements LoginServiceImp {
                     roleRepository.save(roleEntity);
                 }
 
-                UserEntity userEntity = new UserEntity();
-                userEntity.setEmail(email);
-                userEntity.setRole(roleEntity);
-                userEntity.setFullName(fullName);
-                userEntity.setAvt(avt);
-                userRepository.save(userEntity);
-
                 UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(email,null);
                 Authentication authentication = authenticationManager.authenticate(token);
                 ObjectMapper mapper = new ObjectMapper();
                 String json = mapper.writeValueAsString(authentication.getAuthorities());
                 String jwtToken = jwtHelper.generateToken(json);
+                userEntity = new UserEntity();
+                userEntity.setEmail(email);
+                userEntity.setRole(roleEntity);
+                userEntity.setFullName(fullName);
+                userEntity.setAvt(avt);
+                userEntity.setAccessToken(jwtToken);
+                userRepository.save(userEntity);
+                userDetailDTO.setAccessToken(userEntity.getAccessToken());
+                userDetailDTO.setEmail(userEntity.getEmail());
+                userDetailDTO.setFullName(userEntity.getFullName());
+                userDetailDTO.setAvt(userEntity.getAvt());
+                userDetailDTO.setRole(userEntity.getRole().getName());
                 BaseResponse baseResponse = new BaseResponse();
                 baseResponse.setMesssage("LoginSucessFull");
-                baseResponse.setData(jwtToken);
+                baseResponse.setData(userDetailDTO);
 
                 return new ResponseEntity<>(baseResponse, HttpStatus.OK);
             }
@@ -107,18 +122,31 @@ public class LoginService implements LoginServiceImp {
     }
 
     public ResponseEntity<?> loginWithUserNameAndPassword(String username, String password) throws JsonProcessingException {
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username,password);
-
-        Authentication authentication = authenticationManager.authenticate(token);
-        ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(authentication.getAuthorities());
-        String jwtToken = jwtHelper.generateToken(json);
-
-        BaseResponse baseResponse = new BaseResponse();
-        baseResponse.setMesssage("OKOK");
-        baseResponse.setData(jwtToken);
-
-        return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        try {
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
+            Authentication authentication = authenticationManager.authenticate(token);
+            ObjectMapper mapper = new ObjectMapper();
+            String json = mapper.writeValueAsString(authentication.getAuthorities());
+            String jwtToken = jwtHelper.generateToken(json);
+            UserEntity userEntity = checkLogin(username,password);
+            UserDetailDTO userDetailDTO = new UserDetailDTO();
+            userEntity.setAccessToken(jwtToken);
+            userRepository.save(userEntity);
+            userDetailDTO.setAccessToken(userEntity.getAccessToken());
+            userDetailDTO.setEmail(userEntity.getEmail());
+            userDetailDTO.setFullName(userEntity.getFullName());
+            userDetailDTO.setAvt(userEntity.getAvt());
+            userDetailDTO.setRole(userEntity.getRole().getName());
+            BaseResponse baseResponse = new BaseResponse();
+            baseResponse.setMesssage("OKOK");
+            baseResponse.setData(userDetailDTO);
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        } catch (UsernameNotFoundException | BadCredentialsException e) {
+            BaseResponse baseResponse = new BaseResponse();
+            baseResponse.setMesssage("Login Fail");
+            baseResponse.setData("Invalid username or password");
+            return new ResponseEntity<>(baseResponse, HttpStatus.UNAUTHORIZED);
+        }
     }
 
 
