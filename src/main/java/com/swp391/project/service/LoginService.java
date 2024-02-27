@@ -64,9 +64,10 @@ public class LoginService implements LoginServiceImp {
             if(userEntity != null){
                 UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(email,null);
                 Authentication authentication = authenticationManager.authenticate(token);
-                ObjectMapper mapper = new ObjectMapper();
-                String json = mapper.writeValueAsString(authentication.getAuthorities());
+                String json = gson.toJson(authentication.getAuthorities());
                 String jwtToken = jwtHelper.generateToken(json);
+                userEntity.setAccessToken(jwtToken);
+                userRepository.save(userEntity);
                 userDetailDTO.setAccessToken(userEntity.getAccessToken());
                 userDetailDTO.setEmail(userEntity.getEmail());
                 userDetailDTO.setFullName(userEntity.getFullName());
@@ -86,8 +87,7 @@ public class LoginService implements LoginServiceImp {
 
                 UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(email,null);
                 Authentication authentication = authenticationManager.authenticate(token);
-                ObjectMapper mapper = new ObjectMapper();
-                String json = mapper.writeValueAsString(authentication.getAuthorities());
+                String json = gson.toJson(authentication.getAuthorities());
                 String jwtToken = jwtHelper.generateToken(json);
                 userEntity = new UserEntity();
                 userEntity.setEmail(email);
@@ -125,8 +125,7 @@ public class LoginService implements LoginServiceImp {
         try {
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
             Authentication authentication = authenticationManager.authenticate(token);
-            ObjectMapper mapper = new ObjectMapper();
-            String json = mapper.writeValueAsString(authentication.getAuthorities());
+            String json = gson.toJson(authentication.getAuthorities());
             String jwtToken = jwtHelper.generateToken(json);
             UserEntity userEntity = checkLogin(username,password);
             UserDetailDTO userDetailDTO = new UserDetailDTO();
