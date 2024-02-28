@@ -23,14 +23,12 @@ public class ProductEntity {
     @Column(name = "img")
     private String image;
 
-    @Column(name = "description", columnDefinition = "VARCHAR(255)")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "type")
     private String type;
 
-    @Column(name = "design_type")
-    private String designType;
 
     @Column(name = "height")
     private double height;
