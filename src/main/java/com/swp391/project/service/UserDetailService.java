@@ -5,6 +5,10 @@ import com.swp391.project.entity.UserEntity;
 import com.swp391.project.repository.UserRepository;
 import com.swp391.project.service.impl.UserDetailServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,18 +31,14 @@ public class UserDetailService implements UserDetailServiceImp {
     }
 
     @Override
-    public List<UserDetailDTO> findAll() {
-        List<UserEntity> userEntities = userRepository.findAll();
-        List<UserDetailDTO> userDetailDTOS = new ArrayList<UserDetailDTO>();
-        for (UserEntity userEntity : userEntities) {
-            UserDetailDTO userDetailDTO = new UserDetailDTO();
-            userDetailDTO.setEmail(userEntity.getEmail());
-            userDetailDTO.setFullName(userEntity.getFullName());
-            userDetailDTO.setAvt(userEntity.getAvt());
-
-            userDetailDTOS.add(userDetailDTO);
-        }
-
-        return userDetailDTOS;
+    public Page<UserDetailDTO> findAll(Pageable pageable) {
+        Page<UserEntity> usersPage  = userRepository.findAll(pageable);
+        return usersPage.map(userEntity -> new UserDetailDTO(
+                userEntity.getFullName(),
+                userEntity.getEmail(),
+                userEntity.getAvt(),
+                userEntity.getAccessToken(),
+                userEntity.getRole().getName()
+        ));
     }
 }

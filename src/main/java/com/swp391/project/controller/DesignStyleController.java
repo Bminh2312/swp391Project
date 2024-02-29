@@ -5,6 +5,8 @@ import com.swp391.project.payload.request.DesignStypeRequest;
 import com.swp391.project.payload.response.BaseResponse;
 import com.swp391.project.service.impl.DesignStyleImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +26,15 @@ public class DesignStyleController {
     private DesignStyleImp designStyleImp;
 
     @GetMapping("/getAllDesign")
-    public ResponseEntity<?> getAllDesign(){
+    public ResponseEntity<?> getAllDesign(Pageable pageable){
         BaseResponse baseResponse = new BaseResponse();
         baseResponse.setMesssage("SucessFull");
         baseResponse.setStatusCode(200);
-        List<DesignStyleDTO> designStyleDTOList = designStyleImp.findAllDesign();
+        Page<DesignStyleDTO> designStyleDTOList = designStyleImp.findAllDesign(pageable);
         if(designStyleDTOList.isEmpty()){
             baseResponse.setData(null);
         }else{
+            baseResponse.setTotalPages(designStyleDTOList.getTotalPages());
             baseResponse.setData(designStyleDTOList);
         }
 
@@ -57,8 +60,8 @@ public class DesignStyleController {
     }
 
     @PostMapping(value = "/updateDesign",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> update(@RequestPart(name = "file", required = true) MultipartFile file, @RequestBody DesignStypeRequest designStypeRequest){
-        boolean check = designStyleImp.update(designStypeRequest,file);
+    public ResponseEntity<?> update(@RequestPart(name = "file", required = true) MultipartFile file, @RequestBody DesignStypeRequest designStypeRequest, String status, int designId){
+        boolean check = designStyleImp.update(designStypeRequest,file,status,designId);
         BaseResponse baseResponse = new BaseResponse();
         if(check){
             baseResponse.setStatusCode(200);

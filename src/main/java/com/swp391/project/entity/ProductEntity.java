@@ -29,7 +29,6 @@ public class ProductEntity {
     @Column(name = "type")
     private String type;
 
-
     @Column(name = "height")
     private double height;
 

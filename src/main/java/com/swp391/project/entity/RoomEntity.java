@@ -16,8 +16,8 @@ public class RoomEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "type")
-    private String type;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "area")
     private double area;
