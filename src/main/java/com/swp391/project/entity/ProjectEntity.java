@@ -19,6 +19,9 @@ public class ProjectEntity {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "type")
+    private String type;
+
     @Column(name = "location",columnDefinition = "NVARCHAR(255)")
     private String location;
 

@@ -6,12 +6,12 @@ import com.swp391.project.payload.request.DesignStypeRequest;
 import com.swp391.project.repository.DesignStyleRepository;
 import com.swp391.project.service.impl.DesignStyleImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class DesignStyleService implements DesignStyleImp {
@@ -22,39 +22,39 @@ public class DesignStyleService implements DesignStyleImp {
     @Autowired
     private FireBaseStorageService fireBaseStorageService;
 
+
     @Override
-    public List<DesignStyleDTO> findAllDesign() {
-        List<DesignStyleDTO> designStyleDTOList = new ArrayList<DesignStyleDTO>();
-        List<DesignStyleEntity> designStyleEntity = designStyleRepository.findAll();
-        for (DesignStyleEntity entity : designStyleEntity) {
-            DesignStyleDTO dto = new DesignStyleDTO();
-            dto.setId(entity.getId());
-            dto.setName(entity.getName());
-            dto.setImg(entity.getImg());
-            dto.setDescription(entity.getDescription());
-            dto.setUpdatedAt(entity.getUpdatedAt());
-            dto.setCreatedAt(entity.getCreatedAt());
-            dto.setStatus(entity.getStatus());// Assuming setName method is used to set the name
-            // You may need to set other properties of dto here as well
-            designStyleDTOList.add(dto);
-        }
-        return designStyleDTOList;
+    public Page<DesignStyleDTO> findAllDesign(Pageable pageable) {
+        Page<DesignStyleEntity> designStylePage = designStyleRepository.findAll(pageable);
+        return designStylePage.map(designEntity -> new DesignStyleDTO(
+                designEntity.getId(),
+                designEntity.getName(),
+                designEntity.getImg(),
+                designEntity.getDescription(),
+                designEntity.getCreatedAt(),
+                designEntity.getUpdatedAt(),
+                designEntity.getStatus()
+                ));
     }
+
 
     @Override
     public boolean create(DesignStypeRequest designTypeRequest, MultipartFile file) {
         try{
+            TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+
+            // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
+            Calendar calendar = Calendar.getInstance(timeZone);
+            Date currentTime = calendar.getTime();
             DesignStyleEntity designStyle = new DesignStyleEntity();
-            designStyle.setId(designTypeRequest.getId());
             designStyle.setName(designTypeRequest.getName());
             if(file != null){
                 String img = fireBaseStorageService.uploadImage(file);
                 designStyle.setImg(img);
             }
 
-            designStyle.setCreatedAt(designTypeRequest.getCreatedAt());
-            designStyle.setUpdatedAt(designTypeRequest.getUpdatedAt());
-            designStyle.setStatus(designTypeRequest.getStatus());
+            designStyle.setCreatedAt(currentTime);
+            designStyle.setUpdatedAt(currentTime);
             designStyleRepository.save(designStyle);
             return true;
         }catch (Exception e){
@@ -66,22 +66,24 @@ public class DesignStyleService implements DesignStyleImp {
     }
 
     @Override
-    public boolean update(DesignStypeRequest designTypeRequest, MultipartFile file) {
+    public boolean update(DesignStypeRequest designTypeRequest, MultipartFile file, String status, int designId) {
         try{
-            Optional<DesignStyleEntity> designStyleEntity = designStyleRepository.findById(designTypeRequest.getId());
+            TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+
+            // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
+            Calendar calendar = Calendar.getInstance(timeZone);
+            Date currentTime = calendar.getTime();
+            Optional<DesignStyleEntity> designStyleEntity = designStyleRepository.findById(designId);
             if(designStyleEntity.isEmpty()){
                 return false;
             }else{
-
-                designStyleEntity.get().setId(designTypeRequest.getId());
                 designStyleEntity.get().setName(designTypeRequest.getName());
                 if(file != null){
                     String img = fireBaseStorageService.uploadImage(file);
                     designStyleEntity.get().setImg(img);
                 }
-                designStyleEntity.get().setCreatedAt(designTypeRequest.getCreatedAt());
-                designStyleEntity.get().setUpdatedAt(designTypeRequest.getUpdatedAt());
-                designStyleEntity.get().setStatus(designTypeRequest.getStatus());
+                designStyleEntity.get().setUpdatedAt(currentTime);
+                designStyleEntity.get().setStatus(status);
                 designStyleRepository.save(designStyleEntity.get());
                 return true;
             }

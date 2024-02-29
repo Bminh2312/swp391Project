@@ -6,6 +6,8 @@ import com.swp391.project.dto.UserDetailDTO;
 import com.swp391.project.payload.response.BaseResponse;
 import com.swp391.project.service.impl.UserDetailServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,11 +41,12 @@ public class UserController {
     }
 
     @GetMapping("/getAllUser")
-    public ResponseEntity<?> getAllUser(){
+    public ResponseEntity<?> getAllUser(Pageable pageable){
         BaseResponse baseResponse = new BaseResponse();
-        List<UserDetailDTO> userDTOS = userDetailServiceImp.findAll();
+        Page<UserDetailDTO> userDTOS = userDetailServiceImp.findAll(pageable);
         if(!userDTOS.isEmpty()){
             baseResponse.setData(userDTOS);
+            baseResponse.setTotalPages(userDTOS.getTotalPages());
             baseResponse.setMesssage("Successfull");
             baseResponse.setStatusCode(200);
             return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
