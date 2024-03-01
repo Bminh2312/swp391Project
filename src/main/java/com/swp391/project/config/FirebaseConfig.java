@@ -25,17 +25,21 @@ public class FirebaseConfig {
     @Value("classpath:serviceAccountKey.json")
     private Resource resource;
 
-    @PostConstruct
-    public FirebaseApp firebaseApp () throws IOException {
-        InputStream serviceAccount = resource.getInputStream();
-//        InputStream serviceAccount = new ClassPathResource("serviceAccountKey.json").getInputStream();
+    @Bean
+    public FirebaseApp firebaseApp() throws IOException {
+        // Kiểm tra xem FirebaseApp đã được khởi tạo chưa
+        if (FirebaseApp.getApps().isEmpty()) {
+            InputStream serviceAccount = resource.getInputStream();
 
-        FirebaseOptions options = new FirebaseOptions.Builder()
-                .setCredentials(GoogleCredentials.fromStream(Objects.requireNonNull(serviceAccount)))
-                .setServiceAccountId("firebase-adminsdk-qokx0@swp391-f7197.iam.gserviceaccount.com")
-                .setStorageBucket(storageBucket)
-                .build();
+            FirebaseOptions options = new FirebaseOptions.Builder()
+                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .setServiceAccountId("firebase-adminsdk-qokx0@swp391-f7197.iam.gserviceaccount.com")
+                    .setStorageBucket(storageBucket)
+                    .build();
 
-        return FirebaseApp.initializeApp(options);
+            return FirebaseApp.initializeApp(options);
+        } else {
+            return FirebaseApp.getInstance();
+        }
     }
 }

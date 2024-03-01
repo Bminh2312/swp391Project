@@ -33,9 +33,10 @@ public class FireBaseStorageController {
                     content = @Content)
     })
     @PostMapping(value = "/upload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadImage(@RequestPart(name = "file", required = true) MultipartFile file){
+    public ResponseEntity<?> uploadImage(@RequestPart(name = "file", required = true) MultipartFile file, @ModelAttribute int id){
         try {
             // Gọi service để tải lên Firebase Storage
+            System.out.println(id);
             String imageUrl = fireBaseStorageService.uploadImage(file);
             BaseResponse baseResponse = new BaseResponse();
             baseResponse.setData(imageUrl);

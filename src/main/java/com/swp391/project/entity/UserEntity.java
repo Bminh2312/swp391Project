@@ -1,6 +1,10 @@
 package com.swp391.project.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,21 +20,26 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotBlank
+    @Size(min=4, max=20)
     @Column(name = "username")
     private String username;
 
+    @Size(min=4, max=20)
     @Column(name = "password")
     private String password;
 
+    @Email
     @Column(name = "email", nullable = true)
     private String email;
 
     @Column(name = "fullname")
     private String fullName;
 
-    @Column(name = "avt")
+    @Column(name = "avt", columnDefinition = "TEXT")
     private String avt;
 
+    @Pattern(regexp="\\d{10}")
     @Column(name = "phone")
     private String phone;
 

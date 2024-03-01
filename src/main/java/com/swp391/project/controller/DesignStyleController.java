@@ -3,17 +3,14 @@ package com.swp391.project.controller;
 import com.swp391.project.dto.DesignStyleDTO;
 import com.swp391.project.payload.request.DesignStypeRequest;
 import com.swp391.project.payload.response.BaseResponse;
-import com.swp391.project.service.impl.DesignStyleImp;
+import com.swp391.project.service.impl.DesignStyleServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,7 +20,7 @@ import java.util.List;
 public class DesignStyleController {
 
     @Autowired
-    private DesignStyleImp designStyleImp;
+    private DesignStyleServiceImp designStyleImp;
 
     @GetMapping("/getAllDesign")
     public ResponseEntity<?> getAllDesign(){
@@ -40,27 +37,37 @@ public class DesignStyleController {
         return new ResponseEntity<>(baseResponse, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/createDesign",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> create(@RequestPart(name = "file", required = true) MultipartFile file, @RequestPart(name = "designStypeRequest", required = true) DesignStypeRequest designStypeRequest){
+    @PostMapping(value = "/createDesign", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> create(@RequestPart(name = "file", required = true) MultipartFile file, @RequestParam("name") String name,
+                                    @RequestParam("description") String description) {
+        try {
+            // Xử lý logic của bạn ở đây với file và designStypeRequest
+            // Ví dụ:
+            System.out.println(name);
+            System.out.println(description);
+            boolean check = designStyleImp.create(name,description, file);
 
-        boolean check = designStyleImp.create(designStypeRequest,file);
-        BaseResponse baseResponse = new BaseResponse();
-        if(check){
+            BaseResponse baseResponse = new BaseResponse();
+            if (check) {
+                baseResponse.setStatusCode(201);
+                baseResponse.setMesssage("Create Successful");
+                baseResponse.setData("True");
+                return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+            }
             baseResponse.setStatusCode(200);
-            baseResponse.setMesssage("Create Successfull");
-            baseResponse.setData("True");
-            return new ResponseEntity<>(baseResponse,HttpStatus.OK);
+            baseResponse.setMesssage("Create Failed");
+            baseResponse.setData("False");
+            return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error processing request.");
         }
-        baseResponse.setStatusCode(201);
-        baseResponse.setMesssage("Create Failed");
-        baseResponse.setData("False");
-        return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
-
     }
 
-    @PostMapping(value = "/updateDesign",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> update(@RequestPart(name = "file", required = true) MultipartFile file, @RequestBody DesignStypeRequest designStypeRequest, String status, int designId){
-        boolean check = designStyleImp.update(designStypeRequest,file,status,designId);
+    @PutMapping(value = "/updateDesign",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> update(@RequestPart(name = "file", required = false) MultipartFile file, @RequestParam("name") String name,
+                                    @RequestParam("description") String description, String status, int designId){
+        boolean check = designStyleImp.update(name,description,file,status,designId);
         BaseResponse baseResponse = new BaseResponse();
         if(check){
             baseResponse.setStatusCode(200);
@@ -68,7 +75,7 @@ public class DesignStyleController {
             baseResponse.setData("True");
             return new ResponseEntity<>(baseResponse,HttpStatus.OK);
         }
-        baseResponse.setStatusCode(201);
+        baseResponse.setStatusCode(400);
         baseResponse.setMesssage("Update Failed");
         baseResponse.setData("False");
         return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);

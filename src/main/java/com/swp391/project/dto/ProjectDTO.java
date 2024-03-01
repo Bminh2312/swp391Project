@@ -9,6 +9,7 @@ public class ProjectDTO {
     private int id;
     private String name;
     private String location;
+    private String type;
     private boolean isSample;
     private String designStyleName;
     private Date createdAt;

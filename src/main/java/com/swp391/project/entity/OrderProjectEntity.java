@@ -23,6 +23,12 @@ public class OrderProjectEntity {
     @JoinColumn(name = "id_project")
     private ProjectEntity project;
 
+    @Column(name = "cost")
+    private double cost;
+
+    @Column(name = "description",columnDefinition = "TEXT")
+    private String description;
+
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;

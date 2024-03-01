@@ -20,7 +20,7 @@ public class ProductEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "img")
+    @Column(name = "img",columnDefinition = "TEXT")
     private String image;
 
     @Column(name = "description", columnDefinition = "TEXT")

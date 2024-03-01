@@ -20,6 +20,9 @@ public class RawMaterial {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "img", columnDefinition = "TEXT")
+    private String img;
+
     @Column(name = "description", columnDefinition = "VARCHAR(255)")
     private String description;
 

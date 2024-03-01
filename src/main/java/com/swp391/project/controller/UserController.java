@@ -2,8 +2,11 @@ package com.swp391.project.controller;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.swp391.project.dto.OrderProjectDTO;
 import com.swp391.project.dto.UserDetailDTO;
+import com.swp391.project.dto.UserWithProjectsDTO;
 import com.swp391.project.payload.response.BaseResponse;
+import com.swp391.project.service.impl.OrderProjectImp;
 import com.swp391.project.service.impl.UserDetailServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +25,7 @@ public class UserController {
 
     @Autowired
     private UserDetailServiceImp userDetailServiceImp;
+
 
     @GetMapping("/getUserByEmail")
     public ResponseEntity<?> getUserByEmail(@RequestParam String email){
@@ -56,6 +60,28 @@ public class UserController {
             baseResponse.setStatusCode(400);
             return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
         }
+    }
+
+    @GetMapping("/getAllProjectByUserId")
+    public ResponseEntity<?> getAllProjectByUserId(@RequestParam int idUser){
+        BaseResponse baseResponse = new BaseResponse();
+        UserWithProjectsDTO userWithProjects = userDetailServiceImp.getUserWithProjects(idUser);
+        if(userWithProjects != null){
+            if(userWithProjects.getProjects().isEmpty()){
+                baseResponse.setMesssage("User do not have any project");
+                baseResponse.setStatusCode(200);
+                baseResponse.setData(userWithProjects);
+                return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+            }
+            baseResponse.setMesssage("SucessFull");
+            baseResponse.setStatusCode(200);
+            baseResponse.setData(userWithProjects);
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+        baseResponse.setMesssage("Not found");
+        baseResponse.setStatusCode(200);
+        baseResponse.setData("Null");
+        return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
     }
 
 

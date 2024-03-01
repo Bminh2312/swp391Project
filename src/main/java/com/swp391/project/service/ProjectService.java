@@ -1,6 +1,5 @@
 package com.swp391.project.service;
 
-import com.swp391.project.dto.DesignStyleDTO;
 import com.swp391.project.dto.ProjectDTO;
 import com.swp391.project.entity.DesignStyleEntity;
 import com.swp391.project.entity.ProjectEntity;
@@ -8,7 +7,7 @@ import com.swp391.project.payload.request.ProjectRequest;
 import com.swp391.project.repository.DesignStyleRepository;
 import com.swp391.project.repository.ProjectRepository;
 
-import com.swp391.project.service.impl.ProjectImp;
+import com.swp391.project.service.impl.ProjectServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +17,7 @@ import java.util.Optional;
 import java.util.TimeZone;
 
 @Service
-public class ProjectService implements ProjectImp {
+public class ProjectService implements ProjectServiceImp {
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -38,6 +37,8 @@ public class ProjectService implements ProjectImp {
                 Date currentTime = calendar.getTime();
                 ProjectEntity projectEntity = new ProjectEntity();
                 projectEntity.setName(projectRequest.getName());
+                projectEntity.setLocation(projectRequest.getLocation());
+                projectEntity.setType(projectRequest.getType());
                 projectEntity.setDesignStyle(designStyleEntity.get());
                 projectEntity.setCreatedAt(currentTime);
                 projectEntity.setUpdatedAt(currentTime);
@@ -65,7 +66,16 @@ public class ProjectService implements ProjectImp {
                 // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
                 Calendar calendar = Calendar.getInstance(timeZone);
                 Date currentTime = calendar.getTime();
-                projectEntity.get().setName(projectRequest.getName());
+                if(projectRequest.getName() != null){
+                    projectEntity.get().setName(projectRequest.getName());
+                }
+                 if(projectRequest.getLocation() != null){
+                     projectEntity.get().setLocation(projectRequest.getLocation());
+                 }
+
+                 if(projectRequest.getType() != null ){
+                     projectEntity.get().setType(projectRequest.getType());
+                 }
                 designStyleEntity.ifPresent(styleEntity -> projectEntity.get().setDesignStyle(styleEntity));
                 projectEntity.get().setUpdatedAt(currentTime);
                 projectRepository.save(projectEntity.get());
