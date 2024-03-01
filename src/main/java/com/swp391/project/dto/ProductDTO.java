@@ -1,22 +1,23 @@
-package com.swp391.project.payload.request;
+package com.swp391.project.dto;
 
-import com.swp391.project.dto.DesignStyleDTO;
-import com.swp391.project.entity.DesignStyleEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectRequest {
+public class ProductDTO {
     private String name;
-    private String location;
+    private String img;
+    private String description;
     private String type;
-    private boolean isSample;
-    private int designStyleId;
+    private double height;
+    private double length;
+    private double width;
+    private double pricePerM2;
     private Date createdAt;
     private Date updatedAt;
+    private String status;
 }
