@@ -26,15 +26,14 @@ public class DesignStyleController {
     private DesignStyleImp designStyleImp;
 
     @GetMapping("/getAllDesign")
-    public ResponseEntity<?> getAllDesign(Pageable pageable){
+    public ResponseEntity<?> getAllDesign(){
         BaseResponse baseResponse = new BaseResponse();
         baseResponse.setMesssage("SucessFull");
         baseResponse.setStatusCode(200);
-        Page<DesignStyleDTO> designStyleDTOList = designStyleImp.findAllDesign(pageable);
+        List<DesignStyleDTO> designStyleDTOList = designStyleImp.findAllDesign();
         if(designStyleDTOList.isEmpty()){
             baseResponse.setData(null);
         }else{
-            baseResponse.setTotalPages(designStyleDTOList.getTotalPages());
             baseResponse.setData(designStyleDTOList);
         }
 

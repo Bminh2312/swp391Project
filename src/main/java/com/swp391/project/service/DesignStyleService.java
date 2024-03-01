@@ -24,17 +24,22 @@ public class DesignStyleService implements DesignStyleImp {
 
 
     @Override
-    public Page<DesignStyleDTO> findAllDesign(Pageable pageable) {
-        Page<DesignStyleEntity> designStylePage = designStyleRepository.findAll(pageable);
-        return designStylePage.map(designEntity -> new DesignStyleDTO(
-                designEntity.getId(),
-                designEntity.getName(),
-                designEntity.getImg(),
-                designEntity.getDescription(),
-                designEntity.getCreatedAt(),
-                designEntity.getUpdatedAt(),
-                designEntity.getStatus()
-                ));
+    public List<DesignStyleDTO> findAllDesign() {
+        List<DesignStyleEntity> designStyleEntities = designStyleRepository.findAll();
+        List<DesignStyleDTO> designStyleDTOs = new ArrayList<>();
+        for (DesignStyleEntity designEntity : designStyleEntities) {
+            DesignStyleDTO designStyleDTO = new DesignStyleDTO(
+                    designEntity.getId(),
+                    designEntity.getName(),
+                    designEntity.getImg(),
+                    designEntity.getDescription(),
+                    designEntity.getCreatedAt(),
+                    designEntity.getUpdatedAt(),
+                    designEntity.getStatus()
+            );
+            designStyleDTOs.add(designStyleDTO);
+        }
+        return designStyleDTOs;
     }
 
 
