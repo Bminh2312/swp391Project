@@ -9,6 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DesignStyleRepository extends JpaRepository<DesignStyleEntity,Integer> {
 
-    Page<DesignStyleEntity> findAll(Pageable pageable);
 
 }

@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface DesignStyleImp {
 
-    Page<DesignStyleDTO> findAllDesign(Pageable pageable);
+    List<DesignStyleDTO> findAllDesign();
 
     boolean create(DesignStypeRequest designTypeRequest, MultipartFile file);
 
