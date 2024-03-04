@@ -49,6 +49,7 @@ public class OrderProjectService implements OrderProjectImp {
                 orderProjectEntity.setUpdatedAt(currentTime);
                 orderProjectEntity.setCost(orderProjectRequest.getCost());
                 orderProjectEntity.setDescription(orderProjectRequest.getDescription());
+                orderProjectEntity.setStatus(orderProjectRequest.getStatus());
                 orderProjectRepository.save(orderProjectEntity);
                 return true;
             }
@@ -113,6 +114,11 @@ public class OrderProjectService implements OrderProjectImp {
         projectDTO.setId(projectEntity.getId());
         projectDTO.setName(projectEntity.getName());
         projectDTO.setLocation(projectEntity.getLocation());
+        projectDTO.setType(projectEntity.getType());
+        projectDTO.setStatus(projectEntity.getStatus());
+        projectDTO.setSample(projectEntity.isSample());
+        projectDTO.setCreatedAt(projectEntity.getCreatedAt());
+        projectDTO.setUpdatedAt(projectEntity.getUpdatedAt());
         projectDTO.setDesignStyleName(projectEntity.getDesignStyle().getName());
         return projectDTO;
     }

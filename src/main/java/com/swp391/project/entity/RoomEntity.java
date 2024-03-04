@@ -19,8 +19,6 @@ public class RoomEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "area")
-    private double area;
 
     @ManyToOne
     @JoinColumn(name = "id_project")

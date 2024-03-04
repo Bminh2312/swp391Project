@@ -31,7 +31,7 @@ public class QuoteDetailEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_raw_material")
-    private RawMaterial rawMaterial;
+    private RawMaterialEntity rawMaterial;
 
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
