@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 
-public class RawMaterial {
+public class RawMaterialEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

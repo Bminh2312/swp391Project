@@ -54,4 +54,7 @@ public class ProductEntity {
 
     @Column(name = "status",columnDefinition = "VARCHAR(255) DEFAULT 'ACTIVE'")
     private String status;
+
+    @Column(name = "is_modify")
+    private String isModify;
 }

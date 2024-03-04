@@ -32,6 +32,9 @@ public class QuoteEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date quoteDate;
 
+    @Column(name = "area")
+    private double area;
+
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;

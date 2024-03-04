@@ -15,4 +15,6 @@ public interface UserRepository extends JpaRepository<UserEntity,Integer> {
     UserEntity findByUsername(String username);
 
     Page<UserEntity> findAll(Pageable pageable);
+
+
 }

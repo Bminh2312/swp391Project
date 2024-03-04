@@ -33,9 +33,11 @@ public class UserDetailService implements UserDetailServiceImp {
     public UserDetailDTO findByEmail(String email) {
         UserEntity userEntities = userRepository.findByEmail(email);
         UserDetailDTO userDetailDTO = new UserDetailDTO();
+        userDetailDTO.setId(userEntities.getId());
         userDetailDTO.setAvt(userEntities.getAvt());
         userDetailDTO.setEmail(userEntities.getEmail());
         userDetailDTO.setFullName(userEntities.getFullName());
+        userDetailDTO.setRole(userEntities.getRole().getName());
         return userDetailDTO;
     }
 
@@ -43,6 +45,7 @@ public class UserDetailService implements UserDetailServiceImp {
     public Page<UserDetailDTO> findAll(Pageable pageable) {
         Page<UserEntity> usersPage  = userRepository.findAll(pageable);
         return usersPage.map(userEntity -> new UserDetailDTO(
+                userEntity.getId(),
                 userEntity.getFullName(),
                 userEntity.getEmail(),
                 userEntity.getAvt(),
