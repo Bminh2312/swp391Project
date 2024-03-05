@@ -38,8 +38,8 @@ public class ProductEntity {
     @Column(name = "length")
     private double length;
 
-    @Column(name = "price_per_m2")
-    private double pricePerM2;
+    @Column(name = "price")
+    private double price;
 
     @OneToMany(mappedBy = "product")
     List<QuoteDetailEntity> quoteDetailEntityList;

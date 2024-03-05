@@ -22,7 +22,10 @@ public class QuoteDetailEntity {
     private double price;
 
     @Column(name = "note")
-    private double note;
+    private String note;
+
+    @Column(name = "area")
+    private double area;
 
     @ManyToOne
     @JoinColumn(name = "id_quote")

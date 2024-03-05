@@ -51,7 +51,7 @@ public class ProductService implements ProductServiceImp {
             productEntity.setHeight(height);
             productEntity.setLength(length);
             productEntity.setWidth(width);
-            productEntity.setPricePerM2(pricePerM2);
+            productEntity.setPrice(pricePerM2);
             productEntity.setType(type);
             productEntity.setStatus("ACTIVE");
             if(imgFile != null){
@@ -114,8 +114,8 @@ public class ProductService implements ProductServiceImp {
                     productEntity.get().setWidth(width);
                 }
 
-                if(pricePerM2 != productEntity.get().getPricePerM2() && !Double.isNaN(pricePerM2)) {
-                    productEntity.get().setPricePerM2(pricePerM2);
+                if(pricePerM2 != productEntity.get().getPrice() && !Double.isNaN(pricePerM2)) {
+                    productEntity.get().setPrice(pricePerM2);
                 }
 
                 productRepository.save(productEntity.get());
@@ -133,6 +133,7 @@ public class ProductService implements ProductServiceImp {
     public Page<ProductDTO> findAll(Pageable pageable) {
         Page<ProductEntity> productsPage  = productRepository.findAll(pageable);
         return productsPage.map(productEntity -> new ProductDTO(
+                productEntity.getId(),
                 productEntity.getName(),
                 productEntity.getImage(),
                 productEntity.getDescription(),
@@ -140,7 +141,7 @@ public class ProductService implements ProductServiceImp {
                 productEntity.getHeight(),
                 productEntity.getLength(),
                 productEntity.getWidth(),
-                productEntity.getPricePerM2(),
+                productEntity.getPrice(),
                 productEntity.getCreatedAt(),
                 productEntity.getUpdatedAt(),
                 productEntity.getStatus()
@@ -149,13 +150,14 @@ public class ProductService implements ProductServiceImp {
 
     public  ProductDTO mapProductToDTO(ProductEntity productEntity) {
         ProductDTO productDTO = new ProductDTO();
+        productDTO.setId(productEntity.getId());
         productDTO.setName(productEntity.getName());
         productDTO.setImg(productEntity.getImage());
         productDTO.setDescription(productEntity.getDescription());
         productDTO.setHeight(productEntity.getHeight());
         productDTO.setLength(productEntity.getLength());
         productDTO.setWidth(productEntity.getWidth());
-        productDTO.setPrice(productEntity.getPricePerM2());
+        productDTO.setPrice(productEntity.getPrice());
         productDTO.setCreatedAt(productEntity.getCreatedAt());
         productDTO.setUpdatedAt(productEntity.getUpdatedAt());
         productDTO.setStatus(productEntity.getStatus());

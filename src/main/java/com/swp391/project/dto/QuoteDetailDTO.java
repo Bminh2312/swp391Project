@@ -13,10 +13,11 @@ public class QuoteDetailDTO {
     private int id;
     private int quantity;
     private double price;
+    private double area;
     private String note;
     private int quoteId;
-    private int productId;
-    private int rawMaterialId;
+    private ProductDTO product;
+    private RawMaterialDTO rawMaterial;
     private Date createdAt;
     private Date updatedAt;
     private String status;
