@@ -21,6 +21,9 @@ public class QuoteDetailEntity {
     @Column(name = "price")
     private double price;
 
+    @Column(name = "note")
+    private double note;
+
     @ManyToOne
     @JoinColumn(name = "id_quote")
     private QuoteEntity quote;

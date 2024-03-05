@@ -155,7 +155,7 @@ public class ProductService implements ProductServiceImp {
         productDTO.setHeight(productEntity.getHeight());
         productDTO.setLength(productEntity.getLength());
         productDTO.setWidth(productEntity.getWidth());
-        productDTO.setPricePerM2(productEntity.getPricePerM2());
+        productDTO.setPrice(productEntity.getPricePerM2());
         productDTO.setCreatedAt(productEntity.getCreatedAt());
         productDTO.setUpdatedAt(productEntity.getUpdatedAt());
         productDTO.setStatus(productEntity.getStatus());

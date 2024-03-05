@@ -27,7 +27,7 @@ public class RawMaterialService implements RawMaterialServiceImp {
     @Autowired
     private FireBaseStorageService fireBaseStorageService;
     @Override
-    public boolean create(String name, String description, String type, double area, double pricePerM2, MultipartFile imgFile) {
+    public boolean create(String name, String description, String type, double pricePerM2, MultipartFile imgFile) {
         try{
             TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
 
@@ -39,7 +39,6 @@ public class RawMaterialService implements RawMaterialServiceImp {
             rawMaterial.setDescription(description);
             rawMaterial.setPricePerM2(pricePerM2);
             rawMaterial.setType(type);
-            rawMaterial.setArea(area);
             rawMaterial.setStatus("ACTIVE");
             if(imgFile != null){
                 String img = fireBaseStorageService.uploadImage(imgFile);
@@ -57,7 +56,7 @@ public class RawMaterialService implements RawMaterialServiceImp {
     }
 
     @Override
-    public boolean update(String name, String description, String type, double area, double pricePerM2, MultipartFile imgFile, int rawMaterialId) {
+    public boolean update(String name, String description, String type, double pricePerM2, MultipartFile imgFile, int rawMaterialId) {
         try{
             TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
 
@@ -84,9 +83,6 @@ public class RawMaterialService implements RawMaterialServiceImp {
                     rawMaterialEntity.get().setType(type);
                 }
 
-                if(area != rawMaterialEntity.get().getArea() && !Double.isNaN(area)) {
-                    rawMaterialEntity.get().setPricePerM2(area);
-                }
 
                 if(pricePerM2 != rawMaterialEntity.get().getPricePerM2() && !Double.isNaN(pricePerM2)) {
                     rawMaterialEntity.get().setPricePerM2(pricePerM2);
@@ -117,7 +113,6 @@ public class RawMaterialService implements RawMaterialServiceImp {
             rawMaterialDTO.setImg(rawMaterialEntity.getImg());
             rawMaterialDTO.setDescription(rawMaterialEntity.getDescription());
             rawMaterialDTO.setType(rawMaterialEntity.getType());
-            rawMaterialDTO.setArea(rawMaterialEntity.getArea());
             rawMaterialDTO.setPricePerM2(rawMaterialEntity.getPricePerM2());
             // Set other properties of RawMaterialDTO as needed
             rawMaterialDTO.setCreatedAt(rawMaterialEntity.getCreatedAt());

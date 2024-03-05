@@ -16,7 +16,7 @@ public class ProductDTO {
     private double height;
     private double length;
     private double width;
-    private double pricePerM2;
+    private double price;
     private Date createdAt;
     private Date updatedAt;
     private String status;

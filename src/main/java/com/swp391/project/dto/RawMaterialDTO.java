@@ -16,7 +16,6 @@ public class RawMaterialDTO {
     private String img;
     private String description;
     private String type;
-    private double area;
     private double pricePerM2;
     private List<QuoteDetailDTO> quoteDetailDTOList;
     private Date createdAt;
