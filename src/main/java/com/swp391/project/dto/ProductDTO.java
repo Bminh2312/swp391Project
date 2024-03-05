@@ -9,6 +9,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductDTO {
+    private int id;
     private String name;
     private String img;
     private String description;

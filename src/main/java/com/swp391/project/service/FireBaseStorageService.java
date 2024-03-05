@@ -35,9 +35,9 @@ public class FireBaseStorageService {
         // Lấy đường dẫn có quyền truy cập
         String downloadUrl = blob.getMediaLink();
 
-        // Đặt quyền truy cập hết hạn sau một khoảng thời gian (ví dụ: 1 giờ)
-        String signedUrl = blob.signUrl(730 * 3, TimeUnit.HOURS).toString();
+        // Đặt quyền truy cập hết hạn sau một khoảng thời gian (ví dụ: 1 tháng)
+        long oneMonthInSeconds = TimeUnit.DAYS.toSeconds(30);
 
-        return signedUrl;
+        return blob.signUrl(oneMonthInSeconds, TimeUnit.HOURS).toString();
     }
 }

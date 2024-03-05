@@ -54,7 +54,7 @@ public class ProjectController {
     }
 
     @GetMapping("/getProjectById")
-    public ResponseEntity<?> getAllDesign(@RequestParam int id){
+    public ResponseEntity<?> getProjectById(@RequestParam int id){
         BaseResponse baseResponse = new BaseResponse();
         baseResponse.setMesssage("SucessFull");
         baseResponse.setStatusCode(200);
