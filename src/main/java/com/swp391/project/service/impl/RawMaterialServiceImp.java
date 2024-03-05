@@ -10,13 +10,11 @@ public interface RawMaterialServiceImp {
     boolean create ( String name,
                      String description,
                      String type,
-                     double area,
                      double pricePerM2, MultipartFile imgFile);
 
     boolean update (String name,
                     String description,
                     String type,
-                    double area,
                     double pricePerM2, MultipartFile imgFile, int rawMaterialId);
 
     Page<RawMaterialDTO> findAll(Pageable pageable);

@@ -44,10 +44,9 @@ public class RawMaterialController {
     public ResponseEntity<?> create(@RequestPart(name = "fileImg", required = true) MultipartFile fileImg, @RequestParam("name") String name,
                                     @RequestParam("description") String description,
                                     @RequestParam("type") String type,
-                                    @RequestParam("area") double area,
                                     @RequestParam("pricePerM2") double pricePerM2){
 
-        boolean check = rawMaterialServiceImp.create(name,description,type,area,pricePerM2,fileImg);
+        boolean check = rawMaterialServiceImp.create(name,description,type,pricePerM2,fileImg);
         BaseResponse baseResponse = new BaseResponse();
         if(check){
             baseResponse.setStatusCode(201);
@@ -66,10 +65,9 @@ public class RawMaterialController {
     public ResponseEntity<?> update(@RequestPart(name = "fileImg", required = false) MultipartFile fileImg, @RequestParam int rawMaterialId, @RequestParam("name") String name,
                                     @RequestParam("description") String description,
                                     @RequestParam("type") String type,
-                                    @RequestParam("area") double area,
                                     @RequestParam("pricePerM2") double pricePerM2){
         System.out.println(name);
-        boolean check = rawMaterialServiceImp.update(name,description,type,area,pricePerM2,fileImg,rawMaterialId);
+        boolean check = rawMaterialServiceImp.update(name,description,type,pricePerM2,fileImg,rawMaterialId);
         BaseResponse baseResponse = new BaseResponse();
         if(check){
             baseResponse.setStatusCode(200);

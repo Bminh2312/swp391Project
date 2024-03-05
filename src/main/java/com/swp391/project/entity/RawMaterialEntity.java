@@ -29,8 +29,6 @@ public class RawMaterialEntity {
     @Column(name = "type")
     private String type;
 
-    @Column(name = "area")
-    private double area;
 
     @Column(name = "price_per_m2")
     private double pricePerM2;

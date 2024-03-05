@@ -13,6 +13,7 @@ public class QuoteDetailDTO {
     private int id;
     private int quantity;
     private double price;
+    private String note;
     private int quoteId;
     private int productId;
     private int rawMaterialId;
