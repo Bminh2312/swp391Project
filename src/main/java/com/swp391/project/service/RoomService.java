@@ -5,9 +5,11 @@ import com.swp391.project.entity.RoomEntity;
 import com.swp391.project.repository.RoomRepository;
 import com.swp391.project.service.impl.RoomServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+@Service
 public class RoomService implements RoomServiceImp {
 
     @Autowired
@@ -26,6 +28,7 @@ public class RoomService implements RoomServiceImp {
             roomEntity.setCreatedAt(currentTime);
             roomEntity.setUpdatedAt(currentTime);
             roomEntity.setStatus("ACTIVE");
+            roomRepository.save(roomEntity);
             return true;
         }catch (Exception e){
             System.out.println(e.getMessage());
@@ -44,6 +47,7 @@ public class RoomService implements RoomServiceImp {
                 Date currentTime = calendar.getTime();
                 roomEntity.get().setName(name);
                 roomEntity.get().setUpdatedAt(currentTime);
+                roomRepository.save(roomEntity.get());
                 return true;
             }else{
                 return false;
@@ -56,11 +60,49 @@ public class RoomService implements RoomServiceImp {
 
     @Override
     public List<RoomDTO> findAll() {
-        return null;
+        try{
+            List<RoomEntity> roomEntities = roomRepository.findAll();
+            List<RoomDTO> roomDTOS = new ArrayList<>();
+            for (RoomEntity roomEntity:  roomEntities) {
+                RoomDTO roomDTO = mapFromEntity(roomEntity);
+                roomDTOS.add(roomDTO);
+            }
+            return roomDTOS;
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
     @Override
-    public boolean delete(String status) {
-        return false;
+    public boolean delete(int id, String status) {
+        try {
+            TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+            Optional<RoomEntity> roomEntity = roomRepository.findById(id);
+            if (roomEntity.isPresent()) {
+                // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
+                Calendar calendar = Calendar.getInstance(timeZone);
+                Date currentTime = calendar.getTime();
+                roomEntity.get().setStatus(status);
+                roomEntity.get().setUpdatedAt(currentTime);
+                roomRepository.save(roomEntity.get());
+                return true;
+            }else{
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+    public  RoomDTO mapFromEntity(RoomEntity roomEntity) {
+        RoomDTO roomDTO = new RoomDTO();
+        roomDTO.setId(roomEntity.getId());
+        roomDTO.setName(roomEntity.getName());
+        roomDTO.setCreatedAt(roomEntity.getCreatedAt());
+        roomDTO.setUpdatedAt(roomEntity.getUpdatedAt());
+        roomDTO.setStatus(roomEntity.getStatus());
+        return roomDTO;
     }
 }

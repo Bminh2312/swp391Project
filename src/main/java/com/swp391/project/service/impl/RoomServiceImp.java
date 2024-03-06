@@ -12,6 +12,6 @@ public interface RoomServiceImp {
 
     List<RoomDTO> findAll();
 
-    boolean delete (String status);
+    boolean delete (int id, String status);
 
 }

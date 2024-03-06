@@ -147,6 +147,7 @@ public class ProductService implements ProductServiceImp {
 
     @Override
     public List<ProductDTO> findByType(String type) {
+        try{
         List<ProductEntity> productEntities = productRepository.findByType(type);
         List<ProductDTO> productDTOS = new ArrayList<>();
         for (ProductEntity productEntity : productEntities) {
@@ -154,6 +155,9 @@ public class ProductService implements ProductServiceImp {
             productDTOS.add(productDTO);
         }
         return productDTOS;
+        }catch (Exception e){
+            return null;
+        }
     }
 
     @Override

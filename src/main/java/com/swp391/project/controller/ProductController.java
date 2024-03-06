@@ -88,8 +88,7 @@ public class ProductController {
                                     @RequestParam("length") double length,
                                     @RequestParam("width") double width,
                                     @RequestParam("pricePerM2") double pricePerM2){
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Access-Control-Allow-Origin", "*");
+
 
         boolean check = productServiceImp.create(name,description,type,height,length,width,pricePerM2,fileImg);
         BaseResponse baseResponse = new BaseResponse();
@@ -97,12 +96,12 @@ public class ProductController {
             baseResponse.setStatusCode(201);
             baseResponse.setMesssage("Create Successfull");
             baseResponse.setData("True");
-            return new ResponseEntity<>(baseResponse, headers, HttpStatus.OK);
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
         }
         baseResponse.setStatusCode(200);
         baseResponse.setMesssage("Create Failed");
         baseResponse.setData("False");
-        return new ResponseEntity<>(baseResponse,headers,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
 
     }
 
