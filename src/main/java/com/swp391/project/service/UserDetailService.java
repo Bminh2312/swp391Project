@@ -121,4 +121,27 @@ public class UserDetailService implements UserDetailServiceImp {
         }
     }
 
+    @Override
+    public Boolean setStatusUser(int userId, String status) {
+        Optional<UserEntity> userOptional = userRepository.findById(userId);
+
+        if (userOptional.isPresent()) {
+            UserEntity user = userOptional.get();
+
+            switch (status.toUpperCase()) {
+                case "ACTIVE":
+                    user.setStatus("ACTIVE");
+                    break;
+                case "INACTIVE":
+                    user.setStatus("INACTIVE");
+                    break;
+                default:
+                    return false;
+            }
+            userRepository.save(user);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

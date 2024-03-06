@@ -10,6 +10,7 @@ import com.swp391.project.entity.UserEntity;
 import com.swp391.project.payload.response.BaseResponse;
 import com.swp391.project.service.impl.OrderProjectImp;
 import com.swp391.project.service.impl.UserDetailServiceImp;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -108,4 +109,36 @@ public class UserController {
         return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
     }
 
+    @PutMapping(value = "/deleteUser")
+    public ResponseEntity<?> deleteUser(@RequestParam int userId){
+        BaseResponse baseResponse = new BaseResponse();
+        boolean check = userDetailServiceImp.setStatusUser(userId,"INACTIVE");
+        if(check){
+            baseResponse.setMesssage("Delete successful");
+            baseResponse.setStatusCode(200);
+            baseResponse.setData("True");
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+        baseResponse.setMesssage("Delete fail");
+        baseResponse.setStatusCode(200);
+        baseResponse.setData("False");
+        return new ResponseEntity<>(baseResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping(value = "/updateStatusUser")
+    public ResponseEntity<?> updateStatusUser(@RequestParam int userId,
+                                              @RequestParam @Schema(description = "Status", allowableValues = {"ACTIVE", "INACTIVE"}) String status){
+        BaseResponse baseResponse = new BaseResponse();
+        boolean check = userDetailServiceImp.setStatusUser(userId, status);
+        if(check){
+            baseResponse.setMesssage("Delete successful");
+            baseResponse.setStatusCode(200);
+            baseResponse.setData("True");
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+        baseResponse.setMesssage("Set status fail");
+        baseResponse.setStatusCode(200);
+        baseResponse.setData("False");
+        return new ResponseEntity<>(baseResponse, HttpStatus.BAD_REQUEST);
+    }
 }
