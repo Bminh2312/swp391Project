@@ -18,7 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/product")
 @CrossOrigin(origins = {"http://localhost:8082", "https://furniture-quote.azurewebsites.net",
-        "https://eclectic-belekoy-79d097.netlify.app/", "http://localhost:3000"}, allowCredentials = "true")
+        "https://eclectic-belekoy-79d097.netlify.app/", "http://localhost:3000"}, allowCredentials = "true",
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
 public class ProductController {
 
     @Autowired
