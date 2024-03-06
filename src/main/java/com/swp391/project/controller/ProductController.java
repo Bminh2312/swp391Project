@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/product")
 @CrossOrigin(origins = {"http://localhost:8082", "https://furniture-quote.azurewebsites.net",
-        "https://eclectic-belekoy-79d097.netlify.app/", "http://localhost:3000"}, allowCredentials = "true", allowedHeaders = "*"
+        "https://eclectic-belekoy-79d097.netlify.app/", "http://localhost:3000"}, allowCredentials = "true"
         )
 public class ProductController {
 
@@ -61,12 +61,12 @@ public class ProductController {
             baseResponse.setStatusCode(201);
             baseResponse.setMesssage("Create Successfull");
             baseResponse.setData("True");
-            return new ResponseEntity<>(baseResponse,HttpStatus.OK);
+            return new ResponseEntity<>(baseResponse, headers, HttpStatus.OK);
         }
         baseResponse.setStatusCode(200);
         baseResponse.setMesssage("Create Failed");
         baseResponse.setData("False");
-        return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(baseResponse,headers,HttpStatus.NOT_FOUND);
 
     }
 
