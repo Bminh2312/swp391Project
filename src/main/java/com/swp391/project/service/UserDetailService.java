@@ -1,5 +1,6 @@
 package com.swp391.project.service;
 
+import com.google.api.gax.rpc.NotFoundException;
 import com.swp391.project.dto.ProjectDTO;
 import com.swp391.project.dto.UserDetailDTO;
 import com.swp391.project.dto.UserWithProjectsDTO;
@@ -11,13 +12,12 @@ import com.swp391.project.repository.UserRepository;
 import com.swp391.project.service.impl.UserDetailServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +28,8 @@ public class UserDetailService implements UserDetailServiceImp {
     @Autowired
     private OrderProjectRepository orderProjectRepository;
 
+    @Autowired
+    private FireBaseStorageService fireBaseStorageService;
 
     @Override
     public UserDetailDTO findByEmail(String email) {
@@ -41,7 +43,7 @@ public class UserDetailService implements UserDetailServiceImp {
 
     @Override
     public Page<UserDetailDTO> findAll(Pageable pageable) {
-        Page<UserEntity> usersPage  = userRepository.findAll(pageable);
+        Page<UserEntity> usersPage = userRepository.findAll(pageable);
         return usersPage.map(userEntity -> new UserDetailDTO(
                 userEntity.getFullName(),
                 userEntity.getEmail(),
@@ -87,4 +89,33 @@ public class UserDetailService implements UserDetailServiceImp {
         projectDTO.setDesignStyleName(projectEntity.getDesignStyle().getName());
         return projectDTO;
     }
+
+    @Override
+    public Boolean updateUser(int userId, String fullName, String phone, String address, MultipartFile avt) {
+        try {
+            Optional<UserEntity> user = userRepository.findById(userId);
+            if(user.isEmpty()) {
+                return false;
+            }else{
+                if (fullName != null && !fullName.trim().isEmpty()) {
+                    user.get().setFullName(fullName);
+                }
+                if (phone != null && phone.matches("[0-9]+") && phone.length() == 10){
+                    user.get().setPhone(phone);
+                }
+                if (address != null && !address.trim().isEmpty()) {
+                    user.get().setAddress(address);
+                }
+                if (avt != null) {
+                    user.get().setAvt(fireBaseStorageService.uploadImage(avt));
+                }
+                userRepository.save(user.get());
+                return true;
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
 }

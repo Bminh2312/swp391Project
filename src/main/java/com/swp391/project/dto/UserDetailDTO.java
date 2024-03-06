@@ -19,4 +19,5 @@ public class UserDetailDTO {
     private String avt;
     private String accessToken;
     private String role;
+
 }
