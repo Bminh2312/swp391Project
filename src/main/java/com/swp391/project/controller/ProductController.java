@@ -16,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/product")
 @CrossOrigin(origins = {"http://localhost:8082", "https://furniture-quote.azurewebsites.net",
@@ -33,6 +35,40 @@ public class ProductController {
         if(!productDTOS.isEmpty()){
             baseResponse.setData(productDTOS);
             baseResponse.setTotalPages(productDTOS.getTotalPages());
+            baseResponse.setMesssage("Successfull");
+            baseResponse.setStatusCode(200);
+            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }else{
+            baseResponse.setData(null);
+            baseResponse.setMesssage("Not Found");
+            baseResponse.setStatusCode(400);
+            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/getAllType")
+    public ResponseEntity<?> getAllType(){
+        BaseResponse baseResponse = new BaseResponse();
+        List<String> types = productServiceImp.findAllType();
+        if(!types.isEmpty()){
+            baseResponse.setData(types);
+            baseResponse.setMesssage("Successfull");
+            baseResponse.setStatusCode(200);
+            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }else{
+            baseResponse.setData(null);
+            baseResponse.setMesssage("Not Found");
+            baseResponse.setStatusCode(400);
+            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/getAllProductByType")
+    public ResponseEntity<?> getAllProductByType(@RequestParam String type){
+        BaseResponse baseResponse = new BaseResponse();
+        List<ProductDTO> productDTOS = productServiceImp.findByType(type);
+        if(!productDTOS.isEmpty()){
+            baseResponse.setData(productDTOS);
             baseResponse.setMesssage("Successfull");
             baseResponse.setStatusCode(200);
             return  new ResponseEntity<>(baseResponse, HttpStatus.OK);

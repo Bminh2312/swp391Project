@@ -16,10 +16,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Optional;
-import java.util.TimeZone;
+import java.util.*;
 
 @Service
 public class ProductService implements ProductServiceImp {
@@ -146,6 +143,23 @@ public class ProductService implements ProductServiceImp {
                 productEntity.getUpdatedAt(),
                 productEntity.getStatus()
         ));
+    }
+
+    @Override
+    public List<ProductDTO> findByType(String type) {
+        List<ProductEntity> productEntities = productRepository.findByType(type);
+        List<ProductDTO> productDTOS = new ArrayList<>();
+        for (ProductEntity productEntity : productEntities) {
+            ProductDTO productDTO = mapProductToDTO(productEntity);
+            productDTOS.add(productDTO);
+        }
+        return productDTOS;
+    }
+
+    @Override
+    public List<String> findAllType() {
+        return productRepository.findAllType();
+
     }
 
     public  ProductDTO mapProductToDTO(ProductEntity productEntity) {
