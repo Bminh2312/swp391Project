@@ -9,6 +9,7 @@ import com.swp391.project.service.impl.ProductServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/product")
 @CrossOrigin(origins = {"http://localhost:8082", "https://furniture-quote.azurewebsites.net",
-        "https://eclectic-belekoy-79d097.netlify.app/", "http://localhost:3000"}, allowCredentials = "true",
-        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
+        "https://eclectic-belekoy-79d097.netlify.app/", "http://localhost:3000"}, allowCredentials = "true", allowedHeaders = "*"
+        )
 public class ProductController {
 
     @Autowired
@@ -51,6 +52,8 @@ public class ProductController {
                                     @RequestParam("length") double length,
                                     @RequestParam("width") double width,
                                     @RequestParam("pricePerM2") double pricePerM2){
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Access-Control-Allow-Origin", "*");
 
         boolean check = productServiceImp.create(name,description,type,height,length,width,pricePerM2,fileImg);
         BaseResponse baseResponse = new BaseResponse();
