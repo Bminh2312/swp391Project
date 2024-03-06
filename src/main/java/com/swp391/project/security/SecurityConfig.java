@@ -57,6 +57,7 @@ public class SecurityConfig {
                                 .requestMatchers("/login/**","/designStyle/**","/order/project/**","/project/**").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/v3/**").permitAll()
                                 .requestMatchers("/product/**","/rawMaterial/**").hasAnyRole("ADMIN","USER","STAFF")
+                                .requestMatchers("/room/**").hasAnyRole("ADMIN","USER","STAFF")
                                 .requestMatchers("/quoteDetail/**").hasAnyRole("ADMIN","STAFF")
                                 .requestMatchers(HttpMethod.GET,"/quoteDetail/**").hasRole("USER")
                                 .requestMatchers(HttpMethod.POST,"/quoteDetail/**").hasRole("USER")

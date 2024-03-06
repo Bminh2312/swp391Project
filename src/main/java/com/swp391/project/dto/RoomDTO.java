@@ -1,7 +1,10 @@
 package com.swp391.project.dto;
 
+import lombok.Data;
+
 import java.util.Date;
 
+@Data
 public class RoomDTO {
     private int id;
     private String name;
