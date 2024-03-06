@@ -109,7 +109,7 @@ public class UserController {
         return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping(value = "/deleteUser")
+    @DeleteMapping(value = "/deleteUser")
     public ResponseEntity<?> deleteUser(@RequestParam int userId){
         BaseResponse baseResponse = new BaseResponse();
         boolean check = userDetailServiceImp.setStatusUser(userId,"INACTIVE");
