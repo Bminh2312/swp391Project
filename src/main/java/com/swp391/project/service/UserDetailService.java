@@ -5,18 +5,19 @@ import com.swp391.project.dto.UserDetailDTO;
 import com.swp391.project.dto.UserWithProjectsDTO;
 import com.swp391.project.entity.OrderProjectEntity;
 import com.swp391.project.entity.ProjectEntity;
+import com.swp391.project.entity.RoomEntity;
 import com.swp391.project.entity.UserEntity;
 import com.swp391.project.repository.OrderProjectRepository;
 import com.swp391.project.repository.UserRepository;
 import com.swp391.project.service.impl.UserDetailServiceImp;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -121,25 +122,23 @@ public class UserDetailService implements UserDetailServiceImp {
     }
 
     @Override
-    public Boolean setStatusUser(int userId, String status) {
-        Optional<UserEntity> userOptional = userRepository.findById(userId);
-
-        if (userOptional.isPresent()) {
-            UserEntity user = userOptional.get();
-
-            switch (status.toUpperCase()) {
-                case "ACTIVE":
-                    user.setStatus("ACTIVE");
-                    break;
-                case "INACTIVE":
-                    user.setStatus("INACTIVE");
-                    break;
-                default:
-                    return false;
+    public Boolean delete(int userId, String status) {
+        try {
+            TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+            Optional<UserEntity> userEntity = userRepository.findById(userId);
+            if (userEntity.isPresent()) {
+                // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
+                Calendar calendar = Calendar.getInstance(timeZone);
+                Date currentTime = calendar.getTime();
+                userEntity.get().setStatus(status);
+                userEntity.get().setUpdatedAt(currentTime);
+                userRepository.save(userEntity.get());
+                return true;
+            }else{
+                return false;
             }
-            userRepository.save(user);
-            return true;
-        } else {
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             return false;
         }
     }

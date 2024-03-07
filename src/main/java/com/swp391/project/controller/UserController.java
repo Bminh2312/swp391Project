@@ -110,9 +110,10 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/deleteUser")
-    public ResponseEntity<?> deleteUser(@RequestParam int userId){
+    public ResponseEntity<?> deleteUser(@RequestParam int userId,
+                                        @RequestParam @Schema(description = "Status", allowableValues = {"ACTIVE", "INACTIVE"}) String status){
         BaseResponse baseResponse = new BaseResponse();
-        boolean check = userDetailServiceImp.setStatusUser(userId,"INACTIVE");
+        boolean check = userDetailServiceImp.delete(userId,status);
         if(check){
             baseResponse.setMesssage("Delete successful");
             baseResponse.setStatusCode(200);
@@ -125,20 +126,5 @@ public class UserController {
         return new ResponseEntity<>(baseResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @PutMapping(value = "/updateStatusUser")
-    public ResponseEntity<?> updateStatusUser(@RequestParam int userId,
-                                              @RequestParam @Schema(description = "Status", allowableValues = {"ACTIVE", "INACTIVE"}) String status){
-        BaseResponse baseResponse = new BaseResponse();
-        boolean check = userDetailServiceImp.setStatusUser(userId, status);
-        if(check){
-            baseResponse.setMesssage("Delete successful");
-            baseResponse.setStatusCode(200);
-            baseResponse.setData("True");
-            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
-        }
-        baseResponse.setMesssage("Set status fail");
-        baseResponse.setStatusCode(200);
-        baseResponse.setData("False");
-        return new ResponseEntity<>(baseResponse, HttpStatus.BAD_REQUEST);
-    }
+
 }

@@ -18,6 +18,6 @@ public interface UserDetailServiceImp {
 
     Boolean updateUser(int userId, String fullName, String phone, String address, MultipartFile avt);
 
-    Boolean setStatusUser(int userId,String status);
+    Boolean delete(int userId,String status);
 
 }
