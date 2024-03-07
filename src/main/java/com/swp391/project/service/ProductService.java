@@ -179,25 +179,23 @@ public class ProductService implements ProductServiceImp {
     }
 
     @Override
-    public boolean setStatusProduct(int productId, String status) {
-        Optional<ProductEntity> productOptional = productRepository.findById(productId);
-
-        if (productOptional.isPresent()) {
-            ProductEntity user = productOptional.get();
-
-            switch (status.toUpperCase()) {
-                case "ACTIVE":
-                    user.setStatus("ACTIVE");
-                    break;
-                case "INACTIVE":
-                    user.setStatus("INACTIVE");
-                    break;
-                default:
-                    return false;
+    public boolean delete(int productId, String status) {
+        try {
+            TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+            Optional<ProductEntity> productEntity = productRepository.findById(productId);
+            if (productEntity.isPresent()) {
+                // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
+                Calendar calendar = Calendar.getInstance(timeZone);
+                Date currentTime = calendar.getTime();
+                productEntity.get().setStatus(status);
+                productEntity.get().setUpdatedAt(currentTime);
+                productRepository.save(productEntity.get());
+                return true;
+            }else{
+                return false;
             }
-            productRepository.save(user);
-            return true;
-        } else {
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             return false;
         }
     }

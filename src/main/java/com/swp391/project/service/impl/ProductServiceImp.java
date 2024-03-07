@@ -33,5 +33,5 @@ public interface ProductServiceImp {
 
     List<String> findAllType();
 
-    boolean setStatusProduct(int ProductId, String Status);
+    boolean delete(int ProductId, String Status);
 }

@@ -131,17 +131,17 @@ public class ProductController {
         return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
 
     }
-    @PutMapping(value = "/setStatusProduct")
+    @DeleteMapping(value = "/deleteProduct")
     public ResponseEntity<?> updateStatusProduct(@RequestParam int productId,
                                                  @RequestParam @Schema(description = "Status", allowableValues = {"ACTIVE", "INACTIVE"}) String status){
         BaseResponse baseResponse = new BaseResponse();
-        boolean check = productServiceImp.setStatusProduct(productId, status);
+        boolean check = productServiceImp.delete(productId, status);
         if(check){
-            baseResponse.setMesssage("Set status successful");
+            baseResponse.setMesssage("Delete successful");
             baseResponse.setStatusCode(200);
             baseResponse.setData("True");
         }
-        baseResponse.setMesssage("Set status fail");
+        baseResponse.setMesssage("Delete fail");
         baseResponse.setStatusCode(400);
         baseResponse.setData("False");
         return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
