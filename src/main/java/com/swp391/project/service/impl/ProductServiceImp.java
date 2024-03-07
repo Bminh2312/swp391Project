@@ -32,4 +32,6 @@ public interface ProductServiceImp {
     List<ProductDTO> findByType(String type);
 
     List<String> findAllType();
+
+    boolean setStatusProduct(int ProductId, String Status);
 }

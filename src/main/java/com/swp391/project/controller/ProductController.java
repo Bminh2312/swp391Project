@@ -6,6 +6,8 @@ import com.swp391.project.payload.request.DesignStypeRequest;
 import com.swp391.project.payload.request.ProductRequest;
 import com.swp391.project.payload.response.BaseResponse;
 import com.swp391.project.service.impl.ProductServiceImp;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -128,5 +130,20 @@ public class ProductController {
         baseResponse.setData("False");
         return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
 
+    }
+    @PutMapping(value = "/setStatusProduct")
+    public ResponseEntity<?> updateStatusProduct(@RequestParam int productId,
+                                                 @RequestParam @Schema(description = "Status", allowableValues = {"ACTIVE", "INACTIVE"}) String status){
+        BaseResponse baseResponse = new BaseResponse();
+        boolean check = productServiceImp.setStatusProduct(productId, status);
+        if(check){
+            baseResponse.setMesssage("Set status successful");
+            baseResponse.setStatusCode(200);
+            baseResponse.setData("True");
+        }
+        baseResponse.setMesssage("Set status fail");
+        baseResponse.setStatusCode(400);
+        baseResponse.setData("False");
+        return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
     }
 }

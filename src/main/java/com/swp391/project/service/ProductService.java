@@ -177,4 +177,28 @@ public class ProductService implements ProductServiceImp {
         productDTO.setStatus(productEntity.getStatus());
         return productDTO;
     }
+
+    @Override
+    public boolean setStatusProduct(int productId, String status) {
+        Optional<ProductEntity> productOptional = productRepository.findById(productId);
+
+        if (productOptional.isPresent()) {
+            ProductEntity user = productOptional.get();
+
+            switch (status.toUpperCase()) {
+                case "ACTIVE":
+                    user.setStatus("ACTIVE");
+                    break;
+                case "INACTIVE":
+                    user.setStatus("INACTIVE");
+                    break;
+                default:
+                    return false;
+            }
+            productRepository.save(user);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
