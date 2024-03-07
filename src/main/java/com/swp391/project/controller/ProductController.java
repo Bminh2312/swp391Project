@@ -132,7 +132,7 @@ public class ProductController {
 
     }
     @DeleteMapping(value = "/deleteProduct")
-    public ResponseEntity<?> updateStatusProduct(@RequestParam int productId,
+    public ResponseEntity<?> delete(@RequestParam int productId,
                                                  @RequestParam @Schema(description = "Status", allowableValues = {"ACTIVE", "INACTIVE"}) String status){
         BaseResponse baseResponse = new BaseResponse();
         boolean check = productServiceImp.delete(productId, status);
