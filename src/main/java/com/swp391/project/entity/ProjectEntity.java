@@ -22,7 +22,7 @@ public class ProjectEntity {
     @Column(name = "type")
     private String type;
 
-    @Column(name = "location",columnDefinition = "NVARCHAR(255)")
+    @Column(name = "location",columnDefinition = "TEXT")
     private String location;
 
     @Column(name = "is_sample")

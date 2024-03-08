@@ -208,7 +208,7 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
     }
 
     @Override
-    public int updateQuoteForProductByNoteForUser(int idQuoteDetail, int idProduct, int quantityChange, double priceChange, String note) {
+    public int updateQuoteForProductByNoteForUser(int idQuoteDetail, int quantityChange, double priceChange, String note) {
         try {
             TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
 
@@ -236,7 +236,7 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
                 }
 
                 // Cập nhật thông tin cho QuoteDetailEntity hiện tại
-                Optional<ProductEntity> productEntityOptional = productRepository.findById(idProduct);
+                Optional<ProductEntity> productEntityOptional = productRepository.findById(quoteDetailEntity.getProduct().getId());
                 if (productEntityOptional.isPresent()) {
                     quoteDetailEntity.setProduct(productEntityOptional.get());
                     quoteDetailEntity.setQuantity(quantityChange);

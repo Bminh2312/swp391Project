@@ -30,7 +30,7 @@ public class ProjectService implements ProjectServiceImp {
     private UserRepository userRepository;
 
     @Override
-    public boolean create(ProjectRequest projectRequest , int userId, String status) {
+    public int create(ProjectRequest projectRequest , int userId, String status) {
         try{
             Optional<DesignStyleEntity> designStyleEntity = designStyleRepository.findById(projectRequest.getDesignStyleId());
             if(designStyleEntity.isPresent()){
@@ -49,15 +49,15 @@ public class ProjectService implements ProjectServiceImp {
                 projectEntity.setStatus(status);
                 projectEntity.setCreatedAt(currentTime);
                 projectEntity.setUpdatedAt(currentTime);
-                projectRepository.save(projectEntity);
-                return true;
+                ProjectEntity projectEntityRespone =  projectRepository.save(projectEntity);
+                return projectEntityRespone.getId();
             }
         }catch (Exception e){
             System.out.println(e.getMessage());
-            return false;
+            return 0;
         }
 
-        return false;
+        return 0;
     }
 
 
