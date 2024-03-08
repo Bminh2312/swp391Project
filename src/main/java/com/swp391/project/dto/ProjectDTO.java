@@ -1,5 +1,6 @@
 package com.swp391.project.dto;
 
+import com.swp391.project.entity.ProjectEntity;
 import lombok.Data;
 
 import java.util.Date;
@@ -16,3 +17,4 @@ public class ProjectDTO {
     private Date updatedAt;
     private String status;
 }
+

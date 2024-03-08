@@ -72,9 +72,9 @@ public class QuoteDetailController {
 
     }
 
-    @PutMapping(value = "/product/updateQuoteDetailByNote")
+    @PutMapping(value = "/product/updateQuoteDetailByNoteForStaff")
     public ResponseEntity<?> updateQuoteDetailByNote(@RequestParam int quoteDetailId, @RequestParam(required = false) int productId, @RequestParam double price, @RequestParam int quantityChange){
-        boolean check = quoteDetailServiceImp.updateQuoteForProductByNote(quoteDetailId,productId,price,quantityChange);
+        boolean check = quoteDetailServiceImp.updateQuoteForProductByNoteForStaff(quoteDetailId,productId,price,quantityChange);
         BaseResponse baseResponse = new BaseResponse();
         if(check){
             baseResponse.setStatusCode(200);
@@ -88,6 +88,24 @@ public class QuoteDetailController {
         return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
 
     }
+
+    @PutMapping(value = "/product/updateQuoteDetailByNoteForUser")
+    public ResponseEntity<?> updateQuoteDetailByNoteForUser(@RequestParam int quoteDetailId, @RequestParam(required = false) int productId, @RequestParam double price, @RequestParam int quantityChange, @RequestParam String note){
+        int check = quoteDetailServiceImp.updateQuoteForProductByNoteForUser(quoteDetailId,productId,quantityChange,price,note);
+        BaseResponse baseResponse = new BaseResponse();
+        if(check != 0){
+            baseResponse.setStatusCode(200);
+            baseResponse.setMesssage("Update Successfull");
+            baseResponse.setData("quoteId: " + check);
+            return new ResponseEntity<>(baseResponse,HttpStatus.OK);
+        }
+        baseResponse.setStatusCode(400);
+        baseResponse.setMesssage("Update Failed");
+        baseResponse.setData("False");
+        return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
+
+    }
+
 
     @PutMapping(value = "/rawMaterial/updateQuoteDetail")
     public ResponseEntity<?> updateQuoteDetailForRaw(@RequestParam int quoteDetailId, @RequestParam(required = false) int rawMaterialId, @RequestParam double area ){
@@ -114,7 +132,7 @@ public class QuoteDetailController {
         QuoteDetailDTO quoteDetailDTO = quoteDetailServiceImp.findById(id);
         if(quoteDetailDTO == null){
             baseResponse.setMesssage("Not Found");
-            baseResponse.setStatusCode(200);
+            baseResponse.setStatusCode(400);
             baseResponse.setData(null);
             return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
         }else{

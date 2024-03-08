@@ -28,8 +28,9 @@ public class ProjectEntity {
     @Column(name = "is_sample")
     private boolean isSample;
 
-    @OneToMany(mappedBy = "project")
-    private List<OrderProjectEntity> orderProject;
+    @ManyToOne()
+    @JoinColumn(name = "id_user")
+    private UserEntity user;
 
     @OneToMany(mappedBy = "projectRoom")
     private List<RoomEntity> room;

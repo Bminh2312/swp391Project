@@ -4,10 +4,9 @@ import com.google.api.gax.rpc.NotFoundException;
 import com.swp391.project.dto.ProjectDTO;
 import com.swp391.project.dto.UserDetailDTO;
 import com.swp391.project.dto.UserWithProjectsDTO;
-import com.swp391.project.entity.OrderProjectEntity;
 import com.swp391.project.entity.ProjectEntity;
 import com.swp391.project.entity.UserEntity;
-import com.swp391.project.repository.OrderProjectRepository;
+//import com.swp391.project.repository.OrderProjectRepository;
 import com.swp391.project.repository.UserRepository;
 import com.swp391.project.service.impl.UserDetailServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,8 @@ public class UserDetailService implements UserDetailServiceImp {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private OrderProjectRepository orderProjectRepository;
+//    @Autowired
+//    private OrderProjectRepository orderProjectRepository;
 
     @Autowired
     private FireBaseStorageService fireBaseStorageService;
@@ -56,23 +55,23 @@ public class UserDetailService implements UserDetailServiceImp {
         ));
     }
 
-    public UserWithProjectsDTO getUserWithProjects(int userId) {
-        UserEntity userEntity = userRepository.findById(userId).orElse(null);
-        if (userEntity == null) {
-            // Xử lý trường hợp không tìm thấy người dùng
-            return null;
-        }
-
-        List<OrderProjectEntity> orderProjects = orderProjectRepository.findByUserId(userId);
-
-        UserWithProjectsDTO userWithProjectsDTO = new UserWithProjectsDTO();
-        userWithProjectsDTO.setUser(mapUserToDTO(userEntity));
-        userWithProjectsDTO.setProjects(orderProjects.stream()
-                .map(orderProject -> mapProjectToDTO(orderProject.getProject()))
-                .collect(Collectors.toList()));
-
-        return userWithProjectsDTO;
-    }
+//    public UserWithProjectsDTO getUserWithProjects(int userId) {
+//        UserEntity userEntity = userRepository.findById(userId).orElse(null);
+//        if (userEntity == null) {
+//            // Xử lý trường hợp không tìm thấy người dùng
+//            return null;
+//        }
+//
+//        List<OrderProjectEntity> orderProjects = orderProjectRepository.findByUserId(userId);
+//
+//        UserWithProjectsDTO userWithProjectsDTO = new UserWithProjectsDTO();
+//        userWithProjectsDTO.setUser(mapUserToDTO(userEntity));
+//        userWithProjectsDTO.setProjects(orderProjects.stream()
+//                .map(orderProject -> mapProjectToDTO(orderProject.getProject()))
+//                .collect(Collectors.toList()));
+//
+//        return userWithProjectsDTO;
+//    }
 
     private UserDetailDTO mapUserToDTO(UserEntity userEntity) {
         UserDetailDTO userDTO = new UserDetailDTO();

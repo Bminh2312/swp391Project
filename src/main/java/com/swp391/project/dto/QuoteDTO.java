@@ -12,12 +12,13 @@ import java.util.List;
 @NoArgsConstructor
 public class QuoteDTO {
     private int id;
-    private List<QuoteDetailDTO> quoteDetailDTOList;
-    private int projectId;
-    private int roomId;
+    private List<QuoteDetailDTO> quoteDetailDTOs;
+    private ProjectDTO projectDTO;
+    private RoomDTO roomDTO;
     private Date quoteDate;
     private double area;
     private Date createdAt;
     private Date updatedAt;
     private String status;
+
 }

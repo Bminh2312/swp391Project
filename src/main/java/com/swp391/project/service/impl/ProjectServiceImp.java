@@ -4,7 +4,7 @@ import com.swp391.project.dto.ProjectDTO;
 import com.swp391.project.payload.request.ProjectRequest;
 
 public interface ProjectServiceImp {
-    boolean create(ProjectRequest projectRequest);
+    boolean create(ProjectRequest projectRequest, int userId);
 
     boolean update(ProjectRequest projectRequest,int projectId);
 

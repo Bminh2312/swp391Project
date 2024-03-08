@@ -3,10 +3,12 @@ package com.swp391.project.service;
 import com.swp391.project.dto.ProjectDTO;
 import com.swp391.project.entity.DesignStyleEntity;
 import com.swp391.project.entity.ProjectEntity;
+import com.swp391.project.entity.UserEntity;
 import com.swp391.project.payload.request.ProjectRequest;
 import com.swp391.project.repository.DesignStyleRepository;
 import com.swp391.project.repository.ProjectRepository;
 
+import com.swp391.project.repository.UserRepository;
 import com.swp391.project.service.impl.ProjectServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,8 +27,11 @@ public class ProjectService implements ProjectServiceImp {
     @Autowired
     private DesignStyleRepository designStyleRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
-    public boolean create(ProjectRequest projectRequest) {
+    public boolean create(ProjectRequest projectRequest , int userId) {
         try{
             Optional<DesignStyleEntity> designStyleEntity = designStyleRepository.findById(projectRequest.getDesignStyleId());
             if(designStyleEntity.isPresent()){
@@ -36,6 +41,8 @@ public class ProjectService implements ProjectServiceImp {
                 Calendar calendar = Calendar.getInstance(timeZone);
                 Date currentTime = calendar.getTime();
                 ProjectEntity projectEntity = new ProjectEntity();
+                Optional<UserEntity> userEntity = userRepository.findById(userId);
+                userEntity.ifPresent(projectEntity::setUser);
                 projectEntity.setName(projectRequest.getName());
                 projectEntity.setLocation(projectRequest.getLocation());
                 projectEntity.setType(projectRequest.getType());

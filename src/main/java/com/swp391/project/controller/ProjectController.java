@@ -20,9 +20,9 @@ public class ProjectController {
     private ProjectServiceImp projectImp;
 
     @PostMapping(value = "/createProject")
-    public ResponseEntity<?> create( @RequestBody ProjectRequest projectRequest){
+    public ResponseEntity<?> create( @RequestBody ProjectRequest projectRequest, @RequestParam int userId){
         BaseResponse baseResponse = new BaseResponse();
-        boolean check = projectImp.create(projectRequest);
+        boolean check = projectImp.create(projectRequest,userId);
         if(check){
             baseResponse.setStatusCode(201);
             baseResponse.setMesssage("Create Successfull");
