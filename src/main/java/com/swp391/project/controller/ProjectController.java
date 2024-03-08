@@ -24,16 +24,16 @@ public class ProjectController {
     @PostMapping(value = "/createProject")
     public ResponseEntity<?> create( @RequestBody ProjectRequest projectRequest, @RequestParam int userId, @RequestParam String status){
         BaseResponse baseResponse = new BaseResponse();
-        boolean check = projectImp.create(projectRequest,userId,status);
-        if(check){
+        int check = projectImp.create(projectRequest,userId,status);
+        if(check != 0){
             baseResponse.setStatusCode(201);
             baseResponse.setMesssage("Create Successfull");
-            baseResponse.setData("True");
+            baseResponse.setData(check);
             return new ResponseEntity<>(baseResponse, HttpStatus.OK);
         }
         baseResponse.setStatusCode(200);
         baseResponse.setMesssage("Create Failed");
-        baseResponse.setData("False");
+        baseResponse.setData(check);
         return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
 
     }

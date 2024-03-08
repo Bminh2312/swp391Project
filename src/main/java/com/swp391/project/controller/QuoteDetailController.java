@@ -91,17 +91,17 @@ public class QuoteDetailController {
 
     @PutMapping(value = "/product/updateQuoteDetailByNoteForUser")
     public ResponseEntity<?> updateQuoteDetailByNoteForUser(@RequestParam int quoteDetailId, @RequestParam(required = false) int productId, @RequestParam double price, @RequestParam int quantityChange, @RequestParam String note){
-        int check = quoteDetailServiceImp.updateQuoteForProductByNoteForUser(quoteDetailId,productId,quantityChange,price,note);
+        int check = quoteDetailServiceImp.updateQuoteForProductByNoteForUser(quoteDetailId,quantityChange,price,note);
         BaseResponse baseResponse = new BaseResponse();
         if(check != 0){
             baseResponse.setStatusCode(200);
             baseResponse.setMesssage("Update Successfull");
-            baseResponse.setData("quoteId: " + check);
+            baseResponse.setData(check);
             return new ResponseEntity<>(baseResponse,HttpStatus.OK);
         }
         baseResponse.setStatusCode(400);
         baseResponse.setMesssage("Update Failed");
-        baseResponse.setData("False");
+        baseResponse.setData(check);
         return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
 
     }

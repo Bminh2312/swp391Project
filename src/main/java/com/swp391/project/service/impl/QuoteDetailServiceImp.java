@@ -16,7 +16,7 @@ public interface QuoteDetailServiceImp {
 
     boolean updateQuoteForProductByNoteForStaff(int idQuoteDetail, int idProduct, double priceChange,int quantity);
 
-    int updateQuoteForProductByNoteForUser(int idQuoteDetail, int idProduct, int quantity, double priceChange, String note);
+    int updateQuoteForProductByNoteForUser(int idQuoteDetail, int quantity, double priceChange, String note);
 
     boolean updateQuoteForRaw(int idQuoteDetail, int idRawMaterial, double area);
 

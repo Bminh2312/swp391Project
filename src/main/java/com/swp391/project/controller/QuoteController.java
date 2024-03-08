@@ -58,16 +58,16 @@ public class QuoteController {
     @PostMapping(value = "/createQuoteForProject")
     public ResponseEntity<?> createQuoteForProject(@RequestBody QuoteRequest quoteRequest , @RequestParam String status){
         BaseResponse baseResponse = new BaseResponse();
-        boolean check = quoteServiceImp.create(quoteRequest,status);
-        if(check){
+        int check = quoteServiceImp.create(quoteRequest,status);
+        if(check != 0){
             baseResponse.setStatusCode(201);
             baseResponse.setMesssage("Create Successfull");
-            baseResponse.setData("True");
+            baseResponse.setData(check);
             return new ResponseEntity<>(baseResponse, HttpStatus.OK);
         }
         baseResponse.setStatusCode(200);
         baseResponse.setMesssage("Create Failed");
-        baseResponse.setData("False");
+        baseResponse.setData(check);
         return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
 
     }

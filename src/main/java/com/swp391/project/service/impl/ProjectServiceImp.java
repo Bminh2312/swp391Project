@@ -7,7 +7,7 @@ import com.swp391.project.payload.request.ProjectRequest;
 import java.util.List;
 
 public interface ProjectServiceImp {
-    boolean create(ProjectRequest projectRequest, int userId, String status);
+    int create(ProjectRequest projectRequest, int userId, String status);
 
     boolean update(ProjectRequest projectRequest,int projectId);
 

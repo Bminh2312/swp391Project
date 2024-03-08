@@ -31,7 +31,7 @@ public class QuoteService implements QuoteServiceImp {
     private QuoteDetailRepository quoteDetailRepository;
 
     @Override
-    public boolean create(QuoteRequest quoteRequest, String status) {
+    public int create(QuoteRequest quoteRequest, String status) {
         try{
             Optional<ProjectEntity> projectEntity = projectRepository.findById(quoteRequest.getProjectId());
             Optional<RoomEntity> roomEntity = roomRepository.findById(quoteRequest.getRoomId());
@@ -44,18 +44,19 @@ public class QuoteService implements QuoteServiceImp {
                 QuoteEntity quoteEntity = new QuoteEntity();
                 quoteEntity.setProjectQuote(projectEntity.get());
                 quoteEntity.setRoomQuote(roomEntity.get());
+                quoteEntity.setArea(quoteRequest.getArea());
                 quoteEntity.setQuoteDate(currentTime);
                 quoteEntity.setCreatedAt(currentTime);
                 quoteEntity.setUpdatedAt(currentTime);
                 quoteEntity.setStatus(status);
-                quoteRepository.save(quoteEntity);
-                return true;
+                QuoteEntity quoteEntityRespone = quoteRepository.save(quoteEntity);
+                return quoteEntityRespone.getId();
             }else {
-                return false;
+                return 0;
             }
         }catch (Exception e){
             System.out.println(e.getMessage());
-            return false;
+            return 0;
         }
 
     }
@@ -82,6 +83,10 @@ public class QuoteService implements QuoteServiceImp {
                 quoteEntity.get().setUpdatedAt(currentTime);
                 if(quoteEntity.get().getStatus()!= null && !status.equals(quoteEntity.get().getStatus())){
                     quoteEntity.get().setStatus(status);
+                }
+
+                if((quoteRequest.getArea() != quoteEntity.get().getArea())){
+                    quoteEntity.get().setArea(quoteRequest.getArea());
                 }
                 quoteRepository.save(quoteEntity.get());
                 return true;
