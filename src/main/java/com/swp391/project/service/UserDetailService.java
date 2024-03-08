@@ -8,6 +8,7 @@ import com.swp391.project.entity.ProjectEntity;
 import com.swp391.project.entity.UserEntity;
 //import com.swp391.project.repository.OrderProjectRepository;
 import com.swp391.project.repository.UserRepository;
+import com.swp391.project.service.impl.ProjectServiceImp;
 import com.swp391.project.service.impl.UserDetailServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,8 +25,8 @@ public class UserDetailService implements UserDetailServiceImp {
     @Autowired
     private UserRepository userRepository;
 
-//    @Autowired
-//    private OrderProjectRepository orderProjectRepository;
+    @Autowired
+    private ProjectServiceImp projectServiceImp;
 
     @Autowired
     private FireBaseStorageService fireBaseStorageService;
@@ -55,27 +56,28 @@ public class UserDetailService implements UserDetailServiceImp {
         ));
     }
 
-//    public UserWithProjectsDTO getUserWithProjects(int userId) {
-//        UserEntity userEntity = userRepository.findById(userId).orElse(null);
-//        if (userEntity == null) {
-//            // Xử lý trường hợp không tìm thấy người dùng
-//            return null;
-//        }
-//
-//        List<OrderProjectEntity> orderProjects = orderProjectRepository.findByUserId(userId);
-//
-//        UserWithProjectsDTO userWithProjectsDTO = new UserWithProjectsDTO();
-//        userWithProjectsDTO.setUser(mapUserToDTO(userEntity));
-//        userWithProjectsDTO.setProjects(orderProjects.stream()
-//                .map(orderProject -> mapProjectToDTO(orderProject.getProject()))
-//                .collect(Collectors.toList()));
-//
-//        return userWithProjectsDTO;
-//    }
+    @Override
+    public UserWithProjectsDTO getUserWithProjects(String status, int userId) {
+        UserEntity userEntity = userRepository.findById(userId).orElse(null);
+        if (userEntity == null) {
+            // Xử lý trường hợp không tìm thấy người dùng
+            return null;
+        }
+
+        List<ProjectDTO> projectDTOS = projectServiceImp.findByStatusAndUserId(status,userId);
+
+        UserWithProjectsDTO userWithProjectsDTO = new UserWithProjectsDTO();
+        userWithProjectsDTO.setUser(mapUserToDTO(userEntity));
+        userWithProjectsDTO.setProjects(projectDTOS);
+
+        return userWithProjectsDTO;
+    }
+
 
     private UserDetailDTO mapUserToDTO(UserEntity userEntity) {
         UserDetailDTO userDTO = new UserDetailDTO();
         // Thực hiện ánh xạ các trường từ entity sang DTO
+        userDTO.setId(userEntity.getId());
         userDTO.setFullName(userEntity.getFullName());
         userDTO.setAvt(userEntity.getAvt());
         userDTO.setEmail(userEntity.getEmail());

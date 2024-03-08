@@ -66,6 +66,23 @@ public class UserController {
         }
     }
 
+    @GetMapping("/getUserWithProjects")
+    public ResponseEntity<?> getUserWithProjects(@RequestParam String status, @RequestParam int id){
+        BaseResponse baseResponse = new BaseResponse();
+        UserWithProjectsDTO userWithProjectsDTO = userDetailServiceImp.getUserWithProjects(status,id);
+        if(userWithProjectsDTO != null){
+            baseResponse.setData(userWithProjectsDTO);
+            baseResponse.setMesssage("Successfull");
+            baseResponse.setStatusCode(200);
+            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }else{
+            baseResponse.setData(null);
+            baseResponse.setMesssage("Not Found");
+            baseResponse.setStatusCode(400);
+            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+    }
+
 //    @GetMapping("/getAllProjectByUserId")
 //    public ResponseEntity<?> getAllProjectByUserId(@RequestParam int idUser){
 //        BaseResponse baseResponse = new BaseResponse();
