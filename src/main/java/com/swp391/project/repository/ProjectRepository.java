@@ -10,6 +10,8 @@ import java.util.Optional;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<ProjectEntity,Integer> {
-    Optional<ProjectEntity> findByStatus(String status);
+    List<ProjectEntity> findByStatus(String status);
+
+    List<ProjectEntity> findByStatusAndUserId(String status, int userId);
 
 }

@@ -14,7 +14,7 @@ public interface UserDetailServiceImp {
 
     Page<UserDetailDTO> findAll(Pageable pageable);
 
-//    UserWithProjectsDTO getUserWithProjects(int userId);
+    UserWithProjectsDTO getUserWithProjects(String status, int userId);
 
     Boolean updateUser(int userId, String fullName, String phone, String address, MultipartFile avt);
 

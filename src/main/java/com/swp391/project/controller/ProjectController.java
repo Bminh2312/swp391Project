@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/project")
 @CrossOrigin(origins = {"http://localhost:8082", "https://furniture-quote.azurewebsites.net",
@@ -20,9 +22,9 @@ public class ProjectController {
     private ProjectServiceImp projectImp;
 
     @PostMapping(value = "/createProject")
-    public ResponseEntity<?> create( @RequestBody ProjectRequest projectRequest, @RequestParam int userId){
+    public ResponseEntity<?> create( @RequestBody ProjectRequest projectRequest, @RequestParam int userId, @RequestParam String status){
         BaseResponse baseResponse = new BaseResponse();
-        boolean check = projectImp.create(projectRequest,userId);
+        boolean check = projectImp.create(projectRequest,userId,status);
         if(check){
             baseResponse.setStatusCode(201);
             baseResponse.setMesssage("Create Successfull");
@@ -39,6 +41,23 @@ public class ProjectController {
     @PutMapping(value = "/updateProject")
     public ResponseEntity<?> update(@RequestBody ProjectRequest projectRequest, @RequestParam int projectId){
         boolean check = projectImp.update(projectRequest,projectId);
+        BaseResponse baseResponse = new BaseResponse();
+        if(check){
+            baseResponse.setStatusCode(200);
+            baseResponse.setMesssage("Update Successfull");
+            baseResponse.setData("True");
+            return new ResponseEntity<>(baseResponse,HttpStatus.OK);
+        }
+        baseResponse.setStatusCode(400);
+        baseResponse.setMesssage("Update Failed");
+        baseResponse.setData("False");
+        return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
+
+    }
+
+    @PutMapping(value = "/updateProjectByStatus")
+    public ResponseEntity<?> update(@RequestParam int projectId, @RequestParam String status){
+        boolean check = projectImp.updateProjectByStatus(projectId, status);
         BaseResponse baseResponse = new BaseResponse();
         if(check){
             baseResponse.setStatusCode(200);
@@ -70,19 +89,19 @@ public class ProjectController {
         }
     }
 
-    @GetMapping("/getProjectByStatus")
+    @GetMapping("/getAllProjectByStatus")
     public ResponseEntity<?> getProjectById(@RequestParam String status){
         BaseResponse baseResponse = new BaseResponse();
         baseResponse.setMesssage("SucessFull");
         baseResponse.setStatusCode(200);
-        ProjectDTO projectDTO = projectImp.findByStatus(status);
-        if(projectDTO == null){
+        List<ProjectDTO> projectDTOS = projectImp.findByStatus(status);
+        if(projectDTOS == null){
             baseResponse.setMesssage("Not Found");
             baseResponse.setStatusCode(200);
             baseResponse.setData(null);
             return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
         }else{
-            baseResponse.setData(projectDTO);
+            baseResponse.setData(projectDTOS);
             return new ResponseEntity<>(baseResponse, HttpStatus.OK);
         }
 
