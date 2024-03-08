@@ -20,9 +20,9 @@ public class ProjectController {
     private ProjectServiceImp projectImp;
 
     @PostMapping(value = "/createProject")
-    public ResponseEntity<?> create( @RequestBody ProjectRequest projectRequest){
+    public ResponseEntity<?> create( @RequestBody ProjectRequest projectRequest, @RequestParam int userId){
         BaseResponse baseResponse = new BaseResponse();
-        boolean check = projectImp.create(projectRequest);
+        boolean check = projectImp.create(projectRequest,userId);
         if(check){
             baseResponse.setStatusCode(201);
             baseResponse.setMesssage("Create Successfull");
@@ -59,6 +59,23 @@ public class ProjectController {
         baseResponse.setMesssage("SucessFull");
         baseResponse.setStatusCode(200);
         ProjectDTO projectDTO = projectImp.findById(id);
+        if(projectDTO == null){
+            baseResponse.setMesssage("Not Found");
+            baseResponse.setStatusCode(200);
+            baseResponse.setData(null);
+            return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
+        }else{
+            baseResponse.setData(projectDTO);
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/getProjectByStatus")
+    public ResponseEntity<?> getProjectById(@RequestParam String status){
+        BaseResponse baseResponse = new BaseResponse();
+        baseResponse.setMesssage("SucessFull");
+        baseResponse.setStatusCode(200);
+        ProjectDTO projectDTO = projectImp.findByStatus(status);
         if(projectDTO == null){
             baseResponse.setMesssage("Not Found");
             baseResponse.setStatusCode(200);

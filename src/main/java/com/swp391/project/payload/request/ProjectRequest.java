@@ -17,6 +17,4 @@ public class ProjectRequest {
     private String type;
     private boolean isSample;
     private int designStyleId;
-    private Date createdAt;
-    private Date updatedAt;
 }

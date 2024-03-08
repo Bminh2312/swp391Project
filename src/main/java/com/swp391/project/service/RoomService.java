@@ -18,18 +18,22 @@ public class RoomService implements RoomServiceImp {
     @Override
     public boolean create(String name) {
         try{
-            TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+            Optional<RoomEntity> room = roomRepository.findByName(name);
+            if(room.isEmpty()){
+                TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
 
-            // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
-            Calendar calendar = Calendar.getInstance(timeZone);
-            Date currentTime = calendar.getTime();
-            RoomEntity roomEntity = new RoomEntity();
-            roomEntity.setName(name);
-            roomEntity.setCreatedAt(currentTime);
-            roomEntity.setUpdatedAt(currentTime);
-            roomEntity.setStatus("ACTIVE");
-            roomRepository.save(roomEntity);
-            return true;
+                // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
+                Calendar calendar = Calendar.getInstance(timeZone);
+                Date currentTime = calendar.getTime();
+                RoomEntity roomEntity = new RoomEntity();
+                roomEntity.setName(name);
+                roomEntity.setCreatedAt(currentTime);
+                roomEntity.setUpdatedAt(currentTime);
+                roomEntity.setStatus("ACTIVE");
+                roomRepository.save(roomEntity);
+                return true;
+            }
+            return false;
         }catch (Exception e){
             System.out.println(e.getMessage());
             return false;
@@ -41,11 +45,13 @@ public class RoomService implements RoomServiceImp {
         try {
             TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
             Optional<RoomEntity> roomEntity = roomRepository.findById(id);
-            if (roomEntity.isPresent()) {
+            if (roomEntity.isPresent() && !(name.trim().isEmpty())) {
                 // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
                 Calendar calendar = Calendar.getInstance(timeZone);
                 Date currentTime = calendar.getTime();
-                roomEntity.get().setName(name);
+                if(!roomEntity.get().getName().equals(name)){
+                    roomEntity.get().setName(name);
+                }
                 roomEntity.get().setUpdatedAt(currentTime);
                 roomRepository.save(roomEntity.get());
                 return true;

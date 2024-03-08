@@ -54,12 +54,12 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/login/**","/designStyle/**","/order/project/**","/project/**").permitAll()
+                                .requestMatchers("/login/**","/designStyle/**","/order/project/**","/project/**","/quote/**").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/v3/**").permitAll()
                                 .requestMatchers("/product/**","/rawMaterial/**").hasAnyRole("ADMIN","USER","STAFF")
                                 .requestMatchers("/room/**").hasAnyRole("ADMIN","USER","STAFF")
                                 .requestMatchers("/quoteDetail/**").hasAnyRole("ADMIN","STAFF")
-                                .requestMatchers(HttpMethod.GET,"/quoteDetail/**").hasRole("USER")
+                                .requestMatchers(HttpMethod.GET,"/quoteDetail/getQuoteDetailById","/quoteDetail/getAllQuoteDetail").hasRole("USER")
                                 .requestMatchers(HttpMethod.POST,"/quoteDetail/**").hasRole("USER")
                                 .requestMatchers(HttpMethod.PUT,"/quoteDetail/product/updateQuoteDetail","/quoteDetail/rawMaterial/updateQuoteDetail").hasRole("USER")
                                 .requestMatchers("/user/**").hasAnyRole("USER","ADMIN","STAFF")

@@ -58,6 +58,7 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
         return false;
     }
 
+
 //    @Override
 //    public boolean createQuoteForProductByUser(QuoteDetailRequest quoteDetailRequest) {
 //        try{
@@ -161,7 +162,7 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
     }
 
     @Override
-    public boolean updateQuoteForProductByNote(int idQuoteDetail, int idProduct, double priceChange, int quantityChange) {
+    public boolean updateQuoteForProductByNoteForStaff(int idQuoteDetail, int idProduct, double priceChange, int quantityChange) {
         try{
             int quantity = 0;
             double price = 0;
@@ -204,6 +205,53 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
             return false;
         }
         return false;
+    }
+
+    @Override
+    public int updateQuoteForProductByNoteForUser(int idQuoteDetail, int idProduct, int quantityChange, double priceChange, String note) {
+        try {
+            TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+
+            // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
+            Calendar calendar = Calendar.getInstance(timeZone);
+            Date currentTime = calendar.getTime();
+            Optional<QuoteDetailEntity> quoteDetailEntityOptional = quoteDetailRepository.findById(idQuoteDetail);
+            if (quoteDetailEntityOptional.isPresent()) {
+                QuoteDetailEntity quoteDetailEntity = quoteDetailEntityOptional.get();
+
+                // Kiểm tra nếu note không rỗng, tạo mới QuoteDetailEntity
+                if (!note.isEmpty()) {
+                    QuoteDetailEntity newQuoteDetailEntity = new QuoteDetailEntity();
+                    newQuoteDetailEntity.setProduct(quoteDetailEntity.getProduct());
+                    newQuoteDetailEntity.setQuantity(quantityChange);
+                    newQuoteDetailEntity.setPrice(quantityChange * quoteDetailEntity.getProduct().getPrice());
+                    newQuoteDetailEntity.setArea(0);
+                    newQuoteDetailEntity.setNote(note);
+                    newQuoteDetailEntity.setStatus("ACTIVE");
+                    newQuoteDetailEntity.setCreatedAt(currentTime);
+                    newQuoteDetailEntity.setUpdatedAt(currentTime);
+                    quoteDetailRepository.save(newQuoteDetailEntity);
+                    QuoteDetailEntity savedQuoteDetailEntity = quoteDetailRepository.save(quoteDetailEntity);
+                    return savedQuoteDetailEntity.getId();
+                }
+
+                // Cập nhật thông tin cho QuoteDetailEntity hiện tại
+                Optional<ProductEntity> productEntityOptional = productRepository.findById(idProduct);
+                if (productEntityOptional.isPresent()) {
+                    quoteDetailEntity.setProduct(productEntityOptional.get());
+                    quoteDetailEntity.setQuantity(quantityChange);
+                    quoteDetailEntity.setPrice(quantityChange * productEntityOptional.get().getPrice());
+                    quoteDetailEntity.setArea(0);
+                    quoteDetailEntity.setUpdatedAt(currentTime);
+
+                    return idQuoteDetail;
+                }
+            }
+            return  0;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return 0;
     }
 
     @Override

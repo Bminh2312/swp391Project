@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserWithProjectsDTO {
-    private UserDetailDTO user;
-    private List<ProjectDTO> projects;
+public class ProjectWithAllQuoteDTO {
+    private ProjectDTO projectDTO;
+    private List<RoomWithAllQuoteDetailDTO> withAllQuoteDetailDTOList;
 }

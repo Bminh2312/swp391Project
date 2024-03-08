@@ -35,6 +35,9 @@ public class QuoteEntity {
     @Column(name = "area")
     private double area;
 
+    @Column(name = "total")
+    private double total;
+
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;

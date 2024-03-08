@@ -9,7 +9,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserWithProjectsDTO {
-    private UserDetailDTO user;
-    private List<ProjectDTO> projects;
+public class RoomWithAllQuoteDetailDTO {
+    private String roomName;
+    List<QuoteDetailDTO> quoteDetailDTOS;
+    private double total;
 }

@@ -8,7 +8,7 @@ import com.swp391.project.dto.UserDetailDTO;
 import com.swp391.project.dto.UserWithProjectsDTO;
 import com.swp391.project.entity.UserEntity;
 import com.swp391.project.payload.response.BaseResponse;
-import com.swp391.project.service.impl.OrderProjectImp;
+//import com.swp391.project.service.impl.OrderProjectImp;
 import com.swp391.project.service.impl.UserDetailServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -66,27 +66,27 @@ public class UserController {
         }
     }
 
-    @GetMapping("/getAllProjectByUserId")
-    public ResponseEntity<?> getAllProjectByUserId(@RequestParam int idUser){
-        BaseResponse baseResponse = new BaseResponse();
-        UserWithProjectsDTO userWithProjects = userDetailServiceImp.getUserWithProjects(idUser);
-        if(userWithProjects != null){
-            if(userWithProjects.getProjects().isEmpty()){
-                baseResponse.setMesssage("User do not have any project");
-                baseResponse.setStatusCode(200);
-                baseResponse.setData(userWithProjects);
-                return new ResponseEntity<>(baseResponse, HttpStatus.OK);
-            }
-            baseResponse.setMesssage("SucessFull");
-            baseResponse.setStatusCode(200);
-            baseResponse.setData(userWithProjects);
-            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
-        }
-        baseResponse.setMesssage("Not found");
-        baseResponse.setStatusCode(200);
-        baseResponse.setData("Null");
-        return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
-    }
+//    @GetMapping("/getAllProjectByUserId")
+//    public ResponseEntity<?> getAllProjectByUserId(@RequestParam int idUser){
+//        BaseResponse baseResponse = new BaseResponse();
+//        UserWithProjectsDTO userWithProjects = userDetailServiceImp.getUserWithProjects(idUser);
+//        if(userWithProjects != null){
+//            if(userWithProjects.getProjects().isEmpty()){
+//                baseResponse.setMesssage("User do not have any project");
+//                baseResponse.setStatusCode(200);
+//                baseResponse.setData(userWithProjects);
+//                return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+//            }
+//            baseResponse.setMesssage("SucessFull");
+//            baseResponse.setStatusCode(200);
+//            baseResponse.setData(userWithProjects);
+//            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+//        }
+//        baseResponse.setMesssage("Not found");
+//        baseResponse.setStatusCode(200);
+//        baseResponse.setData("Null");
+//        return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
+//    }
 
     @PutMapping(value = "/updateUser",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateUser (@RequestParam int userId,

@@ -55,7 +55,7 @@ public class UserEntity {
     private RoleEntity role;
 
     @OneToMany(mappedBy = "user")
-    private List<OrderProjectEntity> sampleProjects;
+    private List<ProjectEntity> projects;
 
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
