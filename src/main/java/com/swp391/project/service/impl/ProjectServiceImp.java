@@ -10,5 +10,7 @@ public interface ProjectServiceImp {
 
     ProjectDTO findById(int id);
 
+    ProjectDTO findByStatus(String status);
+
 
 }

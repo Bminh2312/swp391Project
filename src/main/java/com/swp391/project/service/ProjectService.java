@@ -1,6 +1,7 @@
 package com.swp391.project.service;
 
 import com.swp391.project.dto.ProjectDTO;
+import com.swp391.project.dto.UserDetailDTO;
 import com.swp391.project.entity.DesignStyleEntity;
 import com.swp391.project.entity.ProjectEntity;
 import com.swp391.project.entity.UserEntity;
@@ -111,6 +112,35 @@ public class ProjectService implements ProjectServiceImp {
             return projectDTO;
         }
         return null;
+    }
+
+    @Override
+    public ProjectDTO findByStatus(String status) {
+        Optional<ProjectEntity> projectEntity = projectRepository.findByStatus(status);
+        ProjectDTO projectDTO = new ProjectDTO();
+        if(projectEntity.isPresent()){
+            projectDTO.setId(projectEntity.get().getId());
+            projectDTO.setUserDetailDTO(mapUserEntityToDTO(projectEntity.get().getUser()));
+            projectDTO.setName(projectEntity.get().getName());
+            projectDTO.setDesignStyleName(projectEntity.get().getDesignStyle().getName());
+            projectDTO.setCreatedAt(projectEntity.get().getCreatedAt());
+            projectDTO.setUpdatedAt(projectEntity.get().getUpdatedAt());
+            projectDTO.setStatus(projectEntity.get().getStatus());
+            return projectDTO;
+        }
+        return null;
+    }
+
+    public UserDetailDTO mapUserEntityToDTO(UserEntity userEntity) {
+        UserDetailDTO userDetailDTO = new UserDetailDTO();
+        userDetailDTO.setId(userEntity.getId());
+        userDetailDTO.setFullName(userEntity.getFullName());
+        userDetailDTO.setEmail(userEntity.getEmail());
+        userDetailDTO.setAvt(userEntity.getAvt());
+        userDetailDTO.setAccessToken(userEntity.getAccessToken());
+        userDetailDTO.setRole(userEntity.getRole().getName()); // Assumed role has a name attribute
+
+        return userDetailDTO;
     }
 
 }

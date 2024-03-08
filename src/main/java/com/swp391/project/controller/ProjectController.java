@@ -68,6 +68,23 @@ public class ProjectController {
             baseResponse.setData(projectDTO);
             return new ResponseEntity<>(baseResponse, HttpStatus.OK);
         }
+    }
+
+    @GetMapping("/getProjectByStatus")
+    public ResponseEntity<?> getProjectById(@RequestParam String status){
+        BaseResponse baseResponse = new BaseResponse();
+        baseResponse.setMesssage("SucessFull");
+        baseResponse.setStatusCode(200);
+        ProjectDTO projectDTO = projectImp.findByStatus(status);
+        if(projectDTO == null){
+            baseResponse.setMesssage("Not Found");
+            baseResponse.setStatusCode(200);
+            baseResponse.setData(null);
+            return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
+        }else{
+            baseResponse.setData(projectDTO);
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
 
 
     }
