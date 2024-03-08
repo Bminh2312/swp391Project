@@ -22,11 +22,11 @@ public class QuoteController {
     private QuoteServiceImp quoteServiceImp;
 
     @GetMapping("/getAllQuoteByProjectId")
-    public ResponseEntity<?> getAllQuoteByProjectId(@RequestParam int projectId){
+    public ResponseEntity<?> getAllQuoteByProjectId(@RequestParam int projectId, @RequestParam String status){
         BaseResponse baseResponse = new BaseResponse();
         baseResponse.setMesssage("SucessFull");
         baseResponse.setStatusCode(200);
-        ProjectWithAllQuoteDTO allQuoteRoomByProject = quoteServiceImp.findAllQuoteRoomByProject(projectId);
+        ProjectWithAllQuoteDTO allQuoteRoomByProject = quoteServiceImp.findAllQuoteRoomByProject(projectId,status);
         if(allQuoteRoomByProject == null){
             baseResponse.setMesssage("Not Found");
             baseResponse.setStatusCode(400);

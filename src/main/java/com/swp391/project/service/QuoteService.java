@@ -128,13 +128,13 @@ public class QuoteService implements QuoteServiceImp {
     }
 
 
-    @Transactional(rollbackFor = {RuntimeException.class,Exception.class})
+
     @Override
-    public ProjectWithAllQuoteDTO findAllQuoteRoomByProject(int projectId) {
+    public ProjectWithAllQuoteDTO findAllQuoteRoomByProject(int projectId, String status) {
         ProjectWithAllQuoteDTO projectWithAllQuote = new ProjectWithAllQuoteDTO();
         List<RoomWithAllQuoteDetailDTO> roomWithAllQuoteDetailDTOs = new ArrayList<>();
         try {
-            Optional<ProjectEntity> projectEntityOptional = projectRepository.findById(projectId);
+            Optional<ProjectEntity> projectEntityOptional = projectRepository.findByIdAndStatus(projectId,status);
             if (projectEntityOptional.isPresent()) {
                 ProjectEntity projectEntity = projectEntityOptional.get();
 
