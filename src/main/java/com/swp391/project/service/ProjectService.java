@@ -46,6 +46,7 @@ public class ProjectService implements ProjectServiceImp {
                 projectEntity.setLocation(projectRequest.getLocation());
                 projectEntity.setType(projectRequest.getType());
                 projectEntity.setDesignStyle(designStyleEntity.get());
+                projectEntity.setSample(false);
                 projectEntity.setStatus(status);
                 projectEntity.setCreatedAt(currentTime);
                 projectEntity.setUpdatedAt(currentTime);
@@ -127,6 +128,9 @@ public class ProjectService implements ProjectServiceImp {
             projectDTO.setId(projectEntity.get().getId());
             projectDTO.setName(projectEntity.get().getName());
             projectDTO.setDesignStyleName(projectEntity.get().getDesignStyle().getName());
+            projectDTO.setLocation(projectEntity.get().getLocation());
+            projectDTO.setType(projectEntity.get().getType());
+            projectDTO.setSample(projectEntity.get().isSample());
             projectDTO.setCreatedAt(projectEntity.get().getCreatedAt());
             projectDTO.setUpdatedAt(projectEntity.get().getUpdatedAt());
             projectDTO.setStatus(projectEntity.get().getStatus());
@@ -143,12 +147,17 @@ public class ProjectService implements ProjectServiceImp {
             for (ProjectEntity projectEntity: projectEntities) {
                 ProjectDTO projectDTO = new ProjectDTO();
                 projectDTO.setId(projectEntity.getId());
-                projectDTO.setUserDetailDTO(mapUserEntityToDTO(projectEntity.getUser()));
+                if(projectEntity.getUser() != null){
+                    projectDTO.setUserDetailDTO(mapUserEntityToDTO(projectEntity.getUser()));
+                }
                 projectDTO.setName(projectEntity.getName());
                 projectDTO.setDesignStyleName(projectEntity.getDesignStyle().getName());
+                projectDTO.setLocation(projectEntity.getLocation());
+                projectDTO.setType(projectEntity.getType());
                 projectDTO.setCreatedAt(projectEntity.getCreatedAt());
                 projectDTO.setUpdatedAt(projectEntity.getUpdatedAt());
                 projectDTO.setStatus(projectEntity.getStatus());
+                projectDTO.setSample(projectEntity.isSample());
                 projectDTOS.add(projectDTO);
             }
             return projectDTOS;
@@ -171,6 +180,7 @@ public class ProjectService implements ProjectServiceImp {
                 projectDTO.setCreatedAt(projectEntity.getCreatedAt());
                 projectDTO.setUpdatedAt(projectEntity.getUpdatedAt());
                 projectDTO.setStatus(projectEntity.getStatus());
+                projectDTO.setSample(projectEntity.isSample());
                 projectDTOS.add(projectDTO);
             }
             return projectDTOS;

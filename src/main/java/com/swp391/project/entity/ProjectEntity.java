@@ -52,4 +52,12 @@ public class ProjectEntity {
 
     @Column(name = "status",columnDefinition = "VARCHAR(255) DEFAULT 'ACTIVE'")
     private String status;
+
+    public boolean isSample() {
+        return isSample;
+    }
+
+    public void setSample(boolean sample) {
+        isSample = sample;
+    }
 }
