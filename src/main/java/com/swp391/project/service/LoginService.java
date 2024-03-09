@@ -85,8 +85,7 @@ public class LoginService implements LoginServiceImp {
                     roleEntity.setName("ROLE_USER");
                     roleRepository.save(roleEntity);
                 }
-
-                UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(email,null);
+                UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(email, null);
                 Authentication authentication = authenticationManager.authenticate(token);
                 String json = gson.toJson(authentication.getAuthorities());
                 String jwtToken = jwtHelper.generateToken(json);

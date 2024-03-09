@@ -1,6 +1,8 @@
 package com.swp391.project.security;
 
+import com.swp391.project.entity.RoleEntity;
 import com.swp391.project.entity.UserEntity;
+import com.swp391.project.repository.RoleRepository;
 import com.swp391.project.service.impl.LoginServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -21,6 +23,9 @@ public class CustomAuthenProvider implements AuthenticationProvider {
     @Autowired
     private LoginServiceImp loginServiceImp;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = (String) authentication.getPrincipal();
@@ -28,11 +33,12 @@ public class CustomAuthenProvider implements AuthenticationProvider {
         String password = (String) authentication.getCredentials();
         System.out.println("Pass " + password);
         UserEntity userEntity = null;
+        UserEntity userEntityMail = null;
         if(password!= null){
             userEntity = loginServiceImp.checkLogin(email,password);
 
         }else{
-             userEntity = loginServiceImp.checkLoginGmail(email);
+            userEntityMail = loginServiceImp.checkLoginGmail(email);
 
         }
 
@@ -43,13 +49,32 @@ public class CustomAuthenProvider implements AuthenticationProvider {
             SimpleGrantedAuthority role = new SimpleGrantedAuthority(userEntity.getRole().getName());
             listRoles.add(role);
 
-            UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken("","",listRoles);
+            return new UsernamePasswordAuthenticationToken("","",listRoles);
 
-            return authenticationToken;
+        }else if(userEntityMail != null) {
+            List<GrantedAuthority> listRoles = new ArrayList<>();
+            //Tạo ra một quyền và gán tên quyền truy vấn được từ database để add vào list role ở trên
+            SimpleGrantedAuthority role = new SimpleGrantedAuthority(userEntityMail.getRole().getName());
+            listRoles.add(role);
+
+            return new UsernamePasswordAuthenticationToken("", "", listRoles);
+        }else if(userEntityMail == null){
+            RoleEntity roleEntity = roleRepository.findByName("ROLE_USER");
+            List<GrantedAuthority> listRoles = new ArrayList<>();
+            //Tạo ra một quyền và gán tên quyền truy vấn được từ database để add vào list role ở trên
+            SimpleGrantedAuthority role = new SimpleGrantedAuthority(roleEntity.getName());
+            listRoles.add(role);
+
+            return new UsernamePasswordAuthenticationToken(null, null, listRoles);
+        }
+        else{
+            throw new BadCredentialsException("Invalid username or password");
         }
 
-        throw new BadCredentialsException("Invalid username or password");
+
+
+
+
     }
 
     @Override
