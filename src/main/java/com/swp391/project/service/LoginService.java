@@ -68,6 +68,7 @@ public class LoginService implements LoginServiceImp {
                 String jwtToken = jwtHelper.generateToken(json);
                 userEntity.setAccessToken(jwtToken);
                 userRepository.save(userEntity);
+                userDetailDTO.setId(userEntity.getId());
                 userDetailDTO.setAccessToken(userEntity.getAccessToken());
                 userDetailDTO.setEmail(userEntity.getEmail());
                 userDetailDTO.setFullName(userEntity.getFullName());
@@ -96,6 +97,7 @@ public class LoginService implements LoginServiceImp {
                 userEntity.setAvt(avt);
                 userEntity.setAccessToken(jwtToken);
                 userRepository.save(userEntity);
+                userDetailDTO.setId(userEntity.getId());
                 userDetailDTO.setAccessToken(userEntity.getAccessToken());
                 userDetailDTO.setEmail(userEntity.getEmail());
                 userDetailDTO.setFullName(userEntity.getFullName());
