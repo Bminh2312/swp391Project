@@ -1,16 +1,18 @@
 package com.swp391.project.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Entity(name = "quote")
 @Getter
 @Setter
-public class QuoteEntity {
+public class QuoteEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +21,7 @@ public class QuoteEntity {
     @OneToMany(mappedBy = "quote")
     List<QuoteDetailEntity> quoteDetailEntityList;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "id_project")
     private ProjectEntity projectQuote;

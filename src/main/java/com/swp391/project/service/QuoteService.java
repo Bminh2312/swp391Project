@@ -30,6 +30,9 @@ public class QuoteService implements QuoteServiceImp {
     @Autowired
     private QuoteDetailRepository quoteDetailRepository;
 
+    @Autowired
+    private VnQrService vnQrService;
+
     @Override
     public int create(QuoteRequest quoteRequest, String status) {
         try{
@@ -166,6 +169,28 @@ public class QuoteService implements QuoteServiceImp {
             // Handle any exceptions appropriately
         }
         return projectWithAllQuote;
+    }
+
+    @Override
+    public String getQrToPay(int projectId, String description) {
+        // Tìm dự án dựa trên projectId
+        ProjectEntity project = projectRepository.findById(projectId).orElse(null);
+
+        if (project == null) {
+            // Xử lý trường hợp dự án không tồn tại
+            return null;
+        }
+
+        // Tính tổng total của các báo giá liên quan đến dự án
+        Double total = quoteRepository.getTotalByProjectId(projectId);
+
+        if (total == null) {
+            // Xử lý trường hợp không có báo giá nào cho dự án
+            return null;
+        }
+
+        // Tạo mã QR từ tổng total
+        return vnQrService.urlQrCode(total, description);
     }
 
     public RawMaterialDTO mapRawMaterialToDTO(RawMaterialEntity rawMaterialEntity) {
