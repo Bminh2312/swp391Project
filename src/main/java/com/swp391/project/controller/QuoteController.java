@@ -38,6 +38,23 @@ public class QuoteController {
         }
     }
 
+    @GetMapping("/getQrToPayByProjectId")
+    public ResponseEntity<?> getQrToPayByProjectId(@RequestParam int projectId, @RequestParam String description){
+        BaseResponse baseResponse = new BaseResponse();
+        baseResponse.setMesssage("SucessFull");
+        baseResponse.setStatusCode(200);
+        String qr = quoteServiceImp.getQrToPay(projectId,description);
+        if(quoteServiceImp == null){
+            baseResponse.setMesssage("Project not found or No quote available");
+            baseResponse.setStatusCode(400);
+            baseResponse.setData(null);
+            return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
+        }else{
+            baseResponse.setData(qr);
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+    }
+
     @PutMapping("/updateTotalQuote")
     public ResponseEntity<?> updateTotalQuote(@RequestParam int projectId){
         boolean check = quoteServiceImp.updateTotal(projectId);

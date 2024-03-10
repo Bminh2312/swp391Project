@@ -12,4 +12,6 @@ public interface QuoteServiceImp {
     boolean updateTotal (int projectId);
 
     ProjectWithAllQuoteDTO findAllQuoteRoomByProject(int projectId, String status);
+
+    String getQrToPay(int projectId, String description);
 }
