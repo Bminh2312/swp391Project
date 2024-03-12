@@ -8,7 +8,6 @@ import com.swp391.project.payload.request.QuoteDetailForProductRequest;
 import com.swp391.project.payload.request.QuoteDetailForRawRequest;
 import com.swp391.project.repository.ProductRepository;
 import com.swp391.project.repository.QuoteDetailRepository;
-import com.swp391.project.repository.QuoteRepository;
 import com.swp391.project.repository.RawMaterialRepository;
 import com.swp391.project.service.impl.QuoteDetailServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +28,10 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
     @Autowired
     private RawMaterialRepository rawMaterialRepository;
 
-    @Autowired
-    private QuoteRepository quoteRepository;
-
     @Override
     public boolean createQuoteForProduct(QuoteDetailForProductRequest quoteDetailRequest) {
         try{
             Optional<ProductEntity> productEntity = productRepository.findById(quoteDetailRequest.getProductId());
-            Optional<QuoteEntity> quoteEntity = quoteRepository.findById(quoteDetailRequest.getQuoteId());
             if(productEntity.isPresent()){
                 TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
 
@@ -44,7 +39,6 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
                 Calendar calendar = Calendar.getInstance(timeZone);
                 Date currentTime = calendar.getTime();
                 QuoteDetailEntity quoteDetailEntity = new QuoteDetailEntity();
-                quoteEntity.ifPresent(quoteDetailEntity::setQuote);
                 quoteDetailEntity.setProduct(productEntity.get());
                 quoteDetailEntity.setQuantity(quoteDetailRequest.getQuantity());
                 quoteDetailEntity.setPrice(quoteDetailRequest.getQuantity() * productEntity.get().getPrice());
@@ -100,7 +94,6 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
     public boolean createQuoteForRaw(QuoteDetailForRawRequest quoteDetailRequest) {
         try{
             Optional<RawMaterialEntity> rawMaterialEntity = rawMaterialRepository.findById(quoteDetailRequest.getRawMaterialId());
-            Optional<QuoteEntity> quoteEntity = quoteRepository.findById(quoteDetailRequest.getQuoteId());
             if(rawMaterialEntity.isPresent()){
                 TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
 
@@ -109,7 +102,6 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
                 Date currentTime = calendar.getTime();
                 QuoteDetailEntity quoteDetailEntity = new QuoteDetailEntity();
                 quoteDetailEntity.setRawMaterial(rawMaterialEntity.get());
-                quoteEntity.ifPresent(quoteDetailEntity::setQuote);
                 quoteDetailEntity.setQuantity(0);
                 quoteDetailEntity.setArea(quoteDetailRequest.getArea());
                 quoteDetailEntity.setPrice(quoteDetailRequest.getArea() * rawMaterialEntity.get().getPricePerM2());
