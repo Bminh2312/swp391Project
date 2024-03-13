@@ -1,16 +1,10 @@
 package com.swp391.project.service;
 
-import com.swp391.project.dto.ProjectDTO;
-import com.swp391.project.dto.UserDetailDTO;
-import com.swp391.project.dto.UserWithProjectsDTO;
-import com.swp391.project.entity.DesignStyleEntity;
-import com.swp391.project.entity.ProjectEntity;
-import com.swp391.project.entity.UserEntity;
+import com.swp391.project.dto.*;
+import com.swp391.project.entity.*;
 import com.swp391.project.payload.request.ProjectRequest;
-import com.swp391.project.repository.DesignStyleRepository;
-import com.swp391.project.repository.ProjectRepository;
+import com.swp391.project.repository.*;
 
-import com.swp391.project.repository.UserRepository;
 import com.swp391.project.service.impl.ProjectServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +16,12 @@ public class ProjectService implements ProjectServiceImp {
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private QuoteRepository quoteRepository;
+
+    @Autowired
+    private QuoteDetailRepository quoteDetailRepository;
 
     @Autowired
     private DesignStyleRepository designStyleRepository;
@@ -188,6 +188,45 @@ public class ProjectService implements ProjectServiceImp {
         return null;
     }
 
+    @Override
+    public ProjectWithAllQuoteDTO findAllQuoteRoomByProject(int projectId) {
+        ProjectWithAllQuoteDTO projectWithAllQuote = new ProjectWithAllQuoteDTO();
+        List<RoomWithAllQuoteDetailDTO> roomWithAllQuoteDetailDTOs = new ArrayList<>();
+        try {
+            Optional<ProjectEntity> projectEntityOptional = projectRepository.findById(projectId);
+            if (projectEntityOptional.isPresent()) {
+                ProjectEntity projectEntity = projectEntityOptional.get();
+
+                ProjectDTO projectDTO = mapProjectToDTO(projectEntity);
+                List<QuoteEntity> quotes = quoteRepository.findByProjectQuoteId(projectEntity.getId());
+
+                for (QuoteEntity quoteEntity : quotes) {
+                    RoomWithAllQuoteDetailDTO roomWithAllQuoteDetailDTO = new RoomWithAllQuoteDetailDTO();
+                    roomWithAllQuoteDetailDTO.setRoomName(quoteEntity.getRoomQuote().getName());
+                    List<QuoteDetailEntity> quoteDetails = quoteDetailRepository.findByQuoteId(quoteEntity.getId());
+                    List<QuoteDetailDTO> quoteDetailDTOs = new ArrayList<>();
+                    double total = 0;
+                    for (QuoteDetailEntity quoteDetail : quoteDetails) {
+                        QuoteDetailDTO quoteDetailDTO = getQuoteDetailDTO(quoteDetail);
+                        total +=quoteDetail.getPrice();
+                        quoteDetailDTOs.add(quoteDetailDTO);
+                    }
+                    roomWithAllQuoteDetailDTO.setQuoteDetailDTOS(quoteDetailDTOs);
+                    roomWithAllQuoteDetailDTO.setTotal(total);
+                    roomWithAllQuoteDetailDTOs.add(roomWithAllQuoteDetailDTO);
+
+                }
+
+                projectWithAllQuote.setProjectDTO(projectDTO);
+                projectWithAllQuote.setWithAllQuoteDetailDTOList(roomWithAllQuoteDetailDTOs);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle any exceptions appropriately
+        }
+        return projectWithAllQuote;
+    }
+
     public ProjectDTO mapProjectAndUserToDTO(ProjectEntity projectEntity) {
         if (projectEntity == null) {
             return null;
@@ -230,5 +269,72 @@ public class ProjectService implements ProjectServiceImp {
 
         return userDetailDTO;
     }
+
+    public  ProjectDTO mapProjectToDTO(ProjectEntity projectEntity) {
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.setId(projectEntity.getId());
+        projectDTO.setName(projectEntity.getName());
+        projectDTO.setImg(projectEntity.getImg());
+        projectDTO.setLocation(projectEntity.getLocation());
+        projectDTO.setSample(projectEntity.isSample());
+        projectDTO.setDesignStyleName(projectEntity.getDesignStyle().getName());
+        projectDTO.setType(projectEntity.getType());
+        projectDTO.setCreatedAt(projectEntity.getCreatedAt());
+        projectDTO.setUpdatedAt(projectEntity.getUpdatedAt());
+        projectDTO.setStatus(projectEntity.getStatus());
+        return projectDTO;
+    }
+
+    private QuoteDetailDTO getQuoteDetailDTO(QuoteDetailEntity quoteDetail) {
+        QuoteDetailDTO quoteDetailDTO = new QuoteDetailDTO();
+        quoteDetailDTO.setId(quoteDetail.getId());
+        quoteDetailDTO.setQuantity(quoteDetail.getQuantity());
+        if(quoteDetail.getProduct() != null){
+            quoteDetailDTO.setProduct(mapProductToDTO(quoteDetail.getProduct()));
+        }
+        if(quoteDetail.getRawMaterial() != null){
+            quoteDetailDTO.setRawMaterial(mapRawMaterialToDTO(quoteDetail.getRawMaterial()));
+        }
+        quoteDetailDTO.setPrice(quoteDetail.getPrice());
+        quoteDetailDTO.setArea(quoteDetail.getArea());
+        quoteDetailDTO.setNote(quoteDetail.getNote());
+        quoteDetailDTO.setCreatedAt(quoteDetail.getCreatedAt());
+        quoteDetailDTO.setUpdatedAt(quoteDetail.getUpdatedAt());
+        quoteDetailDTO.setStatus(quoteDetail.getStatus());
+        return quoteDetailDTO;
+    }
+
+    public  ProductDTO mapProductToDTO(ProductEntity productEntity) {
+        ProductDTO productDTO = new ProductDTO();
+        productDTO.setId(productEntity.getId());
+        productDTO.setName(productEntity.getName());
+        productDTO.setImg(productEntity.getImage());
+        productDTO.setDescription(productEntity.getDescription());
+        productDTO.setHeight(productEntity.getHeight());
+        productDTO.setLength(productEntity.getLength());
+        productDTO.setWidth(productEntity.getWidth());
+        productDTO.setPrice(productEntity.getPrice());
+        productDTO.setCreatedAt(productEntity.getCreatedAt());
+        productDTO.setUpdatedAt(productEntity.getUpdatedAt());
+        productDTO.setStatus(productEntity.getStatus());
+        return productDTO;
+    }
+
+    public RawMaterialDTO mapRawMaterialToDTO(RawMaterialEntity rawMaterialEntity) {
+        RawMaterialDTO rawMaterialDTO = new RawMaterialDTO();
+        rawMaterialDTO.setId(rawMaterialEntity.getId());
+        rawMaterialDTO.setName(rawMaterialEntity.getName());
+        rawMaterialDTO.setImg(rawMaterialEntity.getImg());
+        rawMaterialDTO.setDescription(rawMaterialEntity.getDescription());
+        rawMaterialDTO.setType(rawMaterialEntity.getType());
+        rawMaterialDTO.setPricePerM2(rawMaterialEntity.getPricePerM2());
+        rawMaterialDTO.setCreatedAt(rawMaterialEntity.getCreatedAt());
+        rawMaterialDTO.setUpdatedAt(rawMaterialEntity.getUpdatedAt());
+        rawMaterialDTO.setStatus(rawMaterialEntity.getStatus());
+        // Không map trường quoteDetailDTOList vì nó không phải là một trường của RawMaterialEntity
+
+        return rawMaterialDTO;
+    }
+
 
 }

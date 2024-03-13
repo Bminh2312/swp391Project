@@ -2,6 +2,7 @@ package com.swp391.project.controller;
 
 
 import com.swp391.project.dto.ProjectDTO;
+import com.swp391.project.dto.ProjectWithAllQuoteDTO;
 import com.swp391.project.payload.request.ProjectRequest;
 import com.swp391.project.payload.response.BaseResponse;
 import com.swp391.project.service.impl.ProjectServiceImp;
@@ -20,6 +21,23 @@ public class ProjectController {
 
     @Autowired
     private ProjectServiceImp projectImp;
+
+    @GetMapping("/getAllQuoteByProjectId")
+    public ResponseEntity<?> getAllQuoteByProjectId(@RequestParam int projectId){
+        BaseResponse baseResponse = new BaseResponse();
+        baseResponse.setMesssage("SucessFull");
+        baseResponse.setStatusCode(200);
+        ProjectWithAllQuoteDTO allQuoteRoomByProject = projectImp.findAllQuoteRoomByProject(projectId);
+        if(allQuoteRoomByProject == null){
+            baseResponse.setMesssage("Not Found");
+            baseResponse.setStatusCode(400);
+            baseResponse.setData(null);
+            return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
+        }else{
+            baseResponse.setData(allQuoteRoomByProject);
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+    }
 
     @PostMapping(value = "/createProject")
     public ResponseEntity<?> create( @RequestBody ProjectRequest projectRequest, @RequestParam int userId, @RequestParam String status){

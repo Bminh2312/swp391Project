@@ -1,6 +1,7 @@
 package com.swp391.project.service.impl;
 
 import com.swp391.project.dto.ProjectDTO;
+import com.swp391.project.dto.ProjectWithAllQuoteDTO;
 import com.swp391.project.dto.UserWithProjectsDTO;
 import com.swp391.project.payload.request.ProjectRequest;
 
@@ -18,6 +19,8 @@ public interface ProjectServiceImp {
     List<ProjectDTO> findByStatus(String status);
 
     List<ProjectDTO> findByStatusAndUserId(String status, int id);
+
+    ProjectWithAllQuoteDTO findAllQuoteRoomByProject(int projectId);
 
 
 }

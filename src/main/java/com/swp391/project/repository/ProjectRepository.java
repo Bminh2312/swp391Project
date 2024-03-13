@@ -14,7 +14,7 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity,Integer> 
 
     List<ProjectEntity> findByStatusAndUserId(String status, int userId);
 
-    Optional<ProjectEntity> findByIdAndStatus(int id, String status);
+    Optional<ProjectEntity> findById(int id);
 
     Optional<List<ProjectEntity>> findByIsSample(boolean isSample);
 

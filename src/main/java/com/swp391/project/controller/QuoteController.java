@@ -24,7 +24,7 @@ public class QuoteController {
     @Autowired
     private QuoteServiceImp quoteServiceImp;
 
-    @GetMapping("/getAllQuoteByProjectId")
+    @GetMapping("/getAllQuoteByProjectSample")
     public ResponseEntity<?> getAllQuoteByProjectId(@RequestParam(required = false, defaultValue = "true") @Schema(description = "isSample", type = "boolean") boolean isSample){
         BaseResponse baseResponse = new BaseResponse();
         baseResponse.setMesssage("SucessFull");
