@@ -7,10 +7,13 @@ import com.swp391.project.payload.request.QuoteDetailForRawRequest;
 import com.swp391.project.payload.request.QuoteRequest;
 import com.swp391.project.payload.response.BaseResponse;
 import com.swp391.project.service.impl.QuoteServiceImp;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/quote")
@@ -22,11 +25,11 @@ public class QuoteController {
     private QuoteServiceImp quoteServiceImp;
 
     @GetMapping("/getAllQuoteByProjectId")
-    public ResponseEntity<?> getAllQuoteByProjectId(@RequestParam int projectId, @RequestParam String status){
+    public ResponseEntity<?> getAllQuoteByProjectId(@RequestParam(required = false, defaultValue = "true") @Schema(description = "isSample", type = "boolean") boolean isSample){
         BaseResponse baseResponse = new BaseResponse();
         baseResponse.setMesssage("SucessFull");
         baseResponse.setStatusCode(200);
-        ProjectWithAllQuoteDTO allQuoteRoomByProject = quoteServiceImp.findAllQuoteRoomByProject(projectId,status);
+        List<ProjectWithAllQuoteDTO> allQuoteRoomByProject = quoteServiceImp.findAllQuoteRoomByProject(isSample);
         if(allQuoteRoomByProject == null){
             baseResponse.setMesssage("Not Found");
             baseResponse.setStatusCode(400);

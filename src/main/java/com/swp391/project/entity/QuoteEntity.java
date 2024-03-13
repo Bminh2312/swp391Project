@@ -35,6 +35,9 @@ public class QuoteEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date quoteDate;
 
+    @Column(name = "img",columnDefinition = "TEXT")
+    private String img;
+
     @Column(name = "area")
     private double area;
 

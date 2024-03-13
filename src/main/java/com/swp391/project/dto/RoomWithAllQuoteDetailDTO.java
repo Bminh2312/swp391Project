@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class RoomWithAllQuoteDetailDTO {
     private String roomName;
+    private String img;
     List<QuoteDetailDTO> quoteDetailDTOS;
     private double total;
 }

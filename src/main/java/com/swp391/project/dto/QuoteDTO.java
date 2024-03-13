@@ -15,6 +15,7 @@ public class QuoteDTO {
     private List<QuoteDetailDTO> quoteDetailDTOs;
     private ProjectDTO projectDTO;
     private RoomDTO roomDTO;
+    private String img;
     private Date quoteDate;
     private double area;
     private Date createdAt;

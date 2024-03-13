@@ -133,42 +133,43 @@ public class QuoteService implements QuoteServiceImp {
 
 
     @Override
-    public ProjectWithAllQuoteDTO findAllQuoteRoomByProject(int projectId, String status) {
-        ProjectWithAllQuoteDTO projectWithAllQuote = new ProjectWithAllQuoteDTO();
-        List<RoomWithAllQuoteDetailDTO> roomWithAllQuoteDetailDTOs = new ArrayList<>();
+    public List<ProjectWithAllQuoteDTO> findAllQuoteRoomByProject(boolean isSample) {
+        List<ProjectWithAllQuoteDTO> projectWithAllQuotes = new ArrayList<>();
         try {
-            Optional<ProjectEntity> projectEntityOptional = projectRepository.findByIdAndStatus(projectId,status);
-            if (projectEntityOptional.isPresent()) {
-                ProjectEntity projectEntity = projectEntityOptional.get();
-
-                ProjectDTO projectDTO = mapProjectToDTO(projectEntity);
-                List<QuoteEntity> quotes = quoteRepository.findByProjectQuoteId(projectEntity.getId());
-
-                for (QuoteEntity quoteEntity : quotes) {
-                    RoomWithAllQuoteDetailDTO roomWithAllQuoteDetailDTO = new RoomWithAllQuoteDetailDTO();
-                    roomWithAllQuoteDetailDTO.setRoomName(quoteEntity.getRoomQuote().getName());
-                    List<QuoteDetailEntity> quoteDetails = quoteDetailRepository.findByQuoteId(quoteEntity.getId());
-                    List<QuoteDetailDTO> quoteDetailDTOs = new ArrayList<>();
-                    double total = 0;
-                    for (QuoteDetailEntity quoteDetail : quoteDetails) {
-                        QuoteDetailDTO quoteDetailDTO = getQuoteDetailDTO(quoteDetail);
-                        total +=quoteDetail.getPrice();
-                        quoteDetailDTOs.add(quoteDetailDTO);
+            Optional<List<ProjectEntity>> projectEntitiesOptional = projectRepository.findByIsSample(isSample);
+            if (projectEntitiesOptional.isPresent()) {
+                List<ProjectEntity> projectEntities = projectEntitiesOptional.get();
+                for (ProjectEntity projectEntity : projectEntities) {
+                    ProjectDTO projectDTO = mapProjectToDTO(projectEntity);
+                    List<QuoteEntity> quotes = quoteRepository.findByProjectQuoteId(projectEntity.getId());
+                    List<RoomWithAllQuoteDetailDTO> roomWithAllQuoteDetailDTOs = new ArrayList<>();
+                    for (QuoteEntity quoteEntity : quotes) {
+                        RoomWithAllQuoteDetailDTO roomWithAllQuoteDetailDTO = new RoomWithAllQuoteDetailDTO();
+                        roomWithAllQuoteDetailDTO.setRoomName(quoteEntity.getRoomQuote().getName());
+                        roomWithAllQuoteDetailDTO.setImg(quoteEntity.getImg());
+                        List<QuoteDetailEntity> quoteDetails = quoteDetailRepository.findByQuoteId(quoteEntity.getId());
+                        List<QuoteDetailDTO> quoteDetailDTOs = new ArrayList<>();
+                        double total = 0;
+                        for (QuoteDetailEntity quoteDetail : quoteDetails) {
+                            QuoteDetailDTO quoteDetailDTO = getQuoteDetailDTO(quoteDetail);
+                            total += quoteDetail.getPrice();
+                            quoteDetailDTOs.add(quoteDetailDTO);
+                        }
+                        roomWithAllQuoteDetailDTO.setQuoteDetailDTOS(quoteDetailDTOs);
+                        roomWithAllQuoteDetailDTO.setTotal(total);
+                        roomWithAllQuoteDetailDTOs.add(roomWithAllQuoteDetailDTO);
                     }
-                    roomWithAllQuoteDetailDTO.setQuoteDetailDTOS(quoteDetailDTOs);
-                    roomWithAllQuoteDetailDTO.setTotal(total);
-                    roomWithAllQuoteDetailDTOs.add(roomWithAllQuoteDetailDTO);
-
+                    ProjectWithAllQuoteDTO projectWithAllQuote = new ProjectWithAllQuoteDTO();
+                    projectWithAllQuote.setProjectDTO(projectDTO);
+                    projectWithAllQuote.setWithAllQuoteDetailDTOList(roomWithAllQuoteDetailDTOs);
+                    projectWithAllQuotes.add(projectWithAllQuote);
                 }
-
-                projectWithAllQuote.setProjectDTO(projectDTO);
-                projectWithAllQuote.setWithAllQuoteDetailDTOList(roomWithAllQuoteDetailDTOs);
             }
         } catch (Exception e) {
             e.printStackTrace();
             // Handle any exceptions appropriately
         }
-        return projectWithAllQuote;
+        return projectWithAllQuotes;
     }
 
     @Override
@@ -248,6 +249,7 @@ public class QuoteService implements QuoteServiceImp {
         ProjectDTO projectDTO = new ProjectDTO();
         projectDTO.setId(projectEntity.getId());
         projectDTO.setName(projectEntity.getName());
+        projectDTO.setImg(projectEntity.getImg());
         projectDTO.setLocation(projectEntity.getLocation());
         projectDTO.setSample(projectEntity.isSample());
         projectDTO.setDesignStyleName(projectEntity.getDesignStyle().getName());

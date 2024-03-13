@@ -3,6 +3,8 @@ package com.swp391.project.service.impl;
 import com.swp391.project.dto.ProjectWithAllQuoteDTO;
 import com.swp391.project.payload.request.QuoteRequest;
 
+import java.util.List;
+
 public interface QuoteServiceImp {
     int create (QuoteRequest quoteRequest, String status);
 
@@ -11,7 +13,7 @@ public interface QuoteServiceImp {
 
     boolean updateTotal (int projectId);
 
-    ProjectWithAllQuoteDTO findAllQuoteRoomByProject(int projectId, String status);
+    List<ProjectWithAllQuoteDTO> findAllQuoteRoomByProject(boolean isSample);
 
     String getQrToPay(int projectId, String description);
 }

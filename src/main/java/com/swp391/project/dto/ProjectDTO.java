@@ -14,6 +14,7 @@ public class ProjectDTO {
     private UserDetailDTO userDetailDTO;
     private int id;
     private String name;
+    private String img;
     private String location;
     private String type;
     private boolean isSample;

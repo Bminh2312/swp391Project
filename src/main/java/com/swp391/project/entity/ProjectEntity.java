@@ -28,6 +28,9 @@ public class ProjectEntity implements Serializable {
     @Column(name = "location",columnDefinition = "TEXT")
     private String location;
 
+    @Column(name = "img",columnDefinition = "TEXT")
+    private String img;
+
     @Column(name = "is_sample")
     private boolean isSample;
 
