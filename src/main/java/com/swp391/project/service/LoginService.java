@@ -73,6 +73,8 @@ public class LoginService implements LoginServiceImp {
                 userDetailDTO.setEmail(userEntity.getEmail());
                 userDetailDTO.setFullName(userEntity.getFullName());
                 userDetailDTO.setAvt(userEntity.getAvt());
+                userDetailDTO.setPhone(userEntity.getPhone());
+                userDetailDTO.setAddress(userEntity.getAddress());
                 userDetailDTO.setRole(userEntity.getRole().getName());
                 BaseResponse baseResponse = new BaseResponse();
                 baseResponse.setMesssage("LoginSucessFull");
@@ -101,6 +103,8 @@ public class LoginService implements LoginServiceImp {
                 userDetailDTO.setEmail(userEntityNew.getEmail());
                 userDetailDTO.setFullName(userEntityNew.getFullName());
                 userDetailDTO.setAvt(userEntityNew.getAvt());
+                userDetailDTO.setPhone(userEntityNew.getPhone());
+                userDetailDTO.setAddress(userEntityNew.getAddress());
                 userDetailDTO.setRole(userEntityNew.getRole().getName());
                 BaseResponse baseResponse = new BaseResponse();
                 baseResponse.setMesssage("LoginSucessFull");
@@ -136,6 +140,8 @@ public class LoginService implements LoginServiceImp {
             userDetailDTO.setEmail(userEntity.getEmail());
             userDetailDTO.setFullName(userEntity.getFullName());
             userDetailDTO.setAvt(userEntity.getAvt());
+            userDetailDTO.setPhone(userEntity.getPhone());
+            userDetailDTO.setAddress(userEntity.getAddress());
             userDetailDTO.setRole(userEntity.getRole().getName());
             BaseResponse baseResponse = new BaseResponse();
             baseResponse.setMesssage("OKOK");

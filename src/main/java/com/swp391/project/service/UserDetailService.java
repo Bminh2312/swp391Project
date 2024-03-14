@@ -5,6 +5,7 @@ import com.swp391.project.dto.ProjectDTO;
 import com.swp391.project.dto.UserDetailDTO;
 import com.swp391.project.dto.UserWithProjectsDTO;
 import com.swp391.project.entity.ProjectEntity;
+import com.swp391.project.entity.RoomEntity;
 import com.swp391.project.entity.UserEntity;
 //import com.swp391.project.repository.OrderProjectRepository;
 import com.swp391.project.repository.UserRepository;
@@ -16,8 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,10 +37,35 @@ public class UserDetailService implements UserDetailServiceImp {
         UserDetailDTO userDetailDTO = new UserDetailDTO();
         userDetailDTO.setId(userEntities.getId());
         userDetailDTO.setAvt(userEntities.getAvt());
+        userDetailDTO.setPhone(userEntities.getPhone());
+        userDetailDTO.setAddress(userEntities.getAddress());
         userDetailDTO.setEmail(userEntities.getEmail());
         userDetailDTO.setFullName(userEntities.getFullName());
         userDetailDTO.setRole(userEntities.getRole().getName());
         return userDetailDTO;
+    }
+
+    @Override
+    public UserDetailDTO findById(int id) {
+        try{
+            Optional<UserEntity> userEntities = userRepository.findById(id);
+            if(userEntities.isPresent()){
+                UserDetailDTO userDetailDTO = new UserDetailDTO();
+                userDetailDTO.setId(userEntities.get().getId());
+                userDetailDTO.setAvt(userEntities.get().getAvt());
+                userDetailDTO.setPhone(userEntities.get().getPhone());
+                userDetailDTO.setAddress(userEntities.get().getAddress());
+                userDetailDTO.setEmail(userEntities.get().getEmail());
+                userDetailDTO.setFullName(userEntities.get().getFullName());
+                userDetailDTO.setRole(userEntities.get().getRole().getName());
+                return userDetailDTO;
+            }
+
+            return null;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -51,6 +76,8 @@ public class UserDetailService implements UserDetailServiceImp {
                 userEntity.getFullName(),
                 userEntity.getEmail(),
                 userEntity.getAvt(),
+                userEntity.getPhone(),
+                userEntity.getAddress(),
                 userEntity.getAccessToken(),
                 userEntity.getRole().getName()
         ));
@@ -117,6 +144,28 @@ public class UserDetailService implements UserDetailServiceImp {
                 return true;
             }
         }catch (Exception e){
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean delete(int id, String status) {
+        try {
+            TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+            Optional<UserEntity> userEntity = userRepository.findById(id);
+            if (userEntity.isPresent()) {
+                // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
+                Calendar calendar = Calendar.getInstance(timeZone);
+                Date currentTime = calendar.getTime();
+                userEntity.get().setStatus(status);
+                userEntity.get().setUpdatedAt(currentTime);
+                userRepository.save(userEntity.get());
+                return true;
+            }else{
+                return false;
+            }
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
         }

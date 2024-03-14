@@ -81,16 +81,16 @@ public class ProductController {
     }
 
     @PostMapping(value = "/createProduct",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> create(@RequestPart(name = "fileImg", required = true) MultipartFile fileImg, @RequestParam("name") String name,
-                                    @RequestParam("description") String description,
-                                    @RequestParam("type") String type,
-                                    @RequestParam("height") double height,
-                                    @RequestParam("length") double length,
-                                    @RequestParam("width") double width,
-                                    @RequestParam("pricePerM2") double pricePerM2){
+    public ResponseEntity<?> create(@RequestPart(name = "fileImg", required = true) MultipartFile fileImg, @RequestParam(name = "name", required = false) String name,
+                                    @RequestParam(name = "description", required = false) String description,
+                                    @RequestParam(name = "type", required = false) String type,
+                                    @RequestParam(name = "height", required = false) double height,
+                                    @RequestParam(name = "length", required = false) double length,
+                                    @RequestParam(name = "width", required = false) double width,
+                                    @RequestParam(name = "price", required = false) double price){
 
 
-        boolean check = productServiceImp.create(name,description,type,height,length,width,pricePerM2,fileImg);
+        boolean check = productServiceImp.create(name,description,type,height,length,width,price,fileImg);
         BaseResponse baseResponse = new BaseResponse();
         if(check){
             baseResponse.setStatusCode(201);
@@ -106,15 +106,15 @@ public class ProductController {
     }
 
     @PutMapping(value = "/updateProduct",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> update(@RequestPart(name = "fileImg", required = false) MultipartFile fileImg, @RequestParam int productId, @RequestParam("name") String name,
-                                    @RequestParam("description") String description,
-                                    @RequestParam("type") String type,
-                                    @RequestParam("height") double height,
-                                    @RequestParam("length") double length,
-                                    @RequestParam("width") double width,
-                                    @RequestParam("pricePerM2") double pricePerM2){
+    public ResponseEntity<?> update(@RequestPart(name = "fileImg", required = false) MultipartFile fileImg, @RequestParam int productId, @RequestParam(name = "name", required = false) String name,
+                                    @RequestParam(name = "description", required = false) String description,
+                                    @RequestParam(name = "type", required = false) String type,
+                                    @RequestParam(name = "height", required = false) double height,
+                                    @RequestParam(name = "length", required = false) double length,
+                                    @RequestParam(name = "width", required = false) double width,
+                                    @RequestParam(name = "price", required = false) double price){
         System.out.println(name);
-        boolean check = productServiceImp.update(name,description,type,height,length,width,pricePerM2,fileImg,productId);
+        boolean check = productServiceImp.update(name,description,type,height,length,width,price,fileImg,productId);
         BaseResponse baseResponse = new BaseResponse();
         if(check){
             baseResponse.setStatusCode(200);

@@ -203,6 +203,7 @@ public class ProjectService implements ProjectServiceImp {
                 for (QuoteEntity quoteEntity : quotes) {
                     RoomWithAllQuoteDetailDTO roomWithAllQuoteDetailDTO = new RoomWithAllQuoteDetailDTO();
                     roomWithAllQuoteDetailDTO.setRoomName(quoteEntity.getRoomQuote().getName());
+                    roomWithAllQuoteDetailDTO.setImg(quoteEntity.getImg());
                     List<QuoteDetailEntity> quoteDetails = quoteDetailRepository.findByQuoteId(quoteEntity.getId());
                     List<QuoteDetailDTO> quoteDetailDTOs = new ArrayList<>();
                     double total = 0;

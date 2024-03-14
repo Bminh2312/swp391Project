@@ -12,10 +12,14 @@ import java.util.List;
 public interface UserDetailServiceImp {
     UserDetailDTO findByEmail(String email);
 
+    UserDetailDTO findById(int id);
+
     Page<UserDetailDTO> findAll(Pageable pageable);
 
     UserWithProjectsDTO getUserWithProjects(String status, int userId);
 
     Boolean updateUser(int userId, String fullName, String phone, String address, MultipartFile avt);
+
+    boolean delete(int id, String status);
 
 }

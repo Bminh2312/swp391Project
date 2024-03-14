@@ -41,10 +41,10 @@ public class RawMaterialController {
     }
 
     @PostMapping(value = "/createProduct",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> create(@RequestPart(name = "fileImg", required = true) MultipartFile fileImg, @RequestParam("name") String name,
-                                    @RequestParam("description") String description,
-                                    @RequestParam("type") String type,
-                                    @RequestParam("pricePerM2") double pricePerM2){
+    public ResponseEntity<?> create(@RequestPart(name = "fileImg", required = true) MultipartFile fileImg, @RequestParam(name = "name") String name,
+                                    @RequestParam(name = "description") String description,
+                                    @RequestParam(name = "type") String type,
+                                    @RequestParam(name = "pricePerM2") double pricePerM2){
 
         boolean check = rawMaterialServiceImp.create(name,description,type,pricePerM2,fileImg);
         BaseResponse baseResponse = new BaseResponse();
@@ -62,10 +62,10 @@ public class RawMaterialController {
     }
 
     @PutMapping(value = "/updateProduct",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> update(@RequestPart(name = "fileImg", required = false) MultipartFile fileImg, @RequestParam int rawMaterialId, @RequestParam("name") String name,
-                                    @RequestParam("description") String description,
-                                    @RequestParam("type") String type,
-                                    @RequestParam("pricePerM2") double pricePerM2){
+    public ResponseEntity<?> update(@RequestPart(name = "fileImg", required = false) MultipartFile fileImg, @RequestParam int rawMaterialId, @RequestParam(name = "name", required = false) String name,
+                                    @RequestParam(name = "description", required = false) String description,
+                                    @RequestParam(name = "type", required = false) String type,
+                                    @RequestParam(name = "pricePerM2", required = false) double pricePerM2){
         System.out.println(name);
         boolean check = rawMaterialServiceImp.update(name,description,type,pricePerM2,fileImg,rawMaterialId);
         BaseResponse baseResponse = new BaseResponse();

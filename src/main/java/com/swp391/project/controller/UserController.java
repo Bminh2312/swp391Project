@@ -10,6 +10,7 @@ import com.swp391.project.entity.UserEntity;
 import com.swp391.project.payload.response.BaseResponse;
 //import com.swp391.project.service.impl.OrderProjectImp;
 import com.swp391.project.service.impl.UserDetailServiceImp;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +36,23 @@ public class UserController {
     public ResponseEntity<?> getUserByEmail(@RequestParam String email){
         BaseResponse baseResponse = new BaseResponse();
         UserDetailDTO userDTO = userDetailServiceImp.findByEmail(email);
+        if(userDTO!= null){
+            baseResponse.setData(userDTO);
+            baseResponse.setMesssage("Successfull");
+            baseResponse.setStatusCode(200);
+            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }else{
+            baseResponse.setData(null);
+            baseResponse.setMesssage("Not Found");
+            baseResponse.setStatusCode(400);
+            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/getUserById")
+    public ResponseEntity<?> getUserById(@RequestParam int id){
+        BaseResponse baseResponse = new BaseResponse();
+        UserDetailDTO userDTO = userDetailServiceImp.findById(id);
         if(userDTO!= null){
             baseResponse.setData(userDTO);
             baseResponse.setMesssage("Successfull");
@@ -107,9 +125,9 @@ public class UserController {
 
     @PutMapping(value = "/updateUser",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateUser (@RequestParam int userId,
-                                         @RequestParam("fullName") String fullName,
-                                         @RequestParam("phone") String phone,
-                                         @RequestParam("address") String address,
+                                         @RequestParam(name = "fullName", required = false) String fullName,
+                                         @RequestParam(name = "phone", required = false) String phone,
+                                         @RequestParam(name = "address", required = false) String address,
                                          @RequestParam(name = "fileImg", required = false) MultipartFile avt) {
         BaseResponse baseResponse = new BaseResponse();
         boolean check = userDetailServiceImp.updateUser(userId, fullName, phone, address, avt);
@@ -123,6 +141,23 @@ public class UserController {
         baseResponse.setStatusCode(200);
         baseResponse.setData("False");
         return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping(value = "/deleteUser")
+    public ResponseEntity<?> delete(@RequestParam("id") int id, @RequestParam @Schema(description = "Status", allowableValues = {"ACTIVE", "INACTIVE"}) String status){
+        boolean check = userDetailServiceImp.delete(id,status);
+        BaseResponse baseResponse = new BaseResponse();
+        if(check){
+            baseResponse.setStatusCode(201);
+            baseResponse.setMesssage("Create Successfull");
+            baseResponse.setData("True");
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+        baseResponse.setStatusCode(200);
+        baseResponse.setMesssage("Create Failed");
+        baseResponse.setData("False");
+        return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
+
     }
 
 }
