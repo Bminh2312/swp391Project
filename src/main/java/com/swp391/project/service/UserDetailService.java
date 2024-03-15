@@ -8,6 +8,7 @@ import com.swp391.project.entity.ProjectEntity;
 import com.swp391.project.entity.RoomEntity;
 import com.swp391.project.entity.UserEntity;
 //import com.swp391.project.repository.OrderProjectRepository;
+import com.swp391.project.repository.ProjectRepository;
 import com.swp391.project.repository.UserRepository;
 import com.swp391.project.service.impl.ProjectServiceImp;
 import com.swp391.project.service.impl.UserDetailServiceImp;
@@ -27,6 +28,9 @@ public class UserDetailService implements UserDetailServiceImp {
 
     @Autowired
     private ProjectServiceImp projectServiceImp;
+
+    @Autowired
+    private ProjectRepository projectRepository;
 
     @Autowired
     private FireBaseStorageService fireBaseStorageService;
@@ -102,6 +106,7 @@ public class UserDetailService implements UserDetailServiceImp {
 
         return userWithProjectsDTO;
     }
+
 
 
     private UserDetailDTO mapUserToDTO(UserEntity userEntity) {

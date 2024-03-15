@@ -1,12 +1,16 @@
 package com.swp391.project.controller;
 
 
+import com.swp391.project.dto.ProductDTO;
 import com.swp391.project.dto.ProjectDTO;
 import com.swp391.project.dto.ProjectWithAllQuoteDTO;
+import com.swp391.project.dto.ProjectWithUserDTO;
 import com.swp391.project.payload.request.ProjectRequest;
 import com.swp391.project.payload.response.BaseResponse;
 import com.swp391.project.service.impl.ProjectServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +25,43 @@ public class ProjectController {
 
     @Autowired
     private ProjectServiceImp projectImp;
+
+
+    @GetMapping("/getAllPageProjectByStatusAndUserId")
+    public ResponseEntity<?> getAllPageProductByStatusAndUserId(Pageable pageable, @RequestParam(name = "status", required = false) String status, int userId){
+        BaseResponse baseResponse = new BaseResponse();
+        Page<ProjectDTO> projectDTOS = projectImp.findAllByStatusAndUserId(userId,status,pageable);
+        if(!projectDTOS.isEmpty()){
+            baseResponse.setData(projectDTOS);
+            baseResponse.setTotalPages(projectDTOS.getTotalPages());
+            baseResponse.setMesssage("Successfull");
+            baseResponse.setStatusCode(200);
+            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }else{
+            baseResponse.setData(null);
+            baseResponse.setMesssage("Not Found");
+            baseResponse.setStatusCode(400);
+            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/getAllPageProjectByStatus")
+    public ResponseEntity<?> getAllPageProductByStatusAndUserId(Pageable pageable, @RequestParam(name = "status", required = false) String status){
+        BaseResponse baseResponse = new BaseResponse();
+        Page<ProjectWithUserDTO> projectDTOS = projectImp.findAllByStatus(status,pageable);
+        if(!projectDTOS.isEmpty()){
+            baseResponse.setData(projectDTOS);
+            baseResponse.setTotalPages(projectDTOS.getTotalPages());
+            baseResponse.setMesssage("Successfull");
+            baseResponse.setStatusCode(200);
+            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }else{
+            baseResponse.setData(null);
+            baseResponse.setMesssage("Not Found");
+            baseResponse.setStatusCode(400);
+            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+    }
 
     @GetMapping("/getAllQuoteByProjectId")
     public ResponseEntity<?> getAllQuoteByProjectId(@RequestParam int projectId){

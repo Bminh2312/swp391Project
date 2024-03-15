@@ -2,8 +2,12 @@ package com.swp391.project.service.impl;
 
 import com.swp391.project.dto.ProjectDTO;
 import com.swp391.project.dto.ProjectWithAllQuoteDTO;
+import com.swp391.project.dto.ProjectWithUserDTO;
 import com.swp391.project.dto.UserWithProjectsDTO;
+import com.swp391.project.entity.ProjectEntity;
 import com.swp391.project.payload.request.ProjectRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -18,9 +22,15 @@ public interface ProjectServiceImp {
 
     List<ProjectDTO> findByStatus(String status);
 
+    Page<ProjectWithUserDTO> findAllByStatus(String status, Pageable pageable);
+
+    Page<ProjectDTO> findAllByStatusAndUserId(int userId, String status, Pageable pageable);
+
     List<ProjectDTO> findByStatusAndUserId(String status, int id);
 
     ProjectWithAllQuoteDTO findAllQuoteRoomByProject(int projectId);
+
+
 
 
 }

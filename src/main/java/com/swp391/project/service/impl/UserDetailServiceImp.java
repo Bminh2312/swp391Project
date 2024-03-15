@@ -18,6 +18,7 @@ public interface UserDetailServiceImp {
 
     UserWithProjectsDTO getUserWithProjects(String status, int userId);
 
+
     Boolean updateUser(int userId, String fullName, String phone, String address, MultipartFile avt);
 
     boolean delete(int id, String status);

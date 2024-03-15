@@ -7,6 +7,8 @@ import com.swp391.project.repository.*;
 
 import com.swp391.project.service.impl.ProjectServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -164,6 +166,59 @@ public class ProjectService implements ProjectServiceImp {
         }
         return null;
     }
+
+    @Override
+    public Page<ProjectWithUserDTO> findAllByStatus(String status, Pageable pageable) {
+        Page<ProjectEntity> projectEntityPage;
+        if (status != null) {
+            projectEntityPage = projectRepository.findAllByStatus(status, pageable);
+        } else {
+            projectEntityPage = projectRepository.findAll(pageable);
+        }
+
+        return projectEntityPage.map(projectEntity -> new ProjectWithUserDTO(
+                projectEntity.getId(),
+                projectEntity.getName(),
+                projectEntity.getImg(),
+                projectEntity.getLocation(),
+                projectEntity.getType(),
+                projectEntity.isSample(),
+                projectEntity.getDesignStyle().getName(),
+                projectEntity.getCreatedAt(),
+                projectEntity.getUpdatedAt(),
+                projectEntity.getStatus()
+        ));
+    }
+
+    @Override
+    public Page<ProjectDTO> findAllByStatusAndUserId(int userId, String status, Pageable pageable) {
+        UserEntity userEntity = userRepository.findById(userId).orElse(null);
+        if (userEntity == null) {
+            // Xử lý trường hợp không tìm thấy người dùng
+            return null;
+        }
+        Page<ProjectEntity> projectEntityPage;
+        if (status != null) {
+            projectEntityPage = projectRepository.findAllByStatusAndUserId(status, userId, pageable);
+        } else {
+            projectEntityPage = projectRepository.findAllByUserId(userId, pageable);
+        }
+
+        return projectEntityPage.map(projectEntity -> new ProjectDTO(
+                mapUserToDTO(projectEntity.getUser()),
+                projectEntity.getId(),
+                projectEntity.getName(),
+                projectEntity.getImg(),
+                projectEntity.getLocation(),
+                projectEntity.getType(),
+                projectEntity.isSample(),
+                projectEntity.getDesignStyle().getName(),
+                projectEntity.getCreatedAt(),
+                projectEntity.getUpdatedAt(),
+                projectEntity.getStatus()
+        ));
+    }
+
 
     @Override
     public  List<ProjectDTO> findByStatusAndUserId(String status,int id) {
@@ -335,6 +390,16 @@ public class ProjectService implements ProjectServiceImp {
         // Không map trường quoteDetailDTOList vì nó không phải là một trường của RawMaterialEntity
 
         return rawMaterialDTO;
+    }
+
+    private UserDetailDTO mapUserToDTO(UserEntity userEntity) {
+        UserDetailDTO userDTO = new UserDetailDTO();
+        // Thực hiện ánh xạ các trường từ entity sang DTO
+        userDTO.setId(userEntity.getId());
+        userDTO.setFullName(userEntity.getFullName());
+        userDTO.setAvt(userEntity.getAvt());
+        userDTO.setEmail(userEntity.getEmail());
+        return userDTO;
     }
 
 
