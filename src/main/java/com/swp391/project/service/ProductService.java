@@ -146,6 +146,31 @@ public class ProductService implements ProductServiceImp {
     }
 
     @Override
+    public Page<ProductDTO> findAllByType(String type, Pageable pageable) {
+        Page<ProductEntity> productsPage;
+        if (type != null) {
+            productsPage = productRepository.findAllByType(type, pageable);
+        } else {
+            productsPage = productRepository.findAll(pageable);
+        }
+
+        return productsPage.map(productEntity -> new ProductDTO(
+                productEntity.getId(),
+                productEntity.getName(),
+                productEntity.getImage(),
+                productEntity.getDescription(),
+                productEntity.getType(),
+                productEntity.getHeight(),
+                productEntity.getLength(),
+                productEntity.getWidth(),
+                productEntity.getPrice(),
+                productEntity.getCreatedAt(),
+                productEntity.getUpdatedAt(),
+                productEntity.getStatus()
+        ));
+    }
+
+    @Override
     public List<ProductDTO> findByType(String type) {
         try{
         List<ProductEntity> productEntities = productRepository.findByType(type);

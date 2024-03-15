@@ -47,6 +47,24 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/getAllPageProductByType")
+    public ResponseEntity<?> getAllProduct(Pageable pageable, @RequestParam(name = "type", required = false) String type){
+        BaseResponse baseResponse = new BaseResponse();
+        Page<ProductDTO> productDTOS = productServiceImp.findAllByType(type,pageable);
+        if(!productDTOS.isEmpty()){
+            baseResponse.setData(productDTOS);
+            baseResponse.setTotalPages(productDTOS.getTotalPages());
+            baseResponse.setMesssage("Successfull");
+            baseResponse.setStatusCode(200);
+            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }else{
+            baseResponse.setData(null);
+            baseResponse.setMesssage("Not Found");
+            baseResponse.setStatusCode(400);
+            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+    }
+
     @GetMapping("/getAllType")
     public ResponseEntity<?> getAllType(){
         BaseResponse baseResponse = new BaseResponse();
@@ -64,22 +82,22 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/getAllProductByType")
-    public ResponseEntity<?> getAllProductByType(@RequestParam String type){
-        BaseResponse baseResponse = new BaseResponse();
-        List<ProductDTO> productDTOS = productServiceImp.findByType(type);
-        if(!productDTOS.isEmpty()){
-            baseResponse.setData(productDTOS);
-            baseResponse.setMesssage("Successfull");
-            baseResponse.setStatusCode(200);
-            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
-        }else{
-            baseResponse.setData(null);
-            baseResponse.setMesssage("Not Found");
-            baseResponse.setStatusCode(400);
-            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
-        }
-    }
+//    @GetMapping("/getAllProductByType")
+//    public ResponseEntity<?> getAllProductByType(@RequestParam String type){
+//        BaseResponse baseResponse = new BaseResponse();
+//        List<ProductDTO> productDTOS = productServiceImp.findByType(type);
+//        if(!productDTOS.isEmpty()){
+//            baseResponse.setData(productDTOS);
+//            baseResponse.setMesssage("Successfull");
+//            baseResponse.setStatusCode(200);
+//            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
+//        }else{
+//            baseResponse.setData(null);
+//            baseResponse.setMesssage("Not Found");
+//            baseResponse.setStatusCode(400);
+//            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
+//        }
+//    }
 
     @PostMapping(value = "/createProduct",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> create(@RequestPart(name = "fileImg", required = true) MultipartFile fileImg, @RequestParam(name = "name", required = false) String name,

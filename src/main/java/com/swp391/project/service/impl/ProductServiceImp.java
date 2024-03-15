@@ -29,6 +29,8 @@ public interface ProductServiceImp {
 
     Page<ProductDTO> findAll(Pageable pageable);
 
+    Page<ProductDTO> findAllByType(String type, Pageable pageable);
+
     List<ProductDTO> findByType(String type);
 
     List<String> findAllType();

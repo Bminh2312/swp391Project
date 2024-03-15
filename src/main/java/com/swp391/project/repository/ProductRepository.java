@@ -15,6 +15,8 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<ProductEntity,Integer> {
     Page<ProductEntity> findAll(Pageable pageable);
 
+    Page<ProductEntity> findAllByType(String type, Pageable pageable);
+
     List<ProductEntity> findByType(String type);
 
     @Query("SELECT DISTINCT p.type FROM product p")
