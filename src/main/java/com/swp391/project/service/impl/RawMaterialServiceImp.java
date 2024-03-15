@@ -18,4 +18,6 @@ public interface RawMaterialServiceImp {
                     double pricePerM2, MultipartFile imgFile, int rawMaterialId);
 
     Page<RawMaterialDTO> findAll(Pageable pageable);
+
+    boolean delete(int id, String status);
 }

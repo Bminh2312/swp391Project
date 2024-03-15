@@ -22,5 +22,6 @@ public class UserDetailDTO {
     private String address;
     private String accessToken;
     private String role;
+    private String status;
 
 }

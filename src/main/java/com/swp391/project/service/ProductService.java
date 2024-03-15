@@ -166,6 +166,28 @@ public class ProductService implements ProductServiceImp {
 
     }
 
+    @Override
+    public boolean delete(int id, String status) {
+        try {
+            TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+            Optional<ProductEntity> productEntity = productRepository.findById(id);
+            if (productEntity.isPresent()) {
+                // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
+                Calendar calendar = Calendar.getInstance(timeZone);
+                Date currentTime = calendar.getTime();
+                productEntity.get().setStatus(status);
+                productEntity.get().setUpdatedAt(currentTime);
+                productRepository.save(productEntity.get());
+                return true;
+            }else{
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
     public  ProductDTO mapProductToDTO(ProductEntity productEntity) {
         ProductDTO productDTO = new ProductDTO();
         productDTO.setId(productEntity.getId());

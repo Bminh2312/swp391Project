@@ -4,6 +4,7 @@ import com.swp391.project.dto.ProductDTO;
 import com.swp391.project.dto.RawMaterialDTO;
 import com.swp391.project.payload.response.BaseResponse;
 import com.swp391.project.service.impl.RawMaterialServiceImp;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -65,7 +66,7 @@ public class RawMaterialController {
     public ResponseEntity<?> update(@RequestPart(name = "fileImg", required = false) MultipartFile fileImg, @RequestParam int rawMaterialId, @RequestParam(name = "name", required = false) String name,
                                     @RequestParam(name = "description", required = false) String description,
                                     @RequestParam(name = "type", required = false) String type,
-                                    @RequestParam(name = "pricePerM2", required = false) double pricePerM2){
+                                    @RequestParam(name = "pricePerM2", required = false, defaultValue = "0") double pricePerM2){
         System.out.println(name);
         boolean check = rawMaterialServiceImp.update(name,description,type,pricePerM2,fileImg,rawMaterialId);
         BaseResponse baseResponse = new BaseResponse();
@@ -77,6 +78,23 @@ public class RawMaterialController {
         }
         baseResponse.setStatusCode(400);
         baseResponse.setMesssage("Update Failed");
+        baseResponse.setData("False");
+        return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
+
+    }
+
+    @DeleteMapping(value = "/deleteRawMaterial")
+    public ResponseEntity<?> delete(@RequestParam("id") int id, @RequestParam @Schema(description = "Status", allowableValues = {"ACTIVE", "INACTIVE"}) String status){
+        boolean check = rawMaterialServiceImp.delete(id,status);
+        BaseResponse baseResponse = new BaseResponse();
+        if(check){
+            baseResponse.setStatusCode(201);
+            baseResponse.setMesssage("Create Successfull");
+            baseResponse.setData("True");
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+        baseResponse.setStatusCode(200);
+        baseResponse.setMesssage("Create Failed");
         baseResponse.setData("False");
         return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
 

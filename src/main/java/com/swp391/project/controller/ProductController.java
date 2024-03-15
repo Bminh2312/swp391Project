@@ -6,6 +6,7 @@ import com.swp391.project.payload.request.DesignStypeRequest;
 import com.swp391.project.payload.request.ProductRequest;
 import com.swp391.project.payload.response.BaseResponse;
 import com.swp391.project.service.impl.ProductServiceImp;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -109,10 +110,10 @@ public class ProductController {
     public ResponseEntity<?> update(@RequestPart(name = "fileImg", required = false) MultipartFile fileImg, @RequestParam int productId, @RequestParam(name = "name", required = false) String name,
                                     @RequestParam(name = "description", required = false) String description,
                                     @RequestParam(name = "type", required = false) String type,
-                                    @RequestParam(name = "height", required = false) double height,
-                                    @RequestParam(name = "length", required = false) double length,
-                                    @RequestParam(name = "width", required = false) double width,
-                                    @RequestParam(name = "price", required = false) double price){
+                                    @RequestParam(name = "height", required = false, defaultValue = "0") double height,
+                                    @RequestParam(name = "length", required = false,  defaultValue = "0") double length,
+                                    @RequestParam(name = "width", required = false,  defaultValue = "0") double width,
+                                    @RequestParam(name = "price", required = false,  defaultValue = "0") double price){
         System.out.println(name);
         boolean check = productServiceImp.update(name,description,type,height,length,width,price,fileImg,productId);
         BaseResponse baseResponse = new BaseResponse();
@@ -124,6 +125,23 @@ public class ProductController {
         }
         baseResponse.setStatusCode(400);
         baseResponse.setMesssage("Update Failed");
+        baseResponse.setData("False");
+        return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
+
+    }
+
+    @DeleteMapping(value = "/deleteProduct")
+    public ResponseEntity<?> delete(@RequestParam("id") int id, @RequestParam @Schema(description = "Status", allowableValues = {"ACTIVE", "INACTIVE"}) String status){
+        boolean check = productServiceImp.delete(id,status);
+        BaseResponse baseResponse = new BaseResponse();
+        if(check){
+            baseResponse.setStatusCode(201);
+            baseResponse.setMesssage("Create Successfull");
+            baseResponse.setData("True");
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+        baseResponse.setStatusCode(200);
+        baseResponse.setMesssage("Create Failed");
         baseResponse.setData("False");
         return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
 

@@ -121,4 +121,26 @@ public class RawMaterialService implements RawMaterialServiceImp {
             return rawMaterialDTO;
         });
     }
+
+    @Override
+    public boolean delete(int id, String status) {
+        try {
+            TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+            Optional<RawMaterialEntity> rawMaterialEntity = rawMaterialRepository.findById(id);
+            if (rawMaterialEntity.isPresent()) {
+                // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
+                Calendar calendar = Calendar.getInstance(timeZone);
+                Date currentTime = calendar.getTime();
+                rawMaterialEntity.get().setStatus(status);
+                rawMaterialEntity.get().setUpdatedAt(currentTime);
+                rawMaterialRepository.save(rawMaterialEntity.get());
+                return true;
+            }else{
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
 }

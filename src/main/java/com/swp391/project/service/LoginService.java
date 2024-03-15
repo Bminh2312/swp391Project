@@ -76,6 +76,7 @@ public class LoginService implements LoginServiceImp {
                 userDetailDTO.setPhone(userEntity.getPhone());
                 userDetailDTO.setAddress(userEntity.getAddress());
                 userDetailDTO.setRole(userEntity.getRole().getName());
+                userDetailDTO.setStatus(userEntity.getStatus());
                 BaseResponse baseResponse = new BaseResponse();
                 baseResponse.setMesssage("LoginSucessFull");
                 baseResponse.setData(userDetailDTO);
@@ -106,6 +107,7 @@ public class LoginService implements LoginServiceImp {
                 userDetailDTO.setPhone(userEntityNew.getPhone());
                 userDetailDTO.setAddress(userEntityNew.getAddress());
                 userDetailDTO.setRole(userEntityNew.getRole().getName());
+                userDetailDTO.setStatus(userEntityNew.getStatus());
                 BaseResponse baseResponse = new BaseResponse();
                 baseResponse.setMesssage("LoginSucessFull");
                 baseResponse.setData(userDetailDTO);
@@ -143,6 +145,7 @@ public class LoginService implements LoginServiceImp {
             userDetailDTO.setPhone(userEntity.getPhone());
             userDetailDTO.setAddress(userEntity.getAddress());
             userDetailDTO.setRole(userEntity.getRole().getName());
+            userDetailDTO.setStatus(userEntity.getStatus());
             BaseResponse baseResponse = new BaseResponse();
             baseResponse.setMesssage("OKOK");
             baseResponse.setData(userDetailDTO);

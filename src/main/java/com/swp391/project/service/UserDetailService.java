@@ -58,6 +58,7 @@ public class UserDetailService implements UserDetailServiceImp {
                 userDetailDTO.setEmail(userEntities.get().getEmail());
                 userDetailDTO.setFullName(userEntities.get().getFullName());
                 userDetailDTO.setRole(userEntities.get().getRole().getName());
+                userDetailDTO.setStatus(userEntities.get().getStatus());
                 return userDetailDTO;
             }
 
@@ -79,7 +80,8 @@ public class UserDetailService implements UserDetailServiceImp {
                 userEntity.getPhone(),
                 userEntity.getAddress(),
                 userEntity.getAccessToken(),
-                userEntity.getRole().getName()
+                userEntity.getRole().getName(),
+                userEntity.getStatus()
         ));
     }
 
