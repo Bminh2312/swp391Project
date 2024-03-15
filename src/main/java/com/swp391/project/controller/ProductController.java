@@ -154,12 +154,12 @@ public class ProductController {
         BaseResponse baseResponse = new BaseResponse();
         if(check){
             baseResponse.setStatusCode(201);
-            baseResponse.setMesssage("Create Successfull");
+            baseResponse.setMesssage("Delete Successfull");
             baseResponse.setData("True");
             return new ResponseEntity<>(baseResponse, HttpStatus.OK);
         }
         baseResponse.setStatusCode(200);
-        baseResponse.setMesssage("Create Failed");
+        baseResponse.setMesssage("Delete Failed");
         baseResponse.setData("False");
         return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
 
