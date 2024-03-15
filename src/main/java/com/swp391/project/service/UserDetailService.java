@@ -42,6 +42,7 @@ public class UserDetailService implements UserDetailServiceImp {
         userDetailDTO.setEmail(userEntities.getEmail());
         userDetailDTO.setFullName(userEntities.getFullName());
         userDetailDTO.setRole(userEntities.getRole().getName());
+        userDetailDTO.setStatus(userEntities.get().getStatus());
         return userDetailDTO;
     }
 
