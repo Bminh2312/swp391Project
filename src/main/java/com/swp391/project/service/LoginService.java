@@ -138,6 +138,7 @@ public class LoginService implements LoginServiceImp {
             UserDetailDTO userDetailDTO = new UserDetailDTO();
             userEntity.setAccessToken(jwtToken);
             userRepository.save(userEntity);
+            userDetailDTO.setId(userEntity.getId());
             userDetailDTO.setAccessToken(userEntity.getAccessToken());
             userDetailDTO.setEmail(userEntity.getEmail());
             userDetailDTO.setFullName(userEntity.getFullName());
