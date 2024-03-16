@@ -25,7 +25,7 @@ public class QuoteController {
     private QuoteServiceImp quoteServiceImp;
 
     @GetMapping("/getAllQuoteByProjectSample")
-    public ResponseEntity<?> getAllQuoteByProjectId(@RequestParam(required = false, defaultValue = "true") @Schema(description = "isSample", type = "boolean") boolean isSample){
+    public ResponseEntity<?> getAllQuoteByProjectSample(@RequestParam(required = false, defaultValue = "true") @Schema(description = "isSample", type = "boolean") boolean isSample){
         BaseResponse baseResponse = new BaseResponse();
         baseResponse.setMesssage("SucessFull");
         baseResponse.setStatusCode(200);
@@ -37,6 +37,23 @@ public class QuoteController {
             return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
         }else{
             baseResponse.setData(allQuoteRoomByProject);
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/getAllQuoteByProjectId")
+    public ResponseEntity<?> getQuoteByProjectId(@RequestParam int projectId){
+        BaseResponse baseResponse = new BaseResponse();
+        baseResponse.setMesssage("SucessFull");
+        baseResponse.setStatusCode(200);
+        ProjectWithAllQuoteDTO project = quoteServiceImp.findQuoteRoomByProjectId(projectId);
+        if(project == null){
+            baseResponse.setMesssage("Not Found");
+            baseResponse.setStatusCode(400);
+            baseResponse.setData(null);
+            return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
+        }else{
+            baseResponse.setData(project);
             return new ResponseEntity<>(baseResponse, HttpStatus.OK);
         }
     }

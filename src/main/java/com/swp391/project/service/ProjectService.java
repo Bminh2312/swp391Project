@@ -394,6 +394,9 @@ public class ProjectService implements ProjectServiceImp {
     }
 
     private UserDetailDTO mapUserToDTO(UserEntity userEntity) {
+        if(userEntity == null){
+            return null;
+        }
         UserDetailDTO userDTO = new UserDetailDTO();
         // Thực hiện ánh xạ các trường từ entity sang DTO
         userDTO.setId(userEntity.getId());

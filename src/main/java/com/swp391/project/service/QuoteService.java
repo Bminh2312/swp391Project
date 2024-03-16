@@ -103,6 +103,48 @@ public class QuoteService implements QuoteServiceImp {
 
     }
 
+    @Override
+    public ProjectWithAllQuoteDTO findQuoteRoomByProjectId(int id) {
+        ProjectWithAllQuoteDTO projectWithAllQuotes = new ProjectWithAllQuoteDTO();
+        try {
+            Optional<ProjectEntity> projectEntityOptional = projectRepository.findById(id);
+            if (projectEntityOptional.isPresent()) {
+                ProjectEntity projectEntity = projectEntityOptional.get();
+                ProjectDTO projectDTO = mapProjectToDTO(projectEntity);
+                List<RoomWithAllQuoteDetailDTO> roomWithAllQuoteDetailDTOs = new ArrayList<>();
+
+                List<QuoteEntity> quotes = quoteRepository.findByProjectQuoteId(projectEntity.getId());
+                for (QuoteEntity quoteEntity : quotes) {
+                    RoomWithAllQuoteDetailDTO roomWithAllQuoteDetailDTO = new RoomWithAllQuoteDetailDTO();
+                    roomWithAllQuoteDetailDTO.setRoomName(quoteEntity.getRoomQuote().getName());
+                    roomWithAllQuoteDetailDTO.setImg(quoteEntity.getImg());
+
+                    List<QuoteDetailEntity> quoteDetails = quoteDetailRepository.findByQuoteId(quoteEntity.getId());
+                    List<QuoteDetailDTO> quoteDetailDTOs = new ArrayList<>();
+                    double total = 0;
+
+                    for (QuoteDetailEntity quoteDetail : quoteDetails) {
+                        QuoteDetailDTO quoteDetailDTO = getQuoteDetailDTO(quoteDetail);
+                        total += quoteDetail.getPrice();
+                        quoteDetailDTOs.add(quoteDetailDTO);
+                    }
+
+                    roomWithAllQuoteDetailDTO.setQuoteDetailDTOS(quoteDetailDTOs);
+                    roomWithAllQuoteDetailDTO.setTotal(total);
+                    roomWithAllQuoteDetailDTOs.add(roomWithAllQuoteDetailDTO);
+                }
+
+                projectWithAllQuotes.setProjectDTO(projectDTO);
+                projectWithAllQuotes.setWithAllQuoteDetailDTOList(roomWithAllQuoteDetailDTOs);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Xử lý ngoại lệ phù hợp
+        }
+        return projectWithAllQuotes;
+    }
+
+
     @Transactional(rollbackFor = {RuntimeException.class,Exception.class})
     @Override
     public boolean updateTotal(int projectId) {

@@ -15,5 +15,7 @@ public interface QuoteServiceImp {
 
     List<ProjectWithAllQuoteDTO> findAllQuoteRoomByProject(boolean isSample);
 
+    ProjectWithAllQuoteDTO findQuoteRoomByProjectId(int id);
+
     String getQrToPay(int projectId, String description);
 }
