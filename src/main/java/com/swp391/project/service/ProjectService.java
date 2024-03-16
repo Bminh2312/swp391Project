@@ -168,6 +168,31 @@ public class ProjectService implements ProjectServiceImp {
     }
 
     @Override
+    public Page<ProjectWithUserDTO> findAllByStatusAndDesignStypeAndType(String status, String designStype, String type, Pageable pageable) {
+
+        Page<ProjectEntity> projectEntityPage;
+        if (status != null) {
+            projectEntityPage = projectRepository.findAllByStatus(status, pageable);
+        } else {
+            projectEntityPage = projectRepository.findAll(pageable);
+        }
+
+        return projectEntityPage.map(projectEntity -> new ProjectWithUserDTO(
+                mapUserToDTO(projectEntity.getUser()),
+                projectEntity.getId(),
+                projectEntity.getName(),
+                projectEntity.getImg(),
+                projectEntity.getLocation(),
+                projectEntity.getType(),
+                projectEntity.isSample(),
+                projectEntity.getDesignStyle().getName(),
+                projectEntity.getCreatedAt(),
+                projectEntity.getUpdatedAt(),
+                projectEntity.getStatus()
+        ));
+    }
+
+    @Override
     public Page<ProjectWithUserDTO> findAllByStatus(String status, Pageable pageable) {
         Page<ProjectEntity> projectEntityPage;
         if (status != null) {

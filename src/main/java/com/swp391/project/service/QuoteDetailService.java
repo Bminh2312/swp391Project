@@ -128,7 +128,7 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
     }
 
     @Override
-    public boolean updateQuoteForProduct(int idQuoteDetail, int idProduct, int quantityChange) {
+    public boolean updateQuoteForProduct(int idQuoteDetail, int idProduct, String note, double priceChange,  int quantityChange) {
         try{
             int quantity = 0;
             double price = 0;
@@ -152,8 +152,12 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
                         quoteDetailEntity.get().setQuantity(quantityChange);
                         quantity = quantityChange;
                     }
+                    if(priceChange != 0){
+                        quoteDetailEntity.get().setPrice(quantity * priceChange);
+                    }else{
+                        quoteDetailEntity.get().setPrice(quantity * price);
+                    }
 
-                    quoteDetailEntity.get().setPrice(quantity * price);
 
                     quoteDetailEntity.get().setArea(0);
                     quoteDetailEntity.get().setUpdatedAt(currentTime);

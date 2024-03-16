@@ -24,6 +24,8 @@ public interface ProjectServiceImp {
 
     Page<ProjectWithUserDTO> findAllByStatus(String status, Pageable pageable);
 
+    Page<ProjectWithUserDTO> findAllByStatusAndDesignStypeAndType(String status, String designStype, String type, Pageable pageable);
+
     Page<ProjectDTO> findAllByStatusAndUserId(int userId, String status, Pageable pageable);
 
     List<ProjectDTO> findByStatusAndUserId(String status, int id);

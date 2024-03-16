@@ -56,8 +56,8 @@ public class QuoteDetailController {
     }
 
     @PutMapping(value = "/product/updateQuoteDetail")
-    public ResponseEntity<?> updateQuoteDetailForProduct(@RequestParam int quoteDetailId, @RequestParam(required = false) int productId, @RequestParam int quantity){
-        boolean check = quoteDetailServiceImp.updateQuoteForProduct(quoteDetailId,productId,quantity);
+    public ResponseEntity<?> updateQuoteDetailForProduct(@RequestParam int quoteDetailId, @RequestParam(required = false) int productId, @RequestParam(name = "quantity", defaultValue = "0") int quantity, @RequestParam String note, double price){
+        boolean check = quoteDetailServiceImp.updateQuoteForProduct(quoteDetailId,productId,note,price,quantity);
         BaseResponse baseResponse = new BaseResponse();
         if(check){
             baseResponse.setStatusCode(200);

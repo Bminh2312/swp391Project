@@ -12,7 +12,7 @@ public interface QuoteDetailServiceImp {
 
     boolean createQuoteForRaw(QuoteDetailForRawRequest quoteDetailRequest);
 
-    boolean updateQuoteForProduct(int idQuoteDetail, int idProduct, int quantity);
+    boolean updateQuoteForProduct(int idQuoteDetail, int idProduct, String note, double priceChange,  int quantityChange);
 
     boolean updateQuoteForProductByNoteForStaff(int idQuoteDetail, int idProduct, double priceChange,int quantity);
 
