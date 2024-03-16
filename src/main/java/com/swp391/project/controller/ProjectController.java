@@ -8,6 +8,7 @@ import com.swp391.project.dto.ProjectWithUserDTO;
 import com.swp391.project.payload.request.ProjectRequest;
 import com.swp391.project.payload.response.BaseResponse;
 import com.swp391.project.service.impl.ProjectServiceImp;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,7 +47,7 @@ public class ProjectController {
     }
 
     @GetMapping("/getAllPageProjectByStatus")
-    public ResponseEntity<?> getAllPageProductByStatusAndUserId(Pageable pageable, @RequestParam(name = "status", required = false) String status){
+    public ResponseEntity<?> getAllPageProductByStatusAndUserId(Pageable pageable, @RequestParam @Schema(description = "Status", allowableValues = {"NEW", "QUOTING","REJECTED"}) String status){
         BaseResponse baseResponse = new BaseResponse();
         Page<ProjectWithUserDTO> projectDTOS = projectImp.findAllByStatus(status,pageable);
         if(!projectDTOS.isEmpty()){
