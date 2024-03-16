@@ -177,6 +177,7 @@ public class ProjectService implements ProjectServiceImp {
         }
 
         return projectEntityPage.map(projectEntity -> new ProjectWithUserDTO(
+                mapUserToDTO(projectEntity.getUser()),
                 projectEntity.getId(),
                 projectEntity.getName(),
                 projectEntity.getImg(),
