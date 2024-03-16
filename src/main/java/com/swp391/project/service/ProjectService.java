@@ -173,7 +173,9 @@ public class ProjectService implements ProjectServiceImp {
         Page<ProjectEntity> projectEntityPage;
         if (status != null) {
             projectEntityPage = projectRepository.findAllByStatus(status, pageable);
-        } else {
+        }else if(designStype != null){
+            projectEntityPage = projectRepository.findAllByStatus(status, pageable);
+        }else {
             projectEntityPage = projectRepository.findAll(pageable);
         }
 

@@ -23,7 +23,7 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity,Integer> 
 
     Page<ProjectEntity> findAllByStatus(String type, Pageable pageable);
 
-    Page<ProjectEntity> findAllByStatusAndDesignStypeAndType(String status, String designStype, String type, Pageable pageable);
+//    Page<ProjectEntity> findAllByStatusAndDesignStypeAndType(String status, String designStype, String type, Pageable pageable);
 
     Page<ProjectEntity> findAllByStatusAndUserId( String status, int userId, Pageable pageable);
 
