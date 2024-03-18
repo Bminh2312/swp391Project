@@ -54,7 +54,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/login/**","/designStyle/**","/project/**","/quote/**").permitAll()
+                                .requestMatchers("/login/**","/designStyle/**","/project/**","/quote/**","/type/**").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/v3/**").permitAll()
                                 .requestMatchers("/product/**","/rawMaterial/**").hasAnyRole("ADMIN","USER","STAFF")
                                 .requestMatchers("/room/**").hasAnyRole("ADMIN","USER","STAFF")
