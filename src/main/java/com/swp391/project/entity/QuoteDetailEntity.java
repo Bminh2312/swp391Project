@@ -19,8 +19,11 @@ public class QuoteDetailEntity implements Serializable {
     @Column(name = "quantity")
     private int quantity;
 
-    @Column(name = "price")
-    private double price;
+    @Column(name = "total_price")
+    private double totalPrice;
+
+    @Column(name = "price_change")
+    private double priceChange;
 
     @Column(name = "note")
     private String note;

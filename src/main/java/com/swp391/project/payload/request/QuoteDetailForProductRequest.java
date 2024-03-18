@@ -12,4 +12,5 @@ public class QuoteDetailForProductRequest {
     private String note;
     private int quoteId;
     private int productId;
+    private double priceChange;
 }

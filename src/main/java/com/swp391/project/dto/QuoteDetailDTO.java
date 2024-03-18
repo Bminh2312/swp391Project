@@ -12,7 +12,8 @@ import java.util.Date;
 public class QuoteDetailDTO {
     private int id;
     private int quantity;
-    private double price;
+    private double totalPrice;
+    private double priceChange;
     private double area;
     private String note;
     private int quoteId;

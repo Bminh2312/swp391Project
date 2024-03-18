@@ -46,7 +46,11 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
                 QuoteDetailEntity quoteDetailEntity = new QuoteDetailEntity();
                 quoteDetailEntity.setProduct(productEntity.get());
                 quoteDetailEntity.setQuantity(quoteDetailRequest.getQuantity());
-                quoteDetailEntity.setPrice(quoteDetailRequest.getQuantity() * productEntity.get().getPrice());
+                if(quoteDetailRequest.getPriceChange() == 0){
+                    quoteDetailEntity.setTotalPrice(quoteDetailRequest.getQuantity() * productEntity.get().getPrice());
+
+                }
+                quoteDetailRequest.setPriceChange(0);
                 quoteDetailEntity.setNote(quoteDetailRequest.getNote());
                 quoteDetailEntity.setArea(0);
                 quoteEntity.ifPresent(quoteDetailEntity::setQuote);
@@ -110,8 +114,9 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
                 QuoteDetailEntity quoteDetailEntity = new QuoteDetailEntity();
                 quoteDetailEntity.setRawMaterial(rawMaterialEntity.get());
                 quoteDetailEntity.setQuantity(0);
+                quoteDetailEntity.setPriceChange(0);
                 quoteDetailEntity.setArea(quoteDetailRequest.getArea());
-                quoteDetailEntity.setPrice(quoteDetailRequest.getArea() * rawMaterialEntity.get().getPricePerM2());
+                quoteDetailEntity.setTotalPrice(quoteDetailRequest.getArea() * rawMaterialEntity.get().getPricePerM2());
                 quoteEntity.ifPresent(quoteDetailEntity::setQuote);
                 quoteDetailEntity.setStatus("ACTIVE");
                 quoteDetailEntity.setCreatedAt(currentTime);
@@ -153,9 +158,14 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
                         quantity = quantityChange;
                     }
                     if(priceChange != 0){
-                        quoteDetailEntity.get().setPrice(quantity * priceChange);
+                        quoteDetailEntity.get().setPriceChange(priceChange);
+                        quoteDetailEntity.get().setTotalPrice(quantity * priceChange);
                     }else{
-                        quoteDetailEntity.get().setPrice(quantity * price);
+                        quoteDetailEntity.get().setTotalPrice(quantity * price);
+                    }
+
+                    if(note != null){
+                        quoteDetailEntity.get().setNote(note);
                     }
 
 
@@ -173,98 +183,98 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
 
     }
 
-    @Override
-    public boolean updateQuoteForProductByNoteForStaff(int idQuoteDetail, int idProduct, double priceChange, int quantityChange) {
-        try{
-            int quantity = 0;
-            double price = 0;
-            Optional<QuoteDetailEntity> quoteDetailEntity = quoteDetailRepository.findById(idQuoteDetail);
-            if(quoteDetailEntity.isPresent()) {
-                Optional<ProductEntity> productEntity = productRepository.findById(quoteDetailEntity.get().getProduct().getId());
-                System.out.println();
-                if (productEntity.isPresent()) {
-                    quantity = quoteDetailEntity.get().getQuantity();
-                    price = productEntity.get().getPrice();
-                    TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+//    @Override
+//    public boolean updateQuoteForProductByNoteForStaff(int idQuoteDetail, int idProduct, double priceChange, int quantityChange) {
+//        try{
+//            int quantity = 0;
+//            double price = 0;
+//            Optional<QuoteDetailEntity> quoteDetailEntity = quoteDetailRepository.findById(idQuoteDetail);
+//            if(quoteDetailEntity.isPresent()) {
+//                Optional<ProductEntity> productEntity = productRepository.findById(quoteDetailEntity.get().getProduct().getId());
+//                System.out.println();
+//                if (productEntity.isPresent()) {
+//                    quantity = quoteDetailEntity.get().getQuantity();
+//                    price = productEntity.get().getPrice();
+//                    TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+//
+//                    // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
+//                    Calendar calendar = Calendar.getInstance(timeZone);
+//                    Date currentTime = calendar.getTime();
+//                    Optional<ProductEntity> productEntityChange = productRepository.findById(idProduct);
+//                    if (idProduct != productEntity.get().getId() && productEntityChange.isPresent()) {
+//                        quoteDetailEntity.get().setProduct(productEntityChange.get());
+//                        price = productEntityChange.get().getPrice();
+//                    }
+//                    if (quoteDetailEntity.get().getQuantity() != quantityChange) {
+//                        quoteDetailEntity.get().setQuantity(quantityChange);
+//                        quantity = quantityChange;
+//                    }
+//
+//                    if ((quoteDetailEntity.get().getNote() != null) && quoteDetailEntity.get().getPrice() != (priceChange * quantity)) {
+//                        quoteDetailEntity.get().setPrice(quantity * priceChange);
+//                    } else {
+//                        quoteDetailEntity.get().setPrice(quantity * price);
+//                    }
+//
+//                    quoteDetailEntity.get().setArea(0);
+//                    quoteDetailEntity.get().setUpdatedAt(currentTime);
+//                    quoteDetailRepository.save(quoteDetailEntity.get());
+//                    return true;
+//                }
+//            }
+//        }catch (Exception e){
+//            System.out.println(e.getMessage());
+//            return false;
+//        }
+//        return false;
+//    }
 
-                    // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
-                    Calendar calendar = Calendar.getInstance(timeZone);
-                    Date currentTime = calendar.getTime();
-                    Optional<ProductEntity> productEntityChange = productRepository.findById(idProduct);
-                    if (idProduct != productEntity.get().getId() && productEntityChange.isPresent()) {
-                        quoteDetailEntity.get().setProduct(productEntityChange.get());
-                        price = productEntityChange.get().getPrice();
-                    }
-                    if (quoteDetailEntity.get().getQuantity() != quantityChange) {
-                        quoteDetailEntity.get().setQuantity(quantityChange);
-                        quantity = quantityChange;
-                    }
-
-                    if ((quoteDetailEntity.get().getNote() != null) && quoteDetailEntity.get().getPrice() != (priceChange * quantity)) {
-                        quoteDetailEntity.get().setPrice(quantity * priceChange);
-                    } else {
-                        quoteDetailEntity.get().setPrice(quantity * price);
-                    }
-
-                    quoteDetailEntity.get().setArea(0);
-                    quoteDetailEntity.get().setUpdatedAt(currentTime);
-                    quoteDetailRepository.save(quoteDetailEntity.get());
-                    return true;
-                }
-            }
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-            return false;
-        }
-        return false;
-    }
-
-    @Override
-    public int updateQuoteForProductByNoteForUser(int idQuoteDetail, int quantityChange, double priceChange, String note) {
-        try {
-            TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
-
-            // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
-            Calendar calendar = Calendar.getInstance(timeZone);
-            Date currentTime = calendar.getTime();
-            Optional<QuoteDetailEntity> quoteDetailEntityOptional = quoteDetailRepository.findById(idQuoteDetail);
-            if (quoteDetailEntityOptional.isPresent()) {
-                QuoteDetailEntity quoteDetailEntity = quoteDetailEntityOptional.get();
-
-                // Kiểm tra nếu note không rỗng, tạo mới QuoteDetailEntity
-                if (!note.isEmpty()) {
-                    QuoteDetailEntity newQuoteDetailEntity = new QuoteDetailEntity();
-                    newQuoteDetailEntity.setProduct(quoteDetailEntity.getProduct());
-                    newQuoteDetailEntity.setQuantity(quantityChange);
-                    newQuoteDetailEntity.setPrice(quantityChange * quoteDetailEntity.getProduct().getPrice());
-                    newQuoteDetailEntity.setArea(0);
-                    newQuoteDetailEntity.setNote(note);
-                    newQuoteDetailEntity.setStatus("ACTIVE");
-                    newQuoteDetailEntity.setCreatedAt(currentTime);
-                    newQuoteDetailEntity.setUpdatedAt(currentTime);
-                    quoteDetailRepository.save(newQuoteDetailEntity);
-                    QuoteDetailEntity savedQuoteDetailEntity = quoteDetailRepository.save(quoteDetailEntity);
-                    return savedQuoteDetailEntity.getId();
-                }
-
-                // Cập nhật thông tin cho QuoteDetailEntity hiện tại
-                Optional<ProductEntity> productEntityOptional = productRepository.findById(quoteDetailEntity.getProduct().getId());
-                if (productEntityOptional.isPresent()) {
-                    quoteDetailEntity.setProduct(productEntityOptional.get());
-                    quoteDetailEntity.setQuantity(quantityChange);
-                    quoteDetailEntity.setPrice(quantityChange * productEntityOptional.get().getPrice());
-                    quoteDetailEntity.setArea(0);
-                    quoteDetailEntity.setUpdatedAt(currentTime);
-
-                    return idQuoteDetail;
-                }
-            }
-            return  0;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return 0;
-    }
+//    @Override
+//    public int updateQuoteForProductByNoteForUser(int idQuoteDetail, int quantityChange, double priceChange, String note) {
+//        try {
+//            TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+//
+//            // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
+//            Calendar calendar = Calendar.getInstance(timeZone);
+//            Date currentTime = calendar.getTime();
+//            Optional<QuoteDetailEntity> quoteDetailEntityOptional = quoteDetailRepository.findById(idQuoteDetail);
+//            if (quoteDetailEntityOptional.isPresent()) {
+//                QuoteDetailEntity quoteDetailEntity = quoteDetailEntityOptional.get();
+//
+//                // Kiểm tra nếu note không rỗng, tạo mới QuoteDetailEntity
+//                if (!note.isEmpty()) {
+//                    QuoteDetailEntity newQuoteDetailEntity = new QuoteDetailEntity();
+//                    newQuoteDetailEntity.setProduct(quoteDetailEntity.getProduct());
+//                    newQuoteDetailEntity.setQuantity(quantityChange);
+//                    newQuoteDetailEntity.setPrice(quantityChange * quoteDetailEntity.getProduct().getPrice());
+//                    newQuoteDetailEntity.setArea(0);
+//                    newQuoteDetailEntity.setNote(note);
+//                    newQuoteDetailEntity.setStatus("ACTIVE");
+//                    newQuoteDetailEntity.setCreatedAt(currentTime);
+//                    newQuoteDetailEntity.setUpdatedAt(currentTime);
+//                    quoteDetailRepository.save(newQuoteDetailEntity);
+//                    QuoteDetailEntity savedQuoteDetailEntity = quoteDetailRepository.save(quoteDetailEntity);
+//                    return savedQuoteDetailEntity.getId();
+//                }
+//
+//                // Cập nhật thông tin cho QuoteDetailEntity hiện tại
+//                Optional<ProductEntity> productEntityOptional = productRepository.findById(quoteDetailEntity.getProduct().getId());
+//                if (productEntityOptional.isPresent()) {
+//                    quoteDetailEntity.setProduct(productEntityOptional.get());
+//                    quoteDetailEntity.setQuantity(quantityChange);
+//                    quoteDetailEntity.setPrice(quantityChange * productEntityOptional.get().getPrice());
+//                    quoteDetailEntity.setArea(0);
+//                    quoteDetailEntity.setUpdatedAt(currentTime);
+//
+//                    return idQuoteDetail;
+//                }
+//            }
+//            return  0;
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//        }
+//        return 0;
+//    }
 
     @Override
     public boolean updateQuoteForRaw(int idQuoteDetail, int idRawMaterial, double areaChange) {
@@ -296,7 +306,7 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
                         area = areaChange;
                     }
 
-                    quoteDetailEntity.get().setPrice(area * price);
+                    quoteDetailEntity.get().setTotalPrice(area * price);
 
                     quoteDetailEntity.get().setUpdatedAt(currentTime);
                     quoteDetailRepository.save(quoteDetailEntity.get());
@@ -325,7 +335,8 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
             quoteDetailDTO.setNote(quoteDetailEntity.get().getNote());
             quoteDetailDTO.setQuantity(quoteDetailEntity.get().getQuantity());
             quoteDetailDTO.setArea(quoteDetailEntity.get().getArea());
-            quoteDetailDTO.setPrice(quoteDetailEntity.get().getPrice());
+            quoteDetailDTO.setTotalPrice(quoteDetailEntity.get().getTotalPrice());
+            quoteDetailDTO.setPriceChange(quoteDetailEntity.get().getPriceChange());
             quoteDetailDTO.setCreatedAt(quoteDetailEntity.get().getCreatedAt());
             quoteDetailDTO.setUpdatedAt(quoteDetailEntity.get().getUpdatedAt());
             quoteDetailDTO.setStatus(quoteDetailEntity.get().getStatus());
@@ -378,7 +389,8 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
         QuoteDetailDTO quoteDetailDTO = new QuoteDetailDTO();
         quoteDetailDTO.setId(quoteDetailEntity.getId());
         quoteDetailDTO.setQuantity(quoteDetailEntity.getQuantity());
-        quoteDetailDTO.setPrice(quoteDetailEntity.getPrice());
+        quoteDetailDTO.setTotalPrice(quoteDetailEntity.getTotalPrice());
+        quoteDetailDTO.setPriceChange(quoteDetailEntity.getPriceChange());
         quoteDetailDTO.setArea(quoteDetailEntity.getArea());
         quoteDetailDTO.setNote(quoteDetailEntity.getNote());
         if(quoteDetailEntity.getQuote() != null){
