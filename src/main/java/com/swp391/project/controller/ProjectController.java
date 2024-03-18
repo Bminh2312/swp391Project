@@ -46,28 +46,28 @@ public class ProjectController {
         }
     }
 
-    @GetMapping("/getAllPageProjectByStatus")
-    public ResponseEntity<?> getAllPageProductByStatusAndUserId(Pageable pageable, @RequestParam @Schema(description = "Status", allowableValues = {"NEW", "QUOTING","REJECTED"}) String status){
-        BaseResponse baseResponse = new BaseResponse();
-        Page<ProjectWithUserDTO> projectDTOS = projectImp.findAllByStatus(status,pageable);
-        if(!projectDTOS.isEmpty()){
-            baseResponse.setData(projectDTOS);
-            baseResponse.setTotalPages(projectDTOS.getTotalPages());
-            baseResponse.setMesssage("Successfull");
-            baseResponse.setStatusCode(200);
-            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
-        }else{
-            baseResponse.setData(null);
-            baseResponse.setMesssage("Not Found");
-            baseResponse.setStatusCode(400);
-            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
-        }
-    }
+//    @GetMapping("/getAllPageProjectByStatus")
+//    public ResponseEntity<?> getAllPageProductByStatusAndUserId(Pageable pageable, @RequestParam @Schema(description = "Status", allowableValues = {"NEW", "QUOTING","REJECTED"}) String status){
+//        BaseResponse baseResponse = new BaseResponse();
+//        Page<ProjectWithUserDTO> projectDTOS = projectImp.findAllByStatus(status,pageable);
+//        if(!projectDTOS.isEmpty()){
+//            baseResponse.setData(projectDTOS);
+//            baseResponse.setTotalPages(projectDTOS.getTotalPages());
+//            baseResponse.setMesssage("Successfull");
+//            baseResponse.setStatusCode(200);
+//            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
+//        }else{
+//            baseResponse.setData(null);
+//            baseResponse.setMesssage("Not Found");
+//            baseResponse.setStatusCode(400);
+//            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
+//        }
+//    }
 
     @GetMapping("/getAllPageProjectByStatusOrDesignStyleOrType")
     public ResponseEntity<?> getAllPageProjectByStatusOrDesignStyleOrType(Pageable pageable, @RequestParam @Schema(description = "Status", allowableValues = {"NEW", "QUOTING","REJECTED"}) String status, @RequestParam(name = "designStyleId", required = false, defaultValue = "0") int designStyleId, @RequestParam(name = "type", required = false,defaultValue = "0") int typeId){
         BaseResponse baseResponse = new BaseResponse();
-        Page<ProjectWithUserDTO> projectDTOS = projectImp.findAllByStatusOrDesignStyleOrType(status,designStyleId,typeId,pageable);
+        Page<ProjectWithUserDTO> projectDTOS = projectImp.findAllByStatusOrDesignStyleIdOrTypeProject_Id(status,designStyleId,typeId,pageable);
         if(!projectDTOS.isEmpty()){
             baseResponse.setData(projectDTOS);
             baseResponse.setTotalPages(projectDTOS.getTotalPages());
@@ -166,24 +166,24 @@ public class ProjectController {
         }
     }
 
-    @GetMapping("/getAllProjectByStatus")
-    public ResponseEntity<?> getProjectById(@RequestParam String status){
-        BaseResponse baseResponse = new BaseResponse();
-        baseResponse.setMesssage("SucessFull");
-        baseResponse.setStatusCode(200);
-        List<ProjectDTO> projectDTOS = projectImp.findByStatus(status);
-        if(projectDTOS == null){
-            baseResponse.setMesssage("Not Found");
-            baseResponse.setStatusCode(200);
-            baseResponse.setData(null);
-            return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
-        }else{
-            baseResponse.setData(projectDTOS);
-            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
-        }
-
-
-    }
+//    @GetMapping("/getAllProjectByStatus")
+//    public ResponseEntity<?> getProjectById(@RequestParam String status){
+//        BaseResponse baseResponse = new BaseResponse();
+//        baseResponse.setMesssage("SucessFull");
+//        baseResponse.setStatusCode(200);
+//        List<ProjectDTO> projectDTOS = projectImp.findByStatus(status);
+//        if(projectDTOS == null){
+//            baseResponse.setMesssage("Not Found");
+//            baseResponse.setStatusCode(200);
+//            baseResponse.setData(null);
+//            return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
+//        }else{
+//            baseResponse.setData(projectDTOS);
+//            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+//        }
+//
+//
+//    }
 
 
 }

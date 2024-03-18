@@ -24,9 +24,10 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity,Integer> 
 
     Page<ProjectEntity> findAllByStatus(String type, Pageable pageable);
 
-    Page<ProjectEntity> findAllByStatusOrDesignStyleOrType(String status, DesignStyleEntity designStyle, TypeProjectEntity type, Pageable pageable);
+    Page<ProjectEntity> findAllByTypeProject_Id(int styleId,Pageable  pageable);
     Page<ProjectEntity> findAllByStatusAndUserId( String status, int userId, Pageable pageable);
 
     Page<ProjectEntity> findAllByUserId(int userId, Pageable pageable);
 
+    Page<ProjectEntity> findAllByDesignStyleId(int designStyleId, Pageable pageable);
 }
