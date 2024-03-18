@@ -339,7 +339,7 @@ public class ProjectService implements ProjectServiceImp {
                     double total = 0;
                     for (QuoteDetailEntity quoteDetail : quoteDetails) {
                         QuoteDetailDTO quoteDetailDTO = getQuoteDetailDTO(quoteDetail);
-                        total +=quoteDetail.getPrice();
+                        total +=quoteDetail.getTotalPrice();
                         quoteDetailDTOs.add(quoteDetailDTO);
                     }
                     roomWithAllQuoteDetailDTO.setQuoteDetailDTOS(quoteDetailDTOs);
@@ -426,7 +426,7 @@ public class ProjectService implements ProjectServiceImp {
         if(quoteDetail.getRawMaterial() != null){
             quoteDetailDTO.setRawMaterial(mapRawMaterialToDTO(quoteDetail.getRawMaterial()));
         }
-        quoteDetailDTO.setPrice(quoteDetail.getPrice());
+        quoteDetailDTO.setTotalPrice(quoteDetail.getTotalPrice());
         quoteDetailDTO.setArea(quoteDetail.getArea());
         quoteDetailDTO.setNote(quoteDetail.getNote());
         quoteDetailDTO.setCreatedAt(quoteDetail.getCreatedAt());

@@ -125,7 +125,7 @@ public class QuoteService implements QuoteServiceImp {
 
                     for (QuoteDetailEntity quoteDetail : quoteDetails) {
                         QuoteDetailDTO quoteDetailDTO = getQuoteDetailDTO(quoteDetail);
-                        total += quoteDetail.getPrice();
+                        total += quoteDetail.getTotalPrice();
                         quoteDetailDTOs.add(quoteDetailDTO);
                     }
 
@@ -157,7 +157,7 @@ public class QuoteService implements QuoteServiceImp {
                     total = 0;
                     List<QuoteDetailEntity> quoteDetails = quoteDetailRepository.findByQuoteId(quoteEntity.getId());
                     for (QuoteDetailEntity quoteDetail : quoteDetails) {
-                        total +=quoteDetail.getPrice();
+                        total +=quoteDetail.getTotalPrice();
                     }
                     quoteEntity.setTotal(total);
                     quoteRepository.save(quoteEntity);
@@ -194,7 +194,7 @@ public class QuoteService implements QuoteServiceImp {
                         double total = 0;
                         for (QuoteDetailEntity quoteDetail : quoteDetails) {
                             QuoteDetailDTO quoteDetailDTO = getQuoteDetailDTO(quoteDetail);
-                            total += quoteDetail.getPrice();
+                            total += quoteDetail.getTotalPrice();
                             quoteDetailDTOs.add(quoteDetailDTO);
                         }
                         roomWithAllQuoteDetailDTO.setQuoteDetailDTOS(quoteDetailDTOs);
@@ -278,7 +278,8 @@ public class QuoteService implements QuoteServiceImp {
         if(quoteDetail.getRawMaterial() != null){
             quoteDetailDTO.setRawMaterial(mapRawMaterialToDTO(quoteDetail.getRawMaterial()));
         }
-        quoteDetailDTO.setPrice(quoteDetail.getPrice());
+        quoteDetailDTO.setTotalPrice(quoteDetail.getTotalPrice());
+        quoteDetailDTO.setPriceChange(quoteDetail.getPriceChange());
         quoteDetailDTO.setArea(quoteDetail.getArea());
         quoteDetailDTO.setNote(quoteDetail.getNote());
         quoteDetailDTO.setCreatedAt(quoteDetail.getCreatedAt());
