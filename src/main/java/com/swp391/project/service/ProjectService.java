@@ -45,7 +45,7 @@ public class ProjectService implements ProjectServiceImp {
             Optional<DesignStyleEntity> designStyleEntity = designStyleRepository.findById(projectRequest.getDesignStyleId());
             Optional<TypeProjectEntity> typeProjectEntity = typeRepository.findById(projectRequest.getTypeId());
 
-            if(designStyleEntity.isPresent() && typeProjectEntity.isEmpty()){
+            if(designStyleEntity.isPresent() && typeProjectEntity.isPresent()){
                 TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
 
                 // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
@@ -58,7 +58,7 @@ public class ProjectService implements ProjectServiceImp {
                 projectEntity.setLocation(projectRequest.getLocation());
                 projectEntity.setTypeProject(typeProjectEntity.get());
                 projectEntity.setDesignStyle(designStyleEntity.get());
-                projectEntity.setSample(false);
+                projectEntity.setSample(projectRequest.isSample());
                 projectEntity.setStatus(status);
                 projectEntity.setCreatedAt(currentTime);
                 projectEntity.setUpdatedAt(currentTime);

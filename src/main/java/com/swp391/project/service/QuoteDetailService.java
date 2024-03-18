@@ -279,14 +279,12 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
     @Override
     public boolean updateQuoteForRaw(int idQuoteDetail, int idRawMaterial, double areaChange) {
         try{
-            double area = 0;
             double price = 0;
             System.out.println(idQuoteDetail + " " +idRawMaterial+ " " +areaChange+ " ");
             Optional<QuoteDetailEntity> quoteDetailEntity = quoteDetailRepository.findById(idQuoteDetail);
             if(quoteDetailEntity.isPresent()) {
                 Optional<RawMaterialEntity> rawMaterialEntity = rawMaterialRepository.findById(quoteDetailEntity.get().getRawMaterial().getId());
                 if (rawMaterialEntity.isPresent()) {
-                    area = quoteDetailEntity.get().getArea();
                     price = rawMaterialEntity.get().getPricePerM2();
                     TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
 
@@ -299,25 +297,28 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
                         price = rawMaterialEntityChange.get().getPricePerM2();
                     }
 
-                    quoteDetailEntity.get().setQuantity(0);
 
                     if (areaChange != quoteDetailEntity.get().getArea()) {
                         quoteDetailEntity.get().setArea(areaChange);
-                        area = areaChange;
                     }
 
-                    quoteDetailEntity.get().setTotalPrice(area * price);
+                    quoteDetailEntity.get().setQuantity(0);
+
+                    quoteDetailEntity.get().setTotalPrice(areaChange * price);
 
                     quoteDetailEntity.get().setUpdatedAt(currentTime);
                     quoteDetailRepository.save(quoteDetailEntity.get());
                     return true;
+                }else{
+                    return false;
                 }
+            }else{
+                return false;
             }
         }catch (Exception e){
             System.out.println(e.getMessage());
             return false;
         }
-        return false;
     }
 
     @Override

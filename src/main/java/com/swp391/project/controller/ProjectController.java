@@ -108,7 +108,7 @@ public class ProjectController {
             baseResponse.setData(check);
             return new ResponseEntity<>(baseResponse, HttpStatus.OK);
         }
-        baseResponse.setStatusCode(200);
+        baseResponse.setStatusCode(404);
         baseResponse.setMesssage("Create Failed");
         baseResponse.setData(check);
         return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);

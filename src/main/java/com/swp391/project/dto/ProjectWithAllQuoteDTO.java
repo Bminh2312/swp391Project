@@ -11,5 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ProjectWithAllQuoteDTO {
     private ProjectDTO projectDTO;
+    private double constructionPriceType;
+    private  double constructionPriceDesign;
     private List<RoomWithAllQuoteDetailDTO> withAllQuoteDetailDTOList;
 }

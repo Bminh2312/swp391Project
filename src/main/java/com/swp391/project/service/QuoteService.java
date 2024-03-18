@@ -108,8 +108,13 @@ public class QuoteService implements QuoteServiceImp {
         ProjectWithAllQuoteDTO projectWithAllQuotes = new ProjectWithAllQuoteDTO();
         try {
             Optional<ProjectEntity> projectEntityOptional = projectRepository.findById(id);
+            double total = 0;
+            double constructionPriceType = 0;
+            double constructionPriceDesign = 0;
             if (projectEntityOptional.isPresent()) {
                 ProjectEntity projectEntity = projectEntityOptional.get();
+                constructionPriceType = (projectEntity.getTypeProject().getPriceType());
+                constructionPriceDesign = (projectEntity.getDesignStyle().getPriceDesign());
                 ProjectDTO projectDTO = mapProjectToDTO(projectEntity);
                 List<RoomWithAllQuoteDetailDTO> roomWithAllQuoteDetailDTOs = new ArrayList<>();
 
@@ -121,19 +126,21 @@ public class QuoteService implements QuoteServiceImp {
 
                     List<QuoteDetailEntity> quoteDetails = quoteDetailRepository.findByQuoteId(quoteEntity.getId());
                     List<QuoteDetailDTO> quoteDetailDTOs = new ArrayList<>();
-                    double total = 0;
+
 
                     for (QuoteDetailEntity quoteDetail : quoteDetails) {
                         QuoteDetailDTO quoteDetailDTO = getQuoteDetailDTO(quoteDetail);
                         total += quoteDetail.getTotalPrice();
+
                         quoteDetailDTOs.add(quoteDetailDTO);
                     }
 
                     roomWithAllQuoteDetailDTO.setQuoteDetailDTOS(quoteDetailDTOs);
-                    roomWithAllQuoteDetailDTO.setTotal(total);
+                    roomWithAllQuoteDetailDTO.setTotal(total + constructionPriceType + constructionPriceDesign);
                     roomWithAllQuoteDetailDTOs.add(roomWithAllQuoteDetailDTO);
                 }
-
+                projectWithAllQuotes.setConstructionPriceDesign(constructionPriceDesign);
+                projectWithAllQuotes.setConstructionPriceType(constructionPriceType);
                 projectWithAllQuotes.setProjectDTO(projectDTO);
                 projectWithAllQuotes.setWithAllQuoteDetailDTOList(roomWithAllQuoteDetailDTOs);
             }
