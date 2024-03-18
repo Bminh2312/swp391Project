@@ -27,6 +27,9 @@ public class DesignStyleEntity implements Serializable {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "price_design")
+    private double priceDesign;
+
     @OneToMany(mappedBy = "designStyle")
     private List<ProjectEntity> projectEntities;
 

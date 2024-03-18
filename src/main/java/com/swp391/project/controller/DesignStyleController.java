@@ -39,13 +39,14 @@ public class DesignStyleController {
 
     @PostMapping(value = "/createDesign", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> create(@RequestPart(name = "file", required = true) MultipartFile file, @RequestParam("name") String name,
-                                    @RequestParam("description") String description) {
+                                    @RequestParam("description") String description,
+                                    @RequestParam("price") double price) {
         try {
             // Xử lý logic của bạn ở đây với file và designStypeRequest
             // Ví dụ:
             System.out.println(name);
             System.out.println(description);
-            boolean check = designStyleImp.create(name,description, file);
+            boolean check = designStyleImp.create(name,description, price, file);
 
             BaseResponse baseResponse = new BaseResponse();
             if (check) {
@@ -66,8 +67,11 @@ public class DesignStyleController {
 
     @PutMapping(value = "/updateDesign",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> update(@RequestPart(name = "file", required = false) MultipartFile file, @RequestParam("name") String name,
-                                    @RequestParam("description") String description, String status, int designId){
-        boolean check = designStyleImp.update(name,description,file,status,designId);
+                                    @RequestParam(name = "price", required = false) double price,
+                                    @RequestParam(name = "description", required = false) String description,
+                                    @RequestParam(name = "description", required = false) String status,
+                                    @RequestParam(name = "designId") int designId){
+        boolean check = designStyleImp.update(name,description,price,file,status,designId);
         BaseResponse baseResponse = new BaseResponse();
         if(check){
             baseResponse.setStatusCode(200);

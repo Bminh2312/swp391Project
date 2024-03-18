@@ -5,7 +5,9 @@ import com.swp391.project.entity.*;
 import com.swp391.project.payload.request.ProjectRequest;
 import com.swp391.project.repository.*;
 
+import com.swp391.project.service.impl.DesignStyleServiceImp;
 import com.swp391.project.service.impl.ProjectServiceImp;
+import com.swp391.project.service.impl.TypeProjectServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,11 +33,17 @@ public class ProjectService implements ProjectServiceImp {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private TypeRepository typeRepository;
+
+
     @Override
     public int create(ProjectRequest projectRequest , int userId, String status) {
         try{
             Optional<DesignStyleEntity> designStyleEntity = designStyleRepository.findById(projectRequest.getDesignStyleId());
-            if(designStyleEntity.isPresent()){
+            Optional<TypeProjectEntity> typeProjectEntity = typeRepository.findById(projectRequest.getTypeId());
+
+            if(designStyleEntity.isPresent() && typeProjectEntity.isEmpty()){
                 TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
 
                 // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
@@ -46,7 +54,7 @@ public class ProjectService implements ProjectServiceImp {
                 userEntity.ifPresent(projectEntity::setUser);
                 projectEntity.setName(projectRequest.getName());
                 projectEntity.setLocation(projectRequest.getLocation());
-                projectEntity.setType(projectRequest.getType());
+                projectEntity.setTypeProject(typeProjectEntity.get());
                 projectEntity.setDesignStyle(designStyleEntity.get());
                 projectEntity.setSample(false);
                 projectEntity.setStatus(status);
@@ -70,6 +78,8 @@ public class ProjectService implements ProjectServiceImp {
         try{
             Optional<ProjectEntity> projectEntity = projectRepository.findById(projectId);
             Optional<DesignStyleEntity> designStyleEntity = designStyleRepository.findById(projectRequest.getDesignStyleId());
+            Optional<TypeProjectEntity> typeProjectEntity = typeRepository.findById(projectRequest.getTypeId());
+
             if(projectEntity.isPresent()){
                 TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
 
@@ -83,9 +93,8 @@ public class ProjectService implements ProjectServiceImp {
                      projectEntity.get().setLocation(projectRequest.getLocation());
                  }
 
-                 if(projectRequest.getType() != null ){
-                     projectEntity.get().setType(projectRequest.getType());
-                 }
+                typeProjectEntity.ifPresent(typeEntity -> projectEntity.get().setTypeProject(typeEntity));
+
                 designStyleEntity.ifPresent(styleEntity -> projectEntity.get().setDesignStyle(styleEntity));
                 projectEntity.get().setUpdatedAt(currentTime);
                 projectRepository.save(projectEntity.get());
@@ -131,7 +140,7 @@ public class ProjectService implements ProjectServiceImp {
             projectDTO.setName(projectEntity.get().getName());
             projectDTO.setDesignStyleName(projectEntity.get().getDesignStyle().getName());
             projectDTO.setLocation(projectEntity.get().getLocation());
-            projectDTO.setType(projectEntity.get().getType());
+            projectDTO.setType(projectEntity.get().getTypeProject().getName());
             projectDTO.setSample(projectEntity.get().isSample());
             projectDTO.setCreatedAt(projectEntity.get().getCreatedAt());
             projectDTO.setUpdatedAt(projectEntity.get().getUpdatedAt());
@@ -155,7 +164,7 @@ public class ProjectService implements ProjectServiceImp {
                 projectDTO.setName(projectEntity.getName());
                 projectDTO.setDesignStyleName(projectEntity.getDesignStyle().getName());
                 projectDTO.setLocation(projectEntity.getLocation());
-                projectDTO.setType(projectEntity.getType());
+                projectDTO.setType(projectEntity.getTypeProject().getName());
                 projectDTO.setCreatedAt(projectEntity.getCreatedAt());
                 projectDTO.setUpdatedAt(projectEntity.getUpdatedAt());
                 projectDTO.setStatus(projectEntity.getStatus());
@@ -167,32 +176,7 @@ public class ProjectService implements ProjectServiceImp {
         return null;
     }
 
-    @Override
-    public Page<ProjectWithUserDTO> findAllByStatusAndDesignStypeAndType(String status, String designStype, String type, Pageable pageable) {
 
-        Page<ProjectEntity> projectEntityPage;
-        if (status != null) {
-            projectEntityPage = projectRepository.findAllByStatus(status, pageable);
-        }else if(designStype != null){
-            projectEntityPage = projectRepository.findAllByStatus(status, pageable);
-        }else {
-            projectEntityPage = projectRepository.findAll(pageable);
-        }
-
-        return projectEntityPage.map(projectEntity -> new ProjectWithUserDTO(
-                mapUserToDTO(projectEntity.getUser()),
-                projectEntity.getId(),
-                projectEntity.getName(),
-                projectEntity.getImg(),
-                projectEntity.getLocation(),
-                projectEntity.getType(),
-                projectEntity.isSample(),
-                projectEntity.getDesignStyle().getName(),
-                projectEntity.getCreatedAt(),
-                projectEntity.getUpdatedAt(),
-                projectEntity.getStatus()
-        ));
-    }
 
     @Override
     public Page<ProjectWithUserDTO> findAllByStatus(String status, Pageable pageable) {
@@ -209,13 +193,41 @@ public class ProjectService implements ProjectServiceImp {
                 projectEntity.getName(),
                 projectEntity.getImg(),
                 projectEntity.getLocation(),
-                projectEntity.getType(),
+                projectEntity.getTypeProject().getName(),
                 projectEntity.isSample(),
                 projectEntity.getDesignStyle().getName(),
                 projectEntity.getCreatedAt(),
                 projectEntity.getUpdatedAt(),
                 projectEntity.getStatus()
         ));
+    }
+
+    @Override
+    public Page<ProjectWithUserDTO> findAllByStatusOrDesignStyleOrType(String status, int designStyleId, int typeId, Pageable pageable) {
+        Optional<DesignStyleEntity> designStyleEntity = designStyleRepository.findById(designStyleId);
+        Optional<TypeProjectEntity> typeProjectEntity = typeRepository.findById(typeId);
+
+        if(designStyleEntity.isEmpty()){
+            designStyleEntity = Optional.empty();
+        } else if(typeProjectEntity.isEmpty()){
+            typeProjectEntity = Optional.empty();
+        }else {
+            Page<ProjectEntity> projectEntityPage = projectRepository.findAllByStatusOrDesignStyleOrType(status, designStyleEntity.get(), typeProjectEntity.get(), pageable);
+            return projectEntityPage.map(projectEntity -> new ProjectWithUserDTO(
+                    mapUserToDTO(projectEntity.getUser()),
+                    projectEntity.getId(),
+                    projectEntity.getName(),
+                    projectEntity.getImg(),
+                    projectEntity.getLocation(),
+                    projectEntity.getTypeProject().getName(),
+                    projectEntity.isSample(),
+                    projectEntity.getDesignStyle().getName(),
+                    projectEntity.getCreatedAt(),
+                    projectEntity.getUpdatedAt(),
+                    projectEntity.getStatus()
+            ));
+        }
+        return null;
     }
 
     @Override
@@ -238,7 +250,7 @@ public class ProjectService implements ProjectServiceImp {
                 projectEntity.getName(),
                 projectEntity.getImg(),
                 projectEntity.getLocation(),
-                projectEntity.getType(),
+                projectEntity.getTypeProject().getName(),
                 projectEntity.isSample(),
                 projectEntity.getDesignStyle().getName(),
                 projectEntity.getCreatedAt(),
@@ -258,7 +270,7 @@ public class ProjectService implements ProjectServiceImp {
                 projectDTO.setId(projectEntity.getId());
                 projectDTO.setName(projectEntity.getName());
                 projectDTO.setLocation(projectEntity.getLocation());
-                projectDTO.setType(projectEntity.getType());
+                projectDTO.setType(projectEntity.getTypeProject().getName());
                 projectDTO.setDesignStyleName(projectEntity.getDesignStyle().getName());
                 projectDTO.setCreatedAt(projectEntity.getCreatedAt());
                 projectDTO.setUpdatedAt(projectEntity.getUpdatedAt());
@@ -320,7 +332,7 @@ public class ProjectService implements ProjectServiceImp {
         projectDTO.setId(projectEntity.getId());
         projectDTO.setName(projectEntity.getName());
         projectDTO.setLocation(projectEntity.getLocation());
-        projectDTO.setType(projectEntity.getType());
+        projectDTO.setType(projectEntity.getTypeProject().getName());
         projectDTO.setSample(projectEntity.isSample());
         projectDTO.setDesignStyleName(projectEntity.getDesignStyle().getName());
         projectDTO.setCreatedAt(projectEntity.getCreatedAt());
@@ -362,7 +374,7 @@ public class ProjectService implements ProjectServiceImp {
         projectDTO.setLocation(projectEntity.getLocation());
         projectDTO.setSample(projectEntity.isSample());
         projectDTO.setDesignStyleName(projectEntity.getDesignStyle().getName());
-        projectDTO.setType(projectEntity.getType());
+        projectDTO.setType(projectEntity.getTypeProject().getName());
         projectDTO.setCreatedAt(projectEntity.getCreatedAt());
         projectDTO.setUpdatedAt(projectEntity.getUpdatedAt());
         projectDTO.setStatus(projectEntity.getStatus());

@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity(name = "type_project")
 @Getter
@@ -20,11 +21,16 @@ public class TypeProjectEntity implements Serializable {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "price_type")
+    private double priceType;
 
+    @OneToMany(mappedBy = "typeProject")
+    private List<ProjectEntity> projectEntities;
 
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
+
 
     @Column(name = "updated_at")
     @Temporal(TemporalType.TIMESTAMP)

@@ -10,9 +10,9 @@ public interface DesignStyleServiceImp {
 
     List<DesignStyleDTO> findAllDesign();
 
-    boolean create(String name, String description, MultipartFile file);
+    boolean create(String name, String description, double price, MultipartFile file);
 
-    boolean update(String name, String description, MultipartFile file, String status, int designId);
+    boolean update(String name, String description, double price, MultipartFile file, String status, int designId);
 
     DesignStyleDTO findById(int id);
 }

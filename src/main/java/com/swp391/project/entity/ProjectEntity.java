@@ -22,9 +22,6 @@ public class ProjectEntity implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "type")
-    private String type;
-
     @Column(name = "location",columnDefinition = "TEXT")
     private String location;
 
@@ -48,6 +45,10 @@ public class ProjectEntity implements Serializable {
     @ManyToOne
     @JoinColumn(name = "id_design")
     private DesignStyleEntity designStyle;
+
+    @ManyToOne
+    @JoinColumn(name = "id_type")
+    private TypeProjectEntity typeProject;
 
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)

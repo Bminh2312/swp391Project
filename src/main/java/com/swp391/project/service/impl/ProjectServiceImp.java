@@ -4,6 +4,7 @@ import com.swp391.project.dto.ProjectDTO;
 import com.swp391.project.dto.ProjectWithAllQuoteDTO;
 import com.swp391.project.dto.ProjectWithUserDTO;
 import com.swp391.project.dto.UserWithProjectsDTO;
+import com.swp391.project.entity.DesignStyleEntity;
 import com.swp391.project.entity.ProjectEntity;
 import com.swp391.project.payload.request.ProjectRequest;
 import org.springframework.data.domain.Page;
@@ -24,7 +25,7 @@ public interface ProjectServiceImp {
 
     Page<ProjectWithUserDTO> findAllByStatus(String status, Pageable pageable);
 
-    Page<ProjectWithUserDTO> findAllByStatusAndDesignStypeAndType(String status, String designStype, String type, Pageable pageable);
+    Page<ProjectWithUserDTO> findAllByStatusOrDesignStyleOrType(String status, int designStyleId, int typeId, Pageable pageable);
 
     Page<ProjectDTO> findAllByStatusAndUserId(int userId, String status, Pageable pageable);
 

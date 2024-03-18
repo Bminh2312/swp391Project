@@ -31,6 +31,7 @@ public class DesignStyleService implements DesignStyleServiceImp {
                     designEntity.getName(),
                     designEntity.getImg(),
                     designEntity.getDescription(),
+                    designEntity.getPriceDesign(),
                     designEntity.getCreatedAt(),
                     designEntity.getUpdatedAt(),
                     designEntity.getStatus()
@@ -42,7 +43,7 @@ public class DesignStyleService implements DesignStyleServiceImp {
 
 
     @Override
-    public boolean create(String name, String description, MultipartFile file) {
+    public boolean create(String name, String description, double price, MultipartFile file) {
         try{
 
             TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
@@ -51,8 +52,13 @@ public class DesignStyleService implements DesignStyleServiceImp {
             Calendar calendar = Calendar.getInstance(timeZone);
             Date currentTime = calendar.getTime();
             DesignStyleEntity designStyle = new DesignStyleEntity();
-            designStyle.setName(name);
-            designStyle.setDescription(description);
+            if(name != null ) {
+                designStyle.setName(name);
+            }
+            if(description != null ) {
+                designStyle.setDescription(description);
+            }
+            designStyle.setPriceDesign(price);
             designStyle.setStatus("ACTIVE");
 
             if(file != null){
@@ -74,7 +80,7 @@ public class DesignStyleService implements DesignStyleServiceImp {
     }
 
     @Override
-    public boolean update(String name, String description, MultipartFile file, String status, int designId) {
+    public boolean update(String name, String description, double price, MultipartFile file, String status, int designId) {
         try{
             TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
 
@@ -91,6 +97,10 @@ public class DesignStyleService implements DesignStyleServiceImp {
 
                 if(description != null ){
                     designStyleEntity.get().setDescription(description);
+                }
+
+                if(designStyleEntity.get().getPriceDesign()!= price && price != 0){
+                    designStyleEntity.get().setPriceDesign(price);
                 }
 
                 if(file != null){
@@ -121,6 +131,7 @@ public class DesignStyleService implements DesignStyleServiceImp {
             designStyleDTO.setName(designStyleEntity.get().getName());
             designStyleDTO.setImg(designStyleEntity.get().getImg());
             designStyleDTO.setDescription(designStyleEntity.get().getDescription());
+            designStyleDTO.setPrice(designStyleEntity.get().getPriceDesign());
             designStyleDTO.setCreatedAt(designStyleEntity.get().getCreatedAt());
             designStyleDTO.setUpdatedAt(designStyleEntity.get().getUpdatedAt());
             designStyleDTO.setStatus(designStyleEntity.get().getStatus());

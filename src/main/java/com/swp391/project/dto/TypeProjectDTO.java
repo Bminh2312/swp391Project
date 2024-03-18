@@ -9,13 +9,12 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DesignStyleDTO {
+public class TypeProjectDTO {
     private int id;
     private String name;
-    private String img;
-    private String description;
     private double price;
     private Date createdAt;
     private Date updatedAt;
     private String status;
+
 }

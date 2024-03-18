@@ -295,7 +295,7 @@ public class QuoteService implements QuoteServiceImp {
         projectDTO.setLocation(projectEntity.getLocation());
         projectDTO.setSample(projectEntity.isSample());
         projectDTO.setDesignStyleName(projectEntity.getDesignStyle().getName());
-        projectDTO.setType(projectEntity.getType());
+        projectDTO.setType(projectEntity.getTypeProject().getName());
         projectDTO.setCreatedAt(projectEntity.getCreatedAt());
         projectDTO.setUpdatedAt(projectEntity.getUpdatedAt());
         projectDTO.setStatus(projectEntity.getStatus());

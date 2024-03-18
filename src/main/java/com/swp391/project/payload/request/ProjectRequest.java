@@ -14,7 +14,7 @@ import java.util.Date;
 public class ProjectRequest {
     private String name;
     private String location;
-    private String type;
     private boolean isSample;
     private int designStyleId;
+    private int typeId;
 }

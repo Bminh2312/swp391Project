@@ -64,6 +64,23 @@ public class ProjectController {
         }
     }
 
+    @GetMapping("/getAllPageProjectByStatusOrDesignStyleOrType")
+    public ResponseEntity<?> getAllPageProjectByStatusOrDesignStyleOrType(Pageable pageable, @RequestParam @Schema(description = "Status", allowableValues = {"NEW", "QUOTING","REJECTED"}) String status, @RequestParam(name = "designStyleId", required = false, defaultValue = "0") int designStyleId, @RequestParam(name = "type", required = false,defaultValue = "0") int typeId){
+        BaseResponse baseResponse = new BaseResponse();
+        Page<ProjectWithUserDTO> projectDTOS = projectImp.findAllByStatusOrDesignStyleOrType(status,designStyleId,typeId,pageable);
+        if(!projectDTOS.isEmpty()){
+            baseResponse.setData(projectDTOS);
+            baseResponse.setTotalPages(projectDTOS.getTotalPages());
+            baseResponse.setMesssage("Successfull");
+            baseResponse.setStatusCode(200);
+        }else{
+            baseResponse.setData(null);
+            baseResponse.setMesssage("Not Found");
+            baseResponse.setStatusCode(400);
+        }
+        return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
+    }
+
     @GetMapping("/getAllQuoteByProjectId")
     public ResponseEntity<?> getAllQuoteByProjectId(@RequestParam int projectId){
         BaseResponse baseResponse = new BaseResponse();

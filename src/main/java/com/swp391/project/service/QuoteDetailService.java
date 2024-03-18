@@ -148,7 +148,7 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
                         quoteDetailEntity.get().setProduct(productEntityChange.get());
                         price = productEntityChange.get().getPrice();
                     }
-                    if (quantityChange != quoteDetailEntity.get().getQuantity()) {
+                    if (quantityChange != quoteDetailEntity.get().getQuantity() && quantityChange != 0) {
                         quoteDetailEntity.get().setQuantity(quantityChange);
                         quantity = quantityChange;
                     }
