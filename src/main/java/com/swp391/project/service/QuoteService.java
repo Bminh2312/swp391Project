@@ -160,6 +160,7 @@ public class QuoteService implements QuoteServiceImp {
             Optional<ProjectEntity> projectEntity = projectRepository.findById(projectId);
             if (projectEntity.isPresent()) {
                 List<QuoteEntity> quotes = quoteRepository.findByProjectQuoteId(projectEntity.get().getId());
+                total = (projectEntity.get().getTypeProject().getPriceType()) + (projectEntity.get().getDesignStyle().getPriceDesign());
                 for (QuoteEntity quoteEntity : quotes) {
                     total = 0;
                     List<QuoteDetailEntity> quoteDetails = quoteDetailRepository.findByQuoteId(quoteEntity.getId());
@@ -281,12 +282,12 @@ public class QuoteService implements QuoteServiceImp {
         quoteDetailDTO.setQuantity(quoteDetail.getQuantity());
         if(quoteDetail.getProduct() != null){
             quoteDetailDTO.setProduct(mapProductToDTO(quoteDetail.getProduct()));
+            quoteDetailDTO.setPriceChange(quoteDetail.getPriceChange());
         }
         if(quoteDetail.getRawMaterial() != null){
             quoteDetailDTO.setRawMaterial(mapRawMaterialToDTO(quoteDetail.getRawMaterial()));
         }
         quoteDetailDTO.setTotalPrice(quoteDetail.getTotalPrice());
-        quoteDetailDTO.setPriceChange(quoteDetail.getPriceChange());
         quoteDetailDTO.setArea(quoteDetail.getArea());
         quoteDetailDTO.setNote(quoteDetail.getNote());
         quoteDetailDTO.setCreatedAt(quoteDetail.getCreatedAt());
