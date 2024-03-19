@@ -1,5 +1,6 @@
 package com.swp391.project.service.impl;
 
+import com.swp391.project.dto.ProjectDTO;
 import com.swp391.project.dto.ProjectWithAllQuoteDTO;
 import com.swp391.project.payload.request.QuoteRequest;
 
@@ -13,7 +14,7 @@ public interface QuoteServiceImp {
 
     boolean updateTotal (int projectId);
 
-    List<ProjectWithAllQuoteDTO> findAllQuoteRoomByProject(boolean isSample);
+    List<ProjectDTO> findAllQuoteRoomByProject(boolean isSample);
 
     ProjectWithAllQuoteDTO findQuoteRoomByProjectId(int id);
 

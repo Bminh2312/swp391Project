@@ -14,7 +14,7 @@ public interface UserDetailServiceImp {
 
     UserDetailDTO findById(int id);
 
-    Page<UserDetailDTO> findAll(Pageable pageable);
+    Page<UserDetailDTO> findAll(Pageable pageable, int roleId);
 
     UserWithProjectsDTO getUserWithProjects(String status, int userId);
 

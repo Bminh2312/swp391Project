@@ -1,6 +1,7 @@
 package com.swp391.project.controller;
 
 
+import com.swp391.project.dto.ProjectDTO;
 import com.swp391.project.dto.ProjectWithAllQuoteDTO;
 import com.swp391.project.dto.QuoteDetailDTO;
 import com.swp391.project.payload.request.QuoteDetailForRawRequest;
@@ -29,14 +30,14 @@ public class QuoteController {
         BaseResponse baseResponse = new BaseResponse();
         baseResponse.setMesssage("SucessFull");
         baseResponse.setStatusCode(200);
-        List<ProjectWithAllQuoteDTO> allQuoteRoomByProject = quoteServiceImp.findAllQuoteRoomByProject(isSample);
-        if(allQuoteRoomByProject == null){
+        List<ProjectDTO> projectDTOS = quoteServiceImp.findAllQuoteRoomByProject(isSample);
+        if(projectDTOS == null){
             baseResponse.setMesssage("Not Found");
             baseResponse.setStatusCode(400);
             baseResponse.setData(null);
             return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
         }else{
-            baseResponse.setData(allQuoteRoomByProject);
+            baseResponse.setData(projectDTOS);
             return new ResponseEntity<>(baseResponse, HttpStatus.OK);
         }
     }

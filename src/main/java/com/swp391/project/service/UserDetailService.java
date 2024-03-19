@@ -5,10 +5,12 @@ import com.swp391.project.dto.ProjectDTO;
 import com.swp391.project.dto.UserDetailDTO;
 import com.swp391.project.dto.UserWithProjectsDTO;
 import com.swp391.project.entity.ProjectEntity;
+import com.swp391.project.entity.RoleEntity;
 import com.swp391.project.entity.RoomEntity;
 import com.swp391.project.entity.UserEntity;
 //import com.swp391.project.repository.OrderProjectRepository;
 import com.swp391.project.repository.ProjectRepository;
+import com.swp391.project.repository.RoleRepository;
 import com.swp391.project.repository.UserRepository;
 import com.swp391.project.service.impl.ProjectServiceImp;
 import com.swp391.project.service.impl.UserDetailServiceImp;
@@ -34,6 +36,9 @@ public class UserDetailService implements UserDetailServiceImp {
 
     @Autowired
     private FireBaseStorageService fireBaseStorageService;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Override
     public UserDetailDTO findByEmail(String email) {
@@ -75,8 +80,23 @@ public class UserDetailService implements UserDetailServiceImp {
     }
 
     @Override
-    public Page<UserDetailDTO> findAll(Pageable pageable) {
-        Page<UserEntity> usersPage = userRepository.findAll(pageable);
+    public Page<UserDetailDTO> findAll(Pageable pageable, int roleId) {
+        Optional<RoleEntity> roleEntity = roleRepository.findById(roleId);
+        if(roleEntity.isEmpty()){
+            Page<UserEntity> usersPage = userRepository.findAll(pageable);
+            return usersPage.map(userEntity -> new UserDetailDTO(
+                    userEntity.getId(),
+                    userEntity.getFullName(),
+                    userEntity.getEmail(),
+                    userEntity.getAvt(),
+                    userEntity.getPhone(),
+                    userEntity.getAddress(),
+                    userEntity.getAccessToken(),
+                    userEntity.getRole().getName(),
+                    userEntity.getStatus()
+            ));
+        }
+        Page<UserEntity> usersPage = userRepository.findAllByRole_Id(roleId,pageable);
         return usersPage.map(userEntity -> new UserDetailDTO(
                 userEntity.getId(),
                 userEntity.getFullName(),
