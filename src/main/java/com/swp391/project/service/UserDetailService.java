@@ -81,33 +81,40 @@ public class UserDetailService implements UserDetailServiceImp {
 
     @Override
     public Page<UserDetailDTO> findAll(Pageable pageable, int roleId) {
-        Optional<RoleEntity> roleEntity = roleRepository.findById(roleId);
-        if(roleEntity.isEmpty()){
-            Page<UserEntity> usersPage = userRepository.findAll(pageable);
-            return usersPage.map(userEntity -> new UserDetailDTO(
-                    userEntity.getId(),
-                    userEntity.getFullName(),
-                    userEntity.getEmail(),
-                    userEntity.getAvt(),
-                    userEntity.getPhone(),
-                    userEntity.getAddress(),
-                    userEntity.getAccessToken(),
-                    userEntity.getRole().getName(),
-                    userEntity.getStatus()
-            ));
+        try {
+            Optional<RoleEntity> roleEntity = roleRepository.findById(roleId);
+            if(roleEntity.isEmpty()){
+                Page<UserEntity> usersPage = userRepository.findAll(pageable);
+                return usersPage.map(userEntity -> new UserDetailDTO(
+                        userEntity.getId(),
+                        userEntity.getFullName(),
+                        userEntity.getEmail(),
+                        userEntity.getAvt(),
+                        userEntity.getPhone(),
+                        userEntity.getAddress(),
+                        userEntity.getAccessToken(),
+                        userEntity.getRole().getName(),
+                        userEntity.getStatus()
+                ));
+            }else{
+                Page<UserEntity> usersPage = userRepository.findAllByRole_Id(roleId,pageable);
+                return usersPage.map(userEntity -> new UserDetailDTO(
+                        userEntity.getId(),
+                        userEntity.getFullName(),
+                        userEntity.getEmail(),
+                        userEntity.getAvt(),
+                        userEntity.getPhone(),
+                        userEntity.getAddress(),
+                        userEntity.getAccessToken(),
+                        userEntity.getRole().getName(),
+                        userEntity.getStatus()
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        Page<UserEntity> usersPage = userRepository.findAllByRole_Id(roleId,pageable);
-        return usersPage.map(userEntity -> new UserDetailDTO(
-                userEntity.getId(),
-                userEntity.getFullName(),
-                userEntity.getEmail(),
-                userEntity.getAvt(),
-                userEntity.getPhone(),
-                userEntity.getAddress(),
-                userEntity.getAccessToken(),
-                userEntity.getRole().getName(),
-                userEntity.getStatus()
-        ));
+
+        return null;
     }
 
     @Override

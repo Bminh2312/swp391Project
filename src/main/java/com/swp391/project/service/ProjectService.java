@@ -208,64 +208,37 @@ public class ProjectService implements ProjectServiceImp {
     @Override
     public Page<ProjectWithUserDTO> findAllByStatusOrDesignStyleIdOrTypeProject_Id(String status, int designStyleId, int typeId, Pageable pageable) {
         try {
-            // Initialize variables to hold query results
-            List<ProjectEntity> byStatus = new ArrayList<>();
-            List<ProjectEntity> byDesignStyle = new ArrayList<>();
-            List<ProjectEntity> byTypeProject = new ArrayList<>();
-
-            // Check if status is provided and query projects by status
-            if (status != null) {
-                Page<ProjectEntity> byStatusPage = projectRepository.findAllByStatus(status, pageable);
-                byStatus = byStatusPage.getContent();
-            }
-
-            // Check if designStyleId is provided and query projects by design style ID
-            if (designStyleId != 0) {
-                Page<ProjectEntity> byDesignStylePage = projectRepository.findAllByDesignStyleId(designStyleId, pageable);
-                byDesignStyle = byDesignStylePage.getContent();
-            }
-
-            // Check if typeId is provided and query projects by type project ID
-            if (typeId != 0) {
-                Page<ProjectEntity> byTypeProjectPage = projectRepository.findAllByTypeProject_Id(typeId, pageable);
-                byTypeProject = byTypeProjectPage.getContent();
-            }
-
-            // Combine results
-            List<ProjectEntity> combinedResults = new ArrayList<>();
-            combinedResults.addAll(byStatus);
-            combinedResults.addAll(byDesignStyle);
-            combinedResults.addAll(byTypeProject);
-
-            // Convert to DTOs
-            List<ProjectWithUserDTO> dtos = combinedResults.stream()
-                    .map(projectEntity -> new ProjectWithUserDTO(
-                            mapUserToDTO(projectEntity.getUser()),
-                            projectEntity.getId(),
-                            projectEntity.getName(),
-                            projectEntity.getImg(),
-                            projectEntity.getLocation(),
-                            projectEntity.getTypeProject() != null ? projectEntity.getTypeProject().getName() : null,
-                            projectEntity.isSample(),
-                            projectEntity.getDesignStyle() != null ? projectEntity.getDesignStyle().getName() : null,
-                            projectEntity.getCreatedAt(),
-                            projectEntity.getUpdatedAt(),
-                            projectEntity.getStatus()
-                    ))
-                    .collect(Collectors.toList());
-
-            // Paginate the combined results
-            int start = Math.toIntExact(pageable.getOffset());
-            int end = Math.min((start + pageable.getPageSize()), dtos.size());
-            return new PageImpl<>(dtos.subList(start, end), pageable, dtos.size());
+            Page<ProjectEntity> projectEntities = projectRepository.findAllByStatusAndTypeAndDesignStyle(status, designStyleId, typeId, pageable);
+            return projectEntities.map(this::convertToDTO);
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
-
-        return null;
     }
 
+    private ProjectWithUserDTO convertToDTO(ProjectEntity projectEntity) {
+        return new ProjectWithUserDTO(
+                mapUserToDTO(projectEntity.getUser()),
+                projectEntity.getId(),
+                projectEntity.getName(),
+                projectEntity.getImg(),
+                projectEntity.getLocation(),
+                getTypeProjectName(projectEntity),
+                projectEntity.isSample(),
+                getDesignStyleName(projectEntity),
+                projectEntity.getCreatedAt(),
+                projectEntity.getUpdatedAt(),
+                projectEntity.getStatus()
+        );
+    }
 
+    private String getTypeProjectName(ProjectEntity projectEntity) {
+        return projectEntity.getTypeProject() != null ? projectEntity.getTypeProject().getName() : null;
+    }
+
+    private String getDesignStyleName(ProjectEntity projectEntity) {
+        return projectEntity.getDesignStyle() != null ? projectEntity.getDesignStyle().getName() : null;
+    }
     @Override
     public Page<ProjectDTO> findAllByStatusAndUserId(int userId, String status, Pageable pageable) {
         UserEntity userEntity = userRepository.findById(userId).orElse(null);
