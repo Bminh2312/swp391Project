@@ -60,6 +60,7 @@ public class ProjectService implements ProjectServiceImp {
                 projectEntity.setDesignStyle(designStyleEntity.get());
                 projectEntity.setSample(projectRequest.isSample());
                 projectEntity.setStatus(status);
+                projectEntity.setPrice(0);
                 projectEntity.setCreatedAt(currentTime);
                 projectEntity.setUpdatedAt(currentTime);
                 ProjectEntity projectEntityRespone =  projectRepository.save(projectEntity);
@@ -288,6 +289,7 @@ public class ProjectService implements ProjectServiceImp {
                 projectEntity.getTypeProject().getName(),
                 projectEntity.isSample(),
                 projectEntity.getDesignStyle().getName(),
+                projectEntity.getPrice(),
                 projectEntity.getCreatedAt(),
                 projectEntity.getUpdatedAt(),
                 projectEntity.getStatus()

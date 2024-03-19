@@ -50,6 +50,9 @@ public class ProjectEntity implements Serializable {
     @JoinColumn(name = "id_type")
     private TypeProjectEntity typeProject;
 
+    @Column(name = "price")
+    private double price;
+
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;

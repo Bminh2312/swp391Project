@@ -12,6 +12,7 @@ import java.util.List;
 public class RoomWithAllQuoteDetailDTO {
     private String roomName;
     private String img;
+    private double area;
     List<QuoteDetailDTO> quoteDetailDTOS;
     private double total;
 }

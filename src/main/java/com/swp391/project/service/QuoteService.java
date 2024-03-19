@@ -120,9 +120,11 @@ public class QuoteService implements QuoteServiceImp {
 
                 List<QuoteEntity> quotes = quoteRepository.findByProjectQuoteId(projectEntity.getId());
                 for (QuoteEntity quoteEntity : quotes) {
+                    double totalQuote = 0;
                     RoomWithAllQuoteDetailDTO roomWithAllQuoteDetailDTO = new RoomWithAllQuoteDetailDTO();
                     roomWithAllQuoteDetailDTO.setRoomName(quoteEntity.getRoomQuote().getName());
                     roomWithAllQuoteDetailDTO.setImg(quoteEntity.getImg());
+                    roomWithAllQuoteDetailDTO.setArea(quoteEntity.getArea());
 
                     List<QuoteDetailEntity> quoteDetails = quoteDetailRepository.findByQuoteId(quoteEntity.getId());
                     List<QuoteDetailDTO> quoteDetailDTOs = new ArrayList<>();
@@ -130,17 +132,20 @@ public class QuoteService implements QuoteServiceImp {
 
                     for (QuoteDetailEntity quoteDetail : quoteDetails) {
                         QuoteDetailDTO quoteDetailDTO = getQuoteDetailDTO(quoteDetail);
-                        total += quoteDetail.getTotalPrice();
+                        totalQuote += quoteDetail.getTotalPrice();
 
+                        total += quoteDetail.getTotalPrice();
                         quoteDetailDTOs.add(quoteDetailDTO);
                     }
 
                     roomWithAllQuoteDetailDTO.setQuoteDetailDTOS(quoteDetailDTOs);
-                    roomWithAllQuoteDetailDTO.setTotal(total + constructionPriceType + constructionPriceDesign);
+                    roomWithAllQuoteDetailDTO.setTotal(totalQuote);
                     roomWithAllQuoteDetailDTOs.add(roomWithAllQuoteDetailDTO);
                 }
                 projectWithAllQuotes.setConstructionPriceDesign(constructionPriceDesign);
                 projectWithAllQuotes.setConstructionPriceType(constructionPriceType);
+                projectWithAllQuotes.setTotalPrice(total + constructionPriceType + constructionPriceDesign);
+                System.out.println(total + constructionPriceType + constructionPriceDesign);
                 projectWithAllQuotes.setProjectDTO(projectDTO);
                 projectWithAllQuotes.setWithAllQuoteDetailDTOList(roomWithAllQuoteDetailDTOs);
             }
@@ -162,13 +167,16 @@ public class QuoteService implements QuoteServiceImp {
                 List<QuoteEntity> quotes = quoteRepository.findByProjectQuoteId(projectEntity.get().getId());
                 total = (projectEntity.get().getTypeProject().getPriceType()) + (projectEntity.get().getDesignStyle().getPriceDesign());
                 for (QuoteEntity quoteEntity : quotes) {
-                    total = 0;
+                    double totalQuote = 0;
                     List<QuoteDetailEntity> quoteDetails = quoteDetailRepository.findByQuoteId(quoteEntity.getId());
                     for (QuoteDetailEntity quoteDetail : quoteDetails) {
+                        totalQuote += quoteDetail.getTotalPrice();
                         total +=quoteDetail.getTotalPrice();
                     }
-                    quoteEntity.setTotal(total);
+                    quoteEntity.setTotal(totalQuote);
                     quoteRepository.save(quoteEntity);
+                    projectEntity.get().setPrice(total);
+                    projectRepository.save(projectEntity.get());
                 }
                 return true;
             }

@@ -19,6 +19,7 @@ public class ProjectDTO {
     private String type;
     private boolean isSample;
     private String designStyleName;
+    private double price;
     private Date createdAt;
     private Date updatedAt;
     private String status;

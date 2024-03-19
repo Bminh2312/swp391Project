@@ -13,5 +13,6 @@ public class ProjectWithAllQuoteDTO {
     private ProjectDTO projectDTO;
     private double constructionPriceType;
     private  double constructionPriceDesign;
+    private  double totalPrice;
     private List<RoomWithAllQuoteDetailDTO> withAllQuoteDetailDTOList;
 }
