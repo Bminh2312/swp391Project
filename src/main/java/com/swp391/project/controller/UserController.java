@@ -67,9 +67,9 @@ public class UserController {
     }
 
     @GetMapping("/getAllUser")
-    public ResponseEntity<?> getAllUser(Pageable pageable){
+    public ResponseEntity<?> getAllUser(Pageable pageable, @RequestParam(name = "roleId", required = false) int roleId){
         BaseResponse baseResponse = new BaseResponse();
-        Page<UserDetailDTO> userDTOS = userDetailServiceImp.findAll(pageable);
+        Page<UserDetailDTO> userDTOS = userDetailServiceImp.findAll(pageable,roleId);
         if(!userDTOS.isEmpty()){
             baseResponse.setData(userDTOS);
             baseResponse.setTotalPages(userDTOS.getTotalPages());
