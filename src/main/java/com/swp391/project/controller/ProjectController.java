@@ -32,18 +32,18 @@ public class ProjectController {
     public ResponseEntity<?> getAllPageProductByStatusAndUserId(Pageable pageable, @RequestParam(name = "status", required = false) String status, int userId){
         BaseResponse baseResponse = new BaseResponse();
         Page<ProjectDTO> projectDTOS = projectImp.findAllByStatusAndUserId(userId,status,pageable);
-        if(!projectDTOS.isEmpty()){
-            baseResponse.setData(projectDTOS);
-            baseResponse.setTotalPages(projectDTOS.getTotalPages());
-            baseResponse.setMesssage("Successfull");
-            baseResponse.setStatusCode(200);
-            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
-        }else{
+        if(projectDTOS.isEmpty()){
             baseResponse.setData(null);
             baseResponse.setMesssage("Not Found");
             baseResponse.setStatusCode(400);
-            return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
+
+        }else{
+            baseResponse.setData(projectDTOS);
+            baseResponse.setTotalPages(projectDTOS.getTotalPages());
+            baseResponse.setMesssage("Successfully");
+            baseResponse.setStatusCode(200);
         }
+        return  new ResponseEntity<>(baseResponse, HttpStatus.OK);
     }
 
 //    @GetMapping("/getAllPageProjectByStatus")

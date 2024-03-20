@@ -141,6 +141,7 @@ public class ProjectService implements ProjectServiceImp {
         if(projectEntity.isPresent()){
             projectDTO.setId(projectEntity.get().getId());
             projectDTO.setName(projectEntity.get().getName());
+            projectDTO.setImg(projectEntity.get().getImg());
             projectDTO.setDesignStyleName(projectEntity.get().getDesignStyle().getName());
             projectDTO.setLocation(projectEntity.get().getLocation());
             projectDTO.setType(projectEntity.get().getTypeProject().getName());
@@ -259,9 +260,9 @@ public class ProjectService implements ProjectServiceImp {
                 projectEntity.getName(),
                 projectEntity.getImg(),
                 projectEntity.getLocation(),
-                projectEntity.getTypeProject().getName(),
+                getTypeProjectName(projectEntity),
                 projectEntity.isSample(),
-                projectEntity.getDesignStyle().getName(),
+                getDesignStyleName(projectEntity),
                 projectEntity.getPrice(),
                 projectEntity.getCreatedAt(),
                 projectEntity.getUpdatedAt(),
