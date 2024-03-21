@@ -4,6 +4,8 @@ import com.swp391.project.dto.ProductDTO;
 import com.swp391.project.dto.QuoteDetailDTO;
 import com.swp391.project.dto.RawMaterialDTO;
 import com.swp391.project.entity.*;
+import com.swp391.project.payload.request.ListQuoteDetailForProductRequest;
+import com.swp391.project.payload.request.ListQuoteDetailForRawRequest;
 import com.swp391.project.payload.request.QuoteDetailForProductRequest;
 import com.swp391.project.payload.request.QuoteDetailForRawRequest;
 import com.swp391.project.repository.ProductRepository;
@@ -68,6 +70,47 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
         return false;
     }
 
+    @Override
+    public boolean createListQuoteForProduct(ListQuoteDetailForProductRequest listQuoteDetailForProductRequest) {
+        try {
+            List<QuoteDetailForProductRequest> quoteDetailRequests = listQuoteDetailForProductRequest.getQuoteDetailForProductRequests();
+
+            for (QuoteDetailForProductRequest quoteDetailRequest : quoteDetailRequests) {
+                Optional<ProductEntity> productEntity = productRepository.findById(quoteDetailRequest.getProductId());
+                Optional<QuoteEntity> quoteEntity = quoteRepository.findById(quoteDetailRequest.getQuoteId());
+
+                if (productEntity.isPresent()) {
+                    TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+
+                    // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
+                    Calendar calendar = Calendar.getInstance(timeZone);
+                    Date currentTime = calendar.getTime();
+
+                    QuoteDetailEntity quoteDetailEntity = new QuoteDetailEntity();
+                    quoteDetailEntity.setProduct(productEntity.get());
+                    quoteDetailEntity.setQuantity(quoteDetailRequest.getQuantity());
+
+                    if (quoteDetailRequest.getPriceChange() == 0) {
+                        quoteDetailEntity.setTotalPrice(quoteDetailRequest.getQuantity() * productEntity.get().getPrice());
+                    }
+
+                    quoteDetailRequest.setPriceChange(0);
+                    quoteDetailEntity.setNote(quoteDetailRequest.getNote());
+                    quoteDetailEntity.setArea(0);
+                    quoteEntity.ifPresent(quoteDetailEntity::setQuote);
+                    quoteDetailEntity.setStatus("ACTIVE");
+                    quoteDetailEntity.setCreatedAt(currentTime);
+                    quoteDetailEntity.setUpdatedAt(currentTime);
+                    quoteDetailRepository.save(quoteDetailEntity);
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
 
 //    @Override
 //    public boolean createQuoteForProductByUser(QuoteDetailRequest quoteDetailRequest) {
@@ -130,6 +173,44 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
         }
 
         return false;
+    }
+
+
+
+    @Override
+    public boolean createListQuoteForRaw(ListQuoteDetailForRawRequest listQuoteDetailForRawRequest) {
+        try {
+            List<QuoteDetailForRawRequest> quoteDetailRequests = listQuoteDetailForRawRequest.getQuoteDetailForRawRequests();
+
+            for (QuoteDetailForRawRequest quoteDetailRequest : quoteDetailRequests) {
+                Optional<RawMaterialEntity> rawMaterialEntity = rawMaterialRepository.findById(quoteDetailRequest.getRawMaterialId());
+                Optional<QuoteEntity> quoteEntity = quoteRepository.findById(quoteDetailRequest.getQuoteId());
+
+                if (rawMaterialEntity.isPresent()) {
+                    TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+
+                    // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
+                    Calendar calendar = Calendar.getInstance(timeZone);
+                    Date currentTime = calendar.getTime();
+
+                    QuoteDetailEntity quoteDetailEntity = new QuoteDetailEntity();
+                    quoteDetailEntity.setRawMaterial(rawMaterialEntity.get());
+                    quoteDetailEntity.setQuantity(0);
+                    quoteDetailEntity.setPriceChange(0);
+                    quoteDetailEntity.setArea(quoteDetailRequest.getArea());
+                    quoteDetailEntity.setTotalPrice(quoteDetailRequest.getArea() * rawMaterialEntity.get().getPricePerM2());
+                    quoteEntity.ifPresent(quoteDetailEntity::setQuote);
+                    quoteDetailEntity.setStatus("ACTIVE");
+                    quoteDetailEntity.setCreatedAt(currentTime);
+                    quoteDetailEntity.setUpdatedAt(currentTime);
+                    quoteDetailRepository.save(quoteDetailEntity);
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
 
     @Override

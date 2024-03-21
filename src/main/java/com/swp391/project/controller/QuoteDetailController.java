@@ -1,6 +1,8 @@
 package com.swp391.project.controller;
 
 import com.swp391.project.dto.QuoteDetailDTO;
+import com.swp391.project.payload.request.ListQuoteDetailForProductRequest;
+import com.swp391.project.payload.request.ListQuoteDetailForRawRequest;
 import com.swp391.project.payload.request.QuoteDetailForProductRequest;
 import com.swp391.project.payload.request.QuoteDetailForRawRequest;
 import com.swp391.project.payload.response.BaseResponse;
@@ -38,10 +40,44 @@ public class QuoteDetailController {
 
     }
 
+    @PostMapping(value = "/product/createListQuoteDetail")
+    public ResponseEntity<?> createListQuoteDetail(@RequestBody ListQuoteDetailForProductRequest listQuoteDetailForProductRequest){
+        BaseResponse baseResponse = new BaseResponse();
+        boolean check = quoteDetailServiceImp.createListQuoteForProduct(listQuoteDetailForProductRequest);
+        if(check){
+            baseResponse.setStatusCode(201);
+            baseResponse.setMesssage("Create Successfull");
+            baseResponse.setData("True");
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+        baseResponse.setStatusCode(200);
+        baseResponse.setMesssage("Create Failed");
+        baseResponse.setData("False");
+        return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
+
+    }
+
     @PostMapping(value = "/rawMaterial/createQuoteDetail")
     public ResponseEntity<?> createQuoteDetailforRawMaterial(@RequestBody QuoteDetailForRawRequest quoteDetailRequest){
         BaseResponse baseResponse = new BaseResponse();
         boolean check = quoteDetailServiceImp.createQuoteForRaw(quoteDetailRequest);
+        if(check){
+            baseResponse.setStatusCode(201);
+            baseResponse.setMesssage("Create Successfull");
+            baseResponse.setData("True");
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+        baseResponse.setStatusCode(200);
+        baseResponse.setMesssage("Create Failed");
+        baseResponse.setData("False");
+        return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
+
+    }
+
+    @PostMapping(value = "/rawMaterial/createListQuoteDetail")
+    public ResponseEntity<?> createListQuoteDetail(@RequestBody ListQuoteDetailForRawRequest listQuoteDetailForRawRequest){
+        BaseResponse baseResponse = new BaseResponse();
+        boolean check = quoteDetailServiceImp.createListQuoteForRaw(listQuoteDetailForRawRequest);
         if(check){
             baseResponse.setStatusCode(201);
             baseResponse.setMesssage("Create Successfull");

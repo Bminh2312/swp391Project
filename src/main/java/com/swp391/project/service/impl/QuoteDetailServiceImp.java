@@ -2,6 +2,8 @@ package com.swp391.project.service.impl;
 
 
 import com.swp391.project.dto.QuoteDetailDTO;
+import com.swp391.project.payload.request.ListQuoteDetailForProductRequest;
+import com.swp391.project.payload.request.ListQuoteDetailForRawRequest;
 import com.swp391.project.payload.request.QuoteDetailForProductRequest;
 import com.swp391.project.payload.request.QuoteDetailForRawRequest;
 
@@ -11,6 +13,10 @@ public interface QuoteDetailServiceImp {
     boolean createQuoteForProduct(QuoteDetailForProductRequest quoteDetailRequest);
 
     boolean createQuoteForRaw(QuoteDetailForRawRequest quoteDetailRequest);
+
+    boolean createListQuoteForProduct(ListQuoteDetailForProductRequest listQuoteDetailForProductRequest);
+
+    boolean createListQuoteForRaw(ListQuoteDetailForRawRequest listQuoteDetailForRawRequest);
 
     boolean updateQuoteForProduct(int idQuoteDetail, int idProduct, String note, double priceChange,  int quantityChange);
 
