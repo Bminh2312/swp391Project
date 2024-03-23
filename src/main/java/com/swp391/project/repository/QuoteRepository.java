@@ -13,6 +13,7 @@ import java.util.List;
 public interface QuoteRepository extends JpaRepository<QuoteEntity,Integer> {
     List<QuoteEntity> findByProjectQuoteId(int projectId);
 
+
     @Query("SELECT SUM(q.total) FROM quote q WHERE q.projectQuote.id = :projectId")
     Double getTotalByProjectId(int projectId);
 }

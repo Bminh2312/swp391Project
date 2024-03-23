@@ -35,6 +35,10 @@ public class ProjectEntity implements Serializable {
     @JoinColumn(name = "id_user")
     private UserEntity user;
 
+    @ManyToOne()
+    @JoinColumn(name = "id_staff")
+    private UserEntity staff;
+
     @OneToMany(mappedBy = "projectRoom")
     private List<RoomEntity> room;
 

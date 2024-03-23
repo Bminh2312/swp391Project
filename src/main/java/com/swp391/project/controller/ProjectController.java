@@ -6,6 +6,7 @@ import com.swp391.project.dto.ProjectDTO;
 import com.swp391.project.dto.ProjectWithAllQuoteDTO;
 import com.swp391.project.dto.ProjectWithUserDTO;
 import com.swp391.project.payload.request.ProjectRequest;
+import com.swp391.project.payload.request.ProjectSampleRequest;
 import com.swp391.project.payload.response.BaseResponse;
 import com.swp391.project.service.impl.ProjectServiceImp;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -115,6 +116,23 @@ public class ProjectController {
 
     }
 
+    @PostMapping(value = "/createSampleProject")
+    public ResponseEntity<?> createSample(@RequestBody ProjectSampleRequest projectSampleRequest){
+        BaseResponse baseResponse = new BaseResponse();
+        boolean check = projectImp.createBySampleProject(projectSampleRequest);
+        if(check){
+            baseResponse.setStatusCode(201);
+            baseResponse.setMesssage("Create Successfull");
+            baseResponse.setData(check);
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+        baseResponse.setStatusCode(404);
+        baseResponse.setMesssage("Create Failed");
+        baseResponse.setData(check);
+        return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
+
+    }
+
     @PutMapping(value = "/updateProject")
     public ResponseEntity<?> update(@RequestBody ProjectRequest projectRequest, @RequestParam int projectId){
         boolean check = projectImp.update(projectRequest,projectId);
@@ -133,8 +151,8 @@ public class ProjectController {
     }
 
     @PutMapping(value = "/updateProjectByStatus")
-    public ResponseEntity<?> update(@RequestParam int projectId, @RequestParam String status){
-        boolean check = projectImp.updateProjectByStatus(projectId, status);
+    public ResponseEntity<?> update(@RequestParam int projectId, @RequestParam String status, @RequestParam(name = "userId", required = false) int userId){
+        boolean check = projectImp.updateProjectByStatus(projectId, userId, status);
         BaseResponse baseResponse = new BaseResponse();
         if(check){
             baseResponse.setStatusCode(200);

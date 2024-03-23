@@ -122,6 +122,7 @@ public class QuoteService implements QuoteServiceImp {
                 for (QuoteEntity quoteEntity : quotes) {
                     double totalQuote = 0;
                     RoomWithAllQuoteDetailDTO roomWithAllQuoteDetailDTO = new RoomWithAllQuoteDetailDTO();
+                    roomWithAllQuoteDetailDTO.setQuoteId(quoteEntity.getId());
                     roomWithAllQuoteDetailDTO.setRoomName(quoteEntity.getRoomQuote().getName());
                     roomWithAllQuoteDetailDTO.setImg(quoteEntity.getImg());
                     roomWithAllQuoteDetailDTO.setArea(quoteEntity.getArea());

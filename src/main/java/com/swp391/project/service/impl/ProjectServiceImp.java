@@ -7,6 +7,7 @@ import com.swp391.project.dto.UserWithProjectsDTO;
 import com.swp391.project.entity.DesignStyleEntity;
 import com.swp391.project.entity.ProjectEntity;
 import com.swp391.project.payload.request.ProjectRequest;
+import com.swp391.project.payload.request.ProjectSampleRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -15,9 +16,11 @@ import java.util.List;
 public interface ProjectServiceImp {
     int create(ProjectRequest projectRequest, int userId, String status);
 
+    boolean createBySampleProject(ProjectSampleRequest projectSampleRequest);
+
     boolean update(ProjectRequest projectRequest,int projectId);
 
-    boolean updateProjectByStatus(int projectId, String status);
+    boolean updateProjectByStatus(int projectId, int userId, String status);
 
     ProjectDTO findById(int id);
 
@@ -26,6 +29,8 @@ public interface ProjectServiceImp {
     Page<ProjectWithUserDTO> findAllByStatus(String status, Pageable pageable);
 
     Page<ProjectWithUserDTO> findAllByStatusOrDesignStyleIdOrTypeProject_Id(String status, int designStyleId, int typeId, Pageable pageable);
+
+//    Page<ProjectWithUserDTO> findAllProjectSampleByStatusOrDesignStyleIdOrTypeProject_Id(String status, int designStyleId, int typeId, Pageable pageable);
 
     Page<ProjectDTO> findAllByStatusAndUserId(int userId, String status, Pageable pageable);
 

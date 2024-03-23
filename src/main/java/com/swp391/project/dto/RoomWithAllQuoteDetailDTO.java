@@ -10,6 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoomWithAllQuoteDetailDTO {
+    private int quoteId;
     private String roomName;
     private String img;
     private double area;

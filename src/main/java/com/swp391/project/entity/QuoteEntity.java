@@ -44,6 +44,9 @@ public class QuoteEntity implements Serializable {
     @Column(name = "total")
     private double total;
 
+    @Column(name = "version")
+    private int version;
+
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;

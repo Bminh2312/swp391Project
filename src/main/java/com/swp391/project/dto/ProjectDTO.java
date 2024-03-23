@@ -12,6 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class ProjectDTO {
     private UserDetailDTO userDetailDTO;
+    private UserDetailDTO staffDetailDTO;
     private int id;
     private String name;
     private String img;

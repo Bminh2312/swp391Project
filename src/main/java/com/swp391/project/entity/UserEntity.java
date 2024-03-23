@@ -58,6 +58,9 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy = "user")
     private List<ProjectEntity> projects;
 
+    @OneToMany(mappedBy = "staff")
+    private List<ProjectEntity> managedProjects;
+
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;

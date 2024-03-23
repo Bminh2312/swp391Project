@@ -2,17 +2,16 @@ package com.swp391.project.service;
 
 import com.swp391.project.dto.*;
 import com.swp391.project.entity.*;
-import com.swp391.project.payload.request.ProjectRequest;
+import com.swp391.project.payload.request.*;
 import com.swp391.project.repository.*;
 
-import com.swp391.project.service.impl.DesignStyleServiceImp;
-import com.swp391.project.service.impl.ProjectServiceImp;
-import com.swp391.project.service.impl.TypeProjectServiceImp;
+import com.swp391.project.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -27,6 +26,9 @@ public class ProjectService implements ProjectServiceImp {
     private QuoteRepository quoteRepository;
 
     @Autowired
+    private QuoteServiceImp quoteServiceImp;
+
+    @Autowired
     private QuoteDetailRepository quoteDetailRepository;
 
     @Autowired
@@ -37,6 +39,9 @@ public class ProjectService implements ProjectServiceImp {
 
     @Autowired
     private TypeRepository typeRepository;
+
+    @Autowired
+    private QuoteDetailServiceImp quoteDetailServiceImp;
 
 
     @Override
@@ -74,6 +79,66 @@ public class ProjectService implements ProjectServiceImp {
         return 0;
     }
 
+    @Transactional(rollbackFor = {RuntimeException.class,Exception.class})
+    @Override
+    public boolean createBySampleProject(ProjectSampleRequest projectSampleRequest) {
+        try {
+            Optional<ProjectEntity> projectEntity = projectRepository.findById(projectSampleRequest.getProjectSampleId());
+            ProjectWithAllQuoteDTO project = quoteServiceImp.findQuoteRoomByProjectId(projectSampleRequest.getProjectSampleId());
+            if(projectEntity.isPresent()){
+                TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+
+                // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
+                Calendar calendar = Calendar.getInstance(timeZone);
+                Date currentTime = calendar.getTime();
+                ProjectEntity projectEntityNew = new ProjectEntity();
+                Optional<UserEntity> userEntity = userRepository.findById(projectSampleRequest.getUserId());
+                userEntity.ifPresent(projectEntityNew::setUser);
+                projectEntityNew.setName(projectSampleRequest.getName());
+                projectEntityNew.setLocation(projectSampleRequest.getLocation());
+                projectEntityNew.setDesignStyle(projectEntity.get().getDesignStyle());
+                projectEntityNew.setTypeProject(projectEntity.get().getTypeProject());
+                projectEntityNew.setSample(false);
+                projectEntityNew.setStatus("NEW");
+                projectEntityNew.setPrice(0);
+                projectEntityNew.setCreatedAt(currentTime);
+                projectEntityNew.setUpdatedAt(currentTime);
+                ProjectEntity projectEntityRespone =  projectRepository.save(projectEntityNew);
+                List<QuoteEntity> quoteEntities = quoteRepository.findByProjectQuoteId(projectEntity.get().getId());
+                for (QuoteEntity oldQuoteEntity : quoteEntities) {
+                    QuoteRequest quoteRequest = new QuoteRequest();
+                    quoteRequest.setProjectId(projectEntityRespone.getId());
+                    quoteRequest.setArea(oldQuoteEntity.getArea());
+                    quoteRequest.setRoomId(oldQuoteEntity.getRoomQuote().getId());
+                    // Save new quote entity
+                    int quoteId = quoteServiceImp.create(quoteRequest,"ACTIVE");
+                    List<QuoteDetailEntity> quoteDetailEntityList = quoteDetailRepository.findByQuoteId(oldQuoteEntity.getId());
+                    for (QuoteDetailEntity oldQuoteDetailEntity:quoteDetailEntityList) {
+                        if(oldQuoteDetailEntity.getQuantity() != 0){
+                            QuoteDetailForProductRequest quoteDetailForProductRequest = new QuoteDetailForProductRequest();
+                            quoteDetailForProductRequest.setQuoteId(quoteId);
+                            quoteDetailForProductRequest.setQuantity(oldQuoteDetailEntity.getQuantity());
+                            quoteDetailForProductRequest.setPriceChange(oldQuoteDetailEntity.getPriceChange());
+                            quoteDetailForProductRequest.setNote(oldQuoteDetailEntity.getNote());
+                            quoteDetailForProductRequest.setProductId(oldQuoteDetailEntity.getProduct().getId());
+                            quoteDetailServiceImp.createQuoteForProduct(quoteDetailForProductRequest);
+
+                        }else{
+                            QuoteDetailForRawRequest quoteDetailForRawRequest = new QuoteDetailForRawRequest();
+                            quoteDetailForRawRequest.setQuoteId(quoteId);
+                            quoteDetailForRawRequest.setArea(oldQuoteDetailEntity.getArea());
+                            quoteDetailForRawRequest.setRawMaterialId(oldQuoteDetailEntity.getRawMaterial().getId());
+                            quoteDetailServiceImp.createQuoteForRaw(quoteDetailForRawRequest);
+                        }
+                    }
+                }
+                return true;
+            }
+        }catch (Exception e){
+            return false;
+        }
+        return false;
+    }
 
 
     @Override
@@ -111,9 +176,10 @@ public class ProjectService implements ProjectServiceImp {
     }
 
     @Override
-    public boolean updateProjectByStatus(int projectId, String status) {
+    public boolean updateProjectByStatus(int projectId, int userId, String status) {
         try{
             Optional<ProjectEntity> projectEntity = projectRepository.findById(projectId);
+            Optional<UserEntity> userEntity = userRepository.findById(userId);
             if(projectEntity.isPresent()){
                 TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
 
@@ -121,6 +187,7 @@ public class ProjectService implements ProjectServiceImp {
                 Calendar calendar = Calendar.getInstance(timeZone);
                 Date currentTime = calendar.getTime();
                 projectEntity.get().setStatus(status);
+                userEntity.ifPresent(entity -> projectEntity.get().setStaff(entity));
                 projectEntity.get().setUpdatedAt(currentTime);
                 projectRepository.save(projectEntity.get());
                 return true;
@@ -256,6 +323,7 @@ public class ProjectService implements ProjectServiceImp {
 
         return projectEntityPage.map(projectEntity -> new ProjectDTO(
                 mapUserToDTO(projectEntity.getUser()),
+                mapUserToDTO(projectEntity.getStaff()),
                 projectEntity.getId(),
                 projectEntity.getName(),
                 projectEntity.getImg(),
@@ -456,6 +524,7 @@ public class ProjectService implements ProjectServiceImp {
         userDTO.setAddress(userEntity.getAddress());
         userDTO.setRole(userEntity.getRole().getName());
         userDTO.setEmail(userEntity.getEmail());
+        userDTO.setStatus(userEntity.getStatus());
         return userDTO;
     }
 

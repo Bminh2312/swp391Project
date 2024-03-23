@@ -15,6 +15,7 @@ import com.swp391.project.repository.RawMaterialRepository;
 import com.swp391.project.service.impl.QuoteDetailServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -70,6 +71,7 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
         return false;
     }
 
+    @Transactional(rollbackFor = {RuntimeException.class,Exception.class})
     @Override
     public boolean createListQuoteForProduct(ListQuoteDetailForProductRequest listQuoteDetailForProductRequest) {
         try {
@@ -176,17 +178,18 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
     }
 
 
-
+    @Transactional(rollbackFor = {RuntimeException.class,Exception.class})
     @Override
     public boolean createListQuoteForRaw(ListQuoteDetailForRawRequest listQuoteDetailForRawRequest) {
         try {
             List<QuoteDetailForRawRequest> quoteDetailRequests = listQuoteDetailForRawRequest.getQuoteDetailForRawRequests();
+            List<QuoteDetailEntity> quoteDetailEntities = new ArrayList<>();
 
             for (QuoteDetailForRawRequest quoteDetailRequest : quoteDetailRequests) {
                 Optional<RawMaterialEntity> rawMaterialEntity = rawMaterialRepository.findById(quoteDetailRequest.getRawMaterialId());
                 Optional<QuoteEntity> quoteEntity = quoteRepository.findById(quoteDetailRequest.getQuoteId());
 
-                if (rawMaterialEntity.isPresent()) {
+                if (rawMaterialEntity.isPresent() && quoteEntity.isPresent()) {
                     TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
 
                     // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
@@ -199,19 +202,23 @@ public class QuoteDetailService implements QuoteDetailServiceImp {
                     quoteDetailEntity.setPriceChange(0);
                     quoteDetailEntity.setArea(quoteDetailRequest.getArea());
                     quoteDetailEntity.setTotalPrice(quoteDetailRequest.getArea() * rawMaterialEntity.get().getPricePerM2());
-                    quoteEntity.ifPresent(quoteDetailEntity::setQuote);
+                    quoteDetailEntity.setQuote(quoteEntity.get());
                     quoteDetailEntity.setStatus("ACTIVE");
                     quoteDetailEntity.setCreatedAt(currentTime);
                     quoteDetailEntity.setUpdatedAt(currentTime);
-                    quoteDetailRepository.save(quoteDetailEntity);
+                    quoteDetailEntities.add(quoteDetailEntity);
                 }
             }
+
+            // Lưu danh sách các QuoteDetailEntity vào cơ sở dữ liệu
+            quoteDetailRepository.saveAll(quoteDetailEntities);
             return true;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
         }
     }
+
 
     @Override
     public boolean updateQuoteForProduct(int idQuoteDetail, int idProduct, String note, double priceChange,  int quantityChange) {
