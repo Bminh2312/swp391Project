@@ -30,7 +30,7 @@ public class ProjectController {
 
 
     @GetMapping("/getAllPageProjectByStatusAndUserId")
-    public ResponseEntity<?> getAllPageProductByStatusAndUserId(Pageable pageable, @RequestParam(name = "status", required = false) String status, int userId){
+    public ResponseEntity<?> getAllPageProductByStatusAndUserId(Pageable pageable, @RequestParam(name = "status", required = false, defaultValue = "0") String status, int userId){
         BaseResponse baseResponse = new BaseResponse();
         Page<ProjectDTO> projectDTOS = projectImp.findAllByStatusAndUserId(userId,status,pageable);
         if(projectDTOS.isEmpty()){
@@ -151,7 +151,7 @@ public class ProjectController {
     }
 
     @PutMapping(value = "/updateProjectByStatus")
-    public ResponseEntity<?> update(@RequestParam int projectId, @RequestParam String status, @RequestParam(name = "userId", required = false) int userId){
+    public ResponseEntity<?> update(@RequestParam int projectId, @RequestParam String status, @RequestParam(name = "userId", required = false, defaultValue = "0") int userId){
         boolean check = projectImp.updateProjectByStatus(projectId, userId, status);
         BaseResponse baseResponse = new BaseResponse();
         if(check){

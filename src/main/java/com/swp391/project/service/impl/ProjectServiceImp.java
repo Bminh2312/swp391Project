@@ -22,6 +22,8 @@ public interface ProjectServiceImp {
 
     boolean updateProjectByStatus(int projectId, int userId, String status);
 
+    int findTotalProjectByStatus(String status);
+
     ProjectDTO findById(int id);
 
     List<ProjectDTO> findByStatus(String status);
