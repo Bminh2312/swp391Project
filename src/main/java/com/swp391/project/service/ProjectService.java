@@ -200,6 +200,16 @@ public class ProjectService implements ProjectServiceImp {
 
     }
 
+    @Override
+    public long findTotalProjectByStatus(String status) {
+        try{
+            return projectRepository.countByStatus(status);
+        }catch (Exception e){
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
 
     @Override
     public ProjectDTO findById(int id) {

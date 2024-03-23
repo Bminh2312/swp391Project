@@ -1,10 +1,11 @@
 package com.swp391.project.controller;
 
+import com.swp391.project.payload.response.BaseResponse;
 import com.swp391.project.service.impl.ProjectServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:8082", "https://furniture-quote.azurewebsites.net",
@@ -14,4 +15,20 @@ public class DashBoardController {
     @Autowired
     private ProjectServiceImp projectServiceImp;
 
+    @GetMapping("/getTotalProjectByStatus")
+    public ResponseEntity<?> getTotalProjectByStatus(@RequestParam String status){
+        BaseResponse baseResponse = new BaseResponse();
+        baseResponse.setMesssage("SucessFull");
+        baseResponse.setStatusCode(200);
+        long count = projectServiceImp.findTotalProjectByStatus(status);
+        if(count == 0){
+            baseResponse.setMesssage("Not Found");
+            baseResponse.setStatusCode(400);
+            baseResponse.setData(count);
+            return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
+        }else{
+            baseResponse.setData(count);
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+    }
 }
