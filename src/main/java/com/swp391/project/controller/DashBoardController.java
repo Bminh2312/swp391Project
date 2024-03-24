@@ -106,7 +106,7 @@ public class DashBoardController {
             baseResponse.setMesssage("Not Found");
             baseResponse.setStatusCode(400);
             baseResponse.setData(count);
-            return new ResponseEntity<>(baseResponse, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
         }else{
             baseResponse.setData(count);
             return new ResponseEntity<>(baseResponse, HttpStatus.OK);
