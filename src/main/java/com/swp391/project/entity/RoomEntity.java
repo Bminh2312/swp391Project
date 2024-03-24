@@ -21,10 +21,6 @@ public class RoomEntity implements Serializable {
     private String name;
 
 
-    @ManyToOne
-    @JoinColumn(name = "id_project")
-    private ProjectEntity projectRoom;
-
     @OneToMany(mappedBy = "roomQuote")
     List<QuoteEntity> quotes;
 

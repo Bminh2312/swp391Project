@@ -89,7 +89,7 @@ public class ProjectService implements ProjectServiceImp {
                                    String location,
                                    boolean isSample,
                                    int designStyleId,
-                                   int typeId , int userId, String status, MultipartFile imgFile) {
+                                   int typeId , String status, MultipartFile imgFile) {
         try{
             Optional<DesignStyleEntity> designStyleEntity = designStyleRepository.findById(designStyleId);
             Optional<TypeProjectEntity> typeProjectEntity = typeRepository.findById(typeId);
@@ -101,8 +101,6 @@ public class ProjectService implements ProjectServiceImp {
                 Calendar calendar = Calendar.getInstance(timeZone);
                 Date currentTime = calendar.getTime();
                 ProjectEntity projectEntity = new ProjectEntity();
-                Optional<UserEntity> userEntity = userRepository.findById(userId);
-                userEntity.ifPresent(projectEntity::setUser);
                 if(imgFile != null){
                     String img = fireBaseStorageService.uploadImage(imgFile);
                     projectEntity.setImg(img);

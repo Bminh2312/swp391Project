@@ -127,10 +127,9 @@ public class ProjectController {
                                      @RequestParam boolean isSample,
                                      @RequestParam int designStyleId,
                                      @RequestParam int typeId,
-                                     @RequestParam int userId,
                                      @RequestParam String status){
         BaseResponse baseResponse = new BaseResponse();
-        int check = projectImp.createSampleProject(name, location, isSample, designStyleId, typeId,userId,status,fileImg);
+        int check = projectImp.createSampleProject(name, location, isSample, designStyleId, typeId,status,fileImg);
         if(check != 0){
             baseResponse.setStatusCode(201);
             baseResponse.setMesssage("Create Successfull");

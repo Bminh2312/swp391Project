@@ -40,8 +40,6 @@ public class ProjectEntity implements Serializable {
     @JoinColumn(name = "id_staff")
     private UserEntity staff;
 
-    @OneToMany(mappedBy = "projectRoom")
-    private List<RoomEntity> room;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "projectQuote")

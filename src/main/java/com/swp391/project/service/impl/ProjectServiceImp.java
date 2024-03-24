@@ -22,7 +22,7 @@ public interface ProjectServiceImp {
                             String location,
                             boolean isSample,
                             int designStyleId,
-                            int typeId, int userId, String status, MultipartFile imgFile);
+                            int typeId, String status, MultipartFile imgFile);
 
     boolean createBySampleProject(ProjectSampleRequest projectSampleRequest);
 
