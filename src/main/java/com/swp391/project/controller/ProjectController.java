@@ -68,7 +68,7 @@ public class ProjectController {
 //    }
 
     @GetMapping("/getAllPageProjectByStatusOrDesignStyleOrType")
-    public ResponseEntity<?> getAllPageProjectByStatusOrDesignStyleOrType(Pageable pageable, @RequestParam @Schema(description = "Status", allowableValues = {"ACTIVE","NEW", "QUOTING","REJECTED","COMPLETED"}) String status, @RequestParam(name = "designStyleId", required = false, defaultValue = "0") int designStyleId, @RequestParam(name = "type", required = false,defaultValue = "0") int typeId){
+    public ResponseEntity<?> getAllPageProjectByStatusOrDesignStyleOrType(Pageable pageable, @RequestParam (name = "Status",required = false) String status, @RequestParam(name = "designStyleId", required = false, defaultValue = "0") int designStyleId, @RequestParam(name = "type", required = false,defaultValue = "0") int typeId){
         BaseResponse baseResponse = new BaseResponse();
         Page<ProjectWithUserDTO> projectDTOS = projectImp.findAllByStatusOrDesignStyleIdOrTypeProject_Id(status,designStyleId,typeId,pageable);
         if(!projectDTOS.isEmpty()){
