@@ -4,6 +4,7 @@ import com.swp391.project.dto.ProductDTO;
 import com.swp391.project.dto.UserDetailDTO;
 import com.swp391.project.payload.request.DesignStypeRequest;
 import com.swp391.project.payload.request.ProductRequest;
+import com.swp391.project.payload.request.ProjectRequest;
 import com.swp391.project.payload.response.BaseResponse;
 import com.swp391.project.service.impl.ProductServiceImp;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -123,6 +124,7 @@ public class ProductController {
         return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
 
     }
+
 
     @PutMapping(value = "/updateProduct",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> update(@RequestPart(name = "fileImg", required = false) MultipartFile fileImg, @RequestParam int productId, @RequestParam(name = "name", required = false) String name,

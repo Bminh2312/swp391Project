@@ -22,6 +22,7 @@ public class ProjectEntity implements Serializable {
     @Column(name = "name")
     private String name;
 
+
     @Column(name = "location",columnDefinition = "TEXT")
     private String location;
 

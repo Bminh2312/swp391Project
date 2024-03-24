@@ -19,6 +19,8 @@ public interface ProductServiceImp {
      double width,
      double pricePerM2, MultipartFile imgFile);
 
+
+
     boolean update (String name,
                     String description,
                     String type,

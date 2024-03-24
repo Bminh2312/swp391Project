@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,6 +44,10 @@ public class ProjectService implements ProjectServiceImp {
     @Autowired
     private QuoteDetailServiceImp quoteDetailServiceImp;
 
+    @Autowired
+    private FireBaseStorageService fireBaseStorageService;
+
+
 
     @Override
     public int create(ProjectRequest projectRequest , int userId, String status) {
@@ -64,6 +69,49 @@ public class ProjectService implements ProjectServiceImp {
                 projectEntity.setTypeProject(typeProjectEntity.get());
                 projectEntity.setDesignStyle(designStyleEntity.get());
                 projectEntity.setSample(projectRequest.isSample());
+                projectEntity.setStatus(status);
+                projectEntity.setPrice(0);
+                projectEntity.setCreatedAt(currentTime);
+                projectEntity.setUpdatedAt(currentTime);
+                ProjectEntity projectEntityRespone =  projectRepository.save(projectEntity);
+                return projectEntityRespone.getId();
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return 0;
+        }
+
+        return 0;
+    }
+
+    @Override
+    public int createSampleProject(String name,
+                                   String location,
+                                   boolean isSample,
+                                   int designStyleId,
+                                   int typeId , int userId, String status, MultipartFile imgFile) {
+        try{
+            Optional<DesignStyleEntity> designStyleEntity = designStyleRepository.findById(designStyleId);
+            Optional<TypeProjectEntity> typeProjectEntity = typeRepository.findById(typeId);
+
+            if(designStyleEntity.isPresent() && typeProjectEntity.isPresent()){
+                TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+
+                // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
+                Calendar calendar = Calendar.getInstance(timeZone);
+                Date currentTime = calendar.getTime();
+                ProjectEntity projectEntity = new ProjectEntity();
+                Optional<UserEntity> userEntity = userRepository.findById(userId);
+                userEntity.ifPresent(projectEntity::setUser);
+                if(imgFile != null){
+                    String img = fireBaseStorageService.uploadImage(imgFile);
+                    projectEntity.setImg(img);
+                }
+                projectEntity.setName(name);
+                projectEntity.setLocation(location);
+                projectEntity.setTypeProject(typeProjectEntity.get());
+                projectEntity.setDesignStyle(designStyleEntity.get());
+                projectEntity.setSample(isSample);
                 projectEntity.setStatus(status);
                 projectEntity.setPrice(0);
                 projectEntity.setCreatedAt(currentTime);

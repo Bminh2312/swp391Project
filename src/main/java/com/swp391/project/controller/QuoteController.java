@@ -11,8 +11,10 @@ import com.swp391.project.service.impl.QuoteServiceImp;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -97,6 +99,27 @@ public class QuoteController {
     public ResponseEntity<?> createQuoteForProject(@RequestBody QuoteRequest quoteRequest , @RequestParam String status){
         BaseResponse baseResponse = new BaseResponse();
         int check = quoteServiceImp.create(quoteRequest,status);
+        if(check != 0){
+            baseResponse.setStatusCode(201);
+            baseResponse.setMesssage("Create Successfull");
+            baseResponse.setData(check);
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+        baseResponse.setStatusCode(200);
+        baseResponse.setMesssage("Create Failed");
+        baseResponse.setData(check);
+        return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
+
+    }
+
+    @PostMapping(value = "/createQuoteForProjectSample",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createQuoteForProjectSample(   @RequestPart(name = "fileImg", required = false) MultipartFile fileImg,
+                                                            @RequestParam int projectId,
+                                                            @RequestParam int roomId,
+                                                            @RequestParam double area ,
+                                                            @RequestParam String status){
+        BaseResponse baseResponse = new BaseResponse();
+        int check = quoteServiceImp.createSampleQuote(projectId,roomId,area,status,fileImg);
         if(check != 0){
             baseResponse.setStatusCode(201);
             baseResponse.setMesssage("Create Successfull");

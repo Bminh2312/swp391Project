@@ -10,11 +10,19 @@ import com.swp391.project.payload.request.ProjectRequest;
 import com.swp391.project.payload.request.ProjectSampleRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface ProjectServiceImp {
     int create(ProjectRequest projectRequest, int userId, String status);
+
+    int createSampleProject(String name,
+                            String location,
+                            boolean isSample,
+                            int designStyleId,
+                            int typeId, int userId, String status, MultipartFile imgFile);
 
     boolean createBySampleProject(ProjectSampleRequest projectSampleRequest);
 

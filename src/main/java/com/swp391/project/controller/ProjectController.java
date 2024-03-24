@@ -14,8 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -118,7 +120,31 @@ public class ProjectController {
 
     }
 
-    @PostMapping(value = "/createSampleProject")
+    @PostMapping(value = "/createSampleProject",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createSampleProject( @RequestPart(name = "fileImg", required = false) MultipartFile fileImg,
+                                     @RequestParam String name,
+                                     @RequestParam String location,
+                                     @RequestParam boolean isSample,
+                                     @RequestParam int designStyleId,
+                                     @RequestParam int typeId,
+                                     @RequestParam int userId,
+                                     @RequestParam String status){
+        BaseResponse baseResponse = new BaseResponse();
+        int check = projectImp.createSampleProject(name, location, isSample, designStyleId, typeId,userId,status,fileImg);
+        if(check != 0){
+            baseResponse.setStatusCode(201);
+            baseResponse.setMesssage("Create Successfull");
+            baseResponse.setData(check);
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+        baseResponse.setStatusCode(404);
+        baseResponse.setMesssage("Create Failed");
+        baseResponse.setData(check);
+        return new ResponseEntity<>(baseResponse,HttpStatus.NOT_FOUND);
+
+    }
+
+    @PostMapping(value = "/createBySampleProject")
     public ResponseEntity<?> createSample(@RequestBody ProjectSampleRequest projectSampleRequest){
         BaseResponse baseResponse = new BaseResponse();
         boolean check = projectImp.createBySampleProject(projectSampleRequest);

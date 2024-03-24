@@ -12,6 +12,7 @@ import com.swp391.project.service.impl.QuoteServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -33,6 +34,8 @@ public class QuoteService implements QuoteServiceImp {
     @Autowired
     private VnQrService vnQrService;
 
+    @Autowired
+    private FireBaseStorageService fireBaseStorageService;
     @Override
     public int create(QuoteRequest quoteRequest, String status) {
         try{
@@ -62,6 +65,40 @@ public class QuoteService implements QuoteServiceImp {
             return 0;
         }
 
+    }
+
+    @Override
+    public int createSampleQuote(int projectId, int roomId, double area, String status, MultipartFile imgFile) {
+        try{
+            Optional<ProjectEntity> projectEntity = projectRepository.findById(projectId);
+            Optional<RoomEntity> roomEntity = roomRepository.findById(roomId);
+            if(projectEntity.isPresent() && roomEntity.isPresent()){
+                TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+
+                // Lấy thời gian hiện tại dựa trên múi giờ của Việt Nam
+                Calendar calendar = Calendar.getInstance(timeZone);
+                Date currentTime = calendar.getTime();
+                QuoteEntity quoteEntity = new QuoteEntity();
+                quoteEntity.setProjectQuote(projectEntity.get());
+                if(imgFile != null){
+                    String img = fireBaseStorageService.uploadImage(imgFile);
+                    quoteEntity.setImg(img);
+                }
+                quoteEntity.setRoomQuote(roomEntity.get());
+                quoteEntity.setArea(area);
+                quoteEntity.setQuoteDate(currentTime);
+                quoteEntity.setCreatedAt(currentTime);
+                quoteEntity.setUpdatedAt(currentTime);
+                quoteEntity.setStatus(status);
+                QuoteEntity quoteEntityRespone = quoteRepository.save(quoteEntity);
+                return quoteEntityRespone.getId();
+            }else {
+                return 0;
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return 0;
+        }
     }
 
     @Override
