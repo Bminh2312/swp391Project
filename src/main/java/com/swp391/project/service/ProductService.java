@@ -192,6 +192,16 @@ public class ProductService implements ProductServiceImp {
     }
 
     @Override
+    public long countByStatus(String status) {
+        try{
+            return productRepository.countByStatus(status);
+        }catch (Exception e){
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    @Override
     public boolean delete(int id, String status) {
         try {
             TimeZone timeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");

@@ -143,4 +143,14 @@ public class RawMaterialService implements RawMaterialServiceImp {
             return false;
         }
     }
+
+    @Override
+    public long countByStatus(String status) {
+        try{
+            return rawMaterialRepository.countByStatus(status);
+        }catch (Exception e){
+            e.printStackTrace();
+            return 0;
+        }
+    }
 }

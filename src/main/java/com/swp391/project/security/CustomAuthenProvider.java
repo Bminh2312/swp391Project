@@ -12,10 +12,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CustomAuthenProvider implements AuthenticationProvider {
@@ -34,44 +36,48 @@ public class CustomAuthenProvider implements AuthenticationProvider {
         System.out.println("Pass " + password);
         UserEntity userEntity = null;
         UserEntity userEntityMail = null;
-        if(password!= null){
-            userEntity = loginServiceImp.checkLogin(email,password);
-
-        }else{
+        if (password != null) {
+            // Đăng nhập bằng tài khoản thông thường
+            userEntity = loginServiceImp.checkLogin(email, password);
+        } else {
+            // Đăng nhập bằng email mới
             userEntityMail = loginServiceImp.checkLoginGmail(email);
-
         }
 
-        if( userEntity != null){
-            //Tạo một list nhận vào danh sách quyền theo chuẩn của Security
+        if (userEntity != null) {
+            if (userEntity.getStatus().equals("INACTIVE")) {
+                throw new BadCredentialsException("User is baned");
+            }
             List<GrantedAuthority> listRoles = new ArrayList<>();
-            //Tạo ra một quyền và gán tên quyền truy vấn được từ database để add vào list role ở trên
             SimpleGrantedAuthority role = new SimpleGrantedAuthority(userEntity.getRole().getName());
             listRoles.add(role);
 
-            return new UsernamePasswordAuthenticationToken("","",listRoles);
+            return new UsernamePasswordAuthenticationToken("", "", listRoles);
+        }
 
-        }else if(userEntityMail != null) {
+        if (userEntityMail != null) {
+            if (userEntityMail.getStatus().equals("INACTIVE")) {
+                throw new BadCredentialsException("User is baned");
+            }
             List<GrantedAuthority> listRoles = new ArrayList<>();
-            //Tạo ra một quyền và gán tên quyền truy vấn được từ database để add vào list role ở trên
             SimpleGrantedAuthority role = new SimpleGrantedAuthority(userEntityMail.getRole().getName());
             listRoles.add(role);
 
             return new UsernamePasswordAuthenticationToken("", "", listRoles);
-        }else if(userEntityMail == null){
+        }
+
+        // Nếu không tìm thấy người dùng trong cơ sở dữ liệu khi đăng nhập bằng tài khoản thông thường, ném ra BadCredentialsException
+        if (password != null) {
+            throw new UsernameNotFoundException("Invalid username or password");
+        } else {
+            // Nếu không tìm thấy người dùng trong cơ sở dữ liệu khi đăng nhập bằng email mới, trả về vai trò mặc định ROLE_USER
             RoleEntity roleEntity = roleRepository.findByName("ROLE_USER");
             List<GrantedAuthority> listRoles = new ArrayList<>();
-            //Tạo ra một quyền và gán tên quyền truy vấn được từ database để add vào list role ở trên
             SimpleGrantedAuthority role = new SimpleGrantedAuthority(roleEntity.getName());
             listRoles.add(role);
 
-            return new UsernamePasswordAuthenticationToken(null, null, listRoles);
+            return new UsernamePasswordAuthenticationToken("", "", listRoles);
         }
-        else{
-            throw new BadCredentialsException("Invalid username or password");
-        }
-
-
 
 
 

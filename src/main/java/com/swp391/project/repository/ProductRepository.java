@@ -21,4 +21,6 @@ public interface ProductRepository extends JpaRepository<ProductEntity,Integer> 
 
     @Query("SELECT DISTINCT p.type FROM product p")
     List<String> findAllType();
+
+    long countByStatus(String status);
 }

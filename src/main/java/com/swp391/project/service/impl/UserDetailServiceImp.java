@@ -23,4 +23,9 @@ public interface UserDetailServiceImp {
 
     boolean delete(int id, String status);
 
+    long countByStatus(String status);
+
+    long countByStatusAndRole_Id(String status, int roleId);
+
+
 }

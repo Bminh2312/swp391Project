@@ -35,5 +35,7 @@ public interface ProductServiceImp {
 
     List<String> findAllType();
 
+    long countByStatus(String status);
+
     boolean delete(int id, String status);
 }

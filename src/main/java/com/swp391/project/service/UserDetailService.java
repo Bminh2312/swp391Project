@@ -206,4 +206,24 @@ public class UserDetailService implements UserDetailServiceImp {
         }
     }
 
+    @Override
+    public long countByStatus(String status) {
+        try{
+            return userRepository.countByStatus(status);
+        }catch (Exception e){
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    @Override
+    public long countByStatusAndRole_Id(String status, int roleId) {
+        try{
+            return userRepository.countByStatusAndRole_Id(status,roleId);
+        }catch (Exception e){
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
 }

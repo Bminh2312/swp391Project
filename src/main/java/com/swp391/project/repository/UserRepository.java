@@ -1,6 +1,7 @@
 package com.swp391.project.repository;
 
 import com.swp391.project.entity.ProjectEntity;
+import com.swp391.project.entity.RoleEntity;
 import com.swp391.project.entity.UserEntity;
 
 import org.springframework.data.domain.Page;
@@ -21,5 +22,8 @@ public interface UserRepository extends JpaRepository<UserEntity,Integer> {
 
     Page<UserEntity> findAllByStatus(int userId,String status, Pageable pageable);
 
+    long countByStatus(String status);
+
+    long countByStatusAndRole_Id(String status, int roleId);
 
 }

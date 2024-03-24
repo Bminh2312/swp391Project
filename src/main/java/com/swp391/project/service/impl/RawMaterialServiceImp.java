@@ -20,4 +20,6 @@ public interface RawMaterialServiceImp {
     Page<RawMaterialDTO> findAll(Pageable pageable);
 
     boolean delete(int id, String status);
+
+    long countByStatus(String status);
 }

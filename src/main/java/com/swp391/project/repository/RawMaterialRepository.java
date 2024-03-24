@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RawMaterialRepository extends JpaRepository<RawMaterialEntity,Integer> {
+    long countByStatus(String status);
 }
